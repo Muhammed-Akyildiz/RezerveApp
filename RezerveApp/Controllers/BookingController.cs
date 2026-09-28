@@ -477,7 +477,8 @@ namespace RezerveApp.Controllers
 
                 if (customer != null && customer.IsBlacklisted)
                 {
-                    return BadRequest("Sistemimizde daha önce oluşturduğunuz randevulara katılmadığınız tespit edilmiştir. Lütfen işletme ile iletişime geçiniz.");
+                    TempData["ErrorMessage"] = "Sistemimizde daha önce oluşturduğunuz randevulara katılmadığınız tespit edilmiştir. Lütfen işletme ile iletişime geçiniz.";
+                    return RedirectToAction(nameof(Index), new { slug = slug });
                 }
 
                 if (customer == null)

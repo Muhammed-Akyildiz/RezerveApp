@@ -951,6 +951,22 @@
             crossorigin=""></script>
 
     <script>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Hata',
+                    text: '@Html.Raw(TempData["ErrorMessage"])',
+                    confirmButtonColor: 'var(--gold)',
+                    background: '#1a1a24',
+                    color: '#ffffff'
+                });
+            });
+            </text>
+        }
+
         // Leaflet default icon fix
         const defaultIcon = L.icon({
             iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',

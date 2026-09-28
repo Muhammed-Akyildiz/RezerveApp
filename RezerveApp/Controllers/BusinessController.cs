@@ -807,6 +807,26 @@ namespace RezerveApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleBlacklist(int id)
+        {
+            var businessId = await GetCurrentBusinessIdAsync();
+            if (businessId == null) return Unauthorized();
+
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == id && c.BusinessId == businessId);
+            if (customer == null) return NotFound();
+
+            customer.IsBlacklisted = !customer.IsBlacklisted;
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = customer.IsBlacklisted 
+                ? $"{customer.Name} isimli müşteri başarıyla kara listeye alındı. Artık randevu oluşturamayacak."
+                : $"{customer.Name} isimli müşteri kara listeden çıkarıldı.";
+                
+            return RedirectToAction(nameof(Customers));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteNotification(int id)
         {
             var businessId = await GetCurrentBusinessIdAsync();

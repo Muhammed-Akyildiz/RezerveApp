@@ -1,4 +1,4 @@
-﻿@model List<RezerveApp.Models.Customer>
+@model List<RezerveApp.Models.Customer>
 
 @{
     Layout = "_BusinessLayout";
@@ -61,11 +61,24 @@
                             }
                         </td>
                         <td>
-                            <a asp-controller="Business" asp-action="CustomerDetails" asp-route-id="@c.Id" class="btn btn-outline btn-sm">Detay</a>
-                            <form asp-controller="Business" asp-action="DeleteCustomer" asp-route-id="@c.Id" method="post" style="display:inline;" data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>" data-confirm-title="Müşteriyi Sil">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-danger-outline btn-sm">Sil</button>
-                            </form>
+                            <div style="display:flex; gap:8px;">
+                                <a asp-controller="Business" asp-action="CustomerDetails" asp-route-id="@c.Id" class="btn btn-outline btn-sm">Detay</a>
+                                <form asp-controller="Business" asp-action="ToggleBlacklist" asp-route-id="@c.Id" method="post">
+                                    @Html.AntiForgeryToken()
+                                    @if(c.IsBlacklisted)
+                                    {
+                                        <button type="submit" class="btn btn-success btn-sm">Listeden Çıkar</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="submit" class="btn btn-danger-outline btn-sm" data-confirm="Bu müşteriyi kara listeye almak istediğinize emin misiniz?<br>Artık sizin işletmenizden randevu alamayacak." data-confirm-title="Kara Listeye Al">Kara Listeye Al</button>
+                                    }
+                                </form>
+                                <form asp-controller="Business" asp-action="DeleteCustomer" asp-route-id="@c.Id" method="post" data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>" data-confirm-title="Müşteriyi Sil">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--danger);"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
