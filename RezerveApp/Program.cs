@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using RezerveApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // ======================================================
 // DATABASE
