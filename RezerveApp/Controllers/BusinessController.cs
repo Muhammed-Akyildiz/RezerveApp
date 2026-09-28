@@ -141,16 +141,15 @@ namespace RezerveApp.Controllers
                     return View();
                 }
 
-                var fileName = Guid.NewGuid().ToString() + extension;
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                Directory.CreateDirectory(uploadDir);
-                var filePath = Path.Combine(uploadDir, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await logo.CopyToAsync(stream);
+                    logoUrl = await _imageService.UploadImageAsync(logo);
                 }
-                logoUrl = "/uploads/" + fileName;
+                catch
+                {
+                    ModelState.AddModelError("logo", "Fotoğraf yüklenirken bir sorun oluştu.");
+                    return View();
+                }
             }
             else
             {
