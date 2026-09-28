@@ -128,11 +128,11 @@
                 if (providesAll) {
                     card.classList.remove('disabled');
                     card.style.opacity = '1';
-                    card.style.pointerEvents = 'auto';
+                    card.style.filter = 'none';
                 } else {
                     card.classList.add('disabled');
-                    card.style.opacity = '0.2';
-                    card.style.pointerEvents = 'none'; // Make unclickable
+                    card.style.opacity = '0.5'; // Daha belirgin
+                    card.style.filter = 'grayscale(1)'; // Gri yapalım
                 }
             });
             
@@ -251,6 +251,20 @@
     // =========================================================
 
     window.selectEmployee = function (card) {
+        if (card.classList.contains('disabled')) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Hizmet Kapsamı Dışında',
+                    text: 'Bu uzman, ilk adımda seçmiş olduğunuz hizmetleri sağlamamaktadır. Lütfen başka bir uzman seçin.',
+                    confirmButtonColor: '#c9a24d',
+                    confirmButtonText: 'Tamam'
+                });
+            } else {
+                alert('Bu uzman, ilk adımda seçtiğiniz hizmetleri sağlamamaktadır.');
+            }
+            return;
+        }
 
         document
             .querySelectorAll('#employeeGrid .employee-pick-card')

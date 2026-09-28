@@ -1,4 +1,4 @@
-﻿@model List<RezerveApp.Models.Service>
+@model List<RezerveApp.Models.Service>
 
 @{
     Layout = "_BusinessLayout";
@@ -10,6 +10,89 @@
     ViewBag.PageSubtitle = employee.Name;
     ViewBag.ActiveNav = "Employees";
 }
+
+<style>
+    .service-check-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .service-check-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .service-check-card:hover {
+        border-color: var(--text-muted);
+    }
+
+    .service-check-card input[type="checkbox"] {
+        display: none;
+    }
+
+    .service-check-card:has(input[type="checkbox"]:checked) {
+        border-color: var(--gold);
+        background: rgba(201, 162, 77, 0.05);
+    }
+
+    .service-check-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .service-check-title {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text-base);
+    }
+
+    .service-check-meta {
+        font-size: 13px;
+        color: var(--text-muted);
+    }
+
+    .custom-check {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        border: 2px solid var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+    }
+
+    .service-check-card input[type="checkbox"]:checked ~ .custom-check {
+        background: var(--gold);
+        border-color: var(--gold);
+    }
+
+    .custom-check::after {
+        content: "";
+        width: 6px;
+        height: 11px;
+        border: solid var(--background);
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+        display: none;
+        margin-bottom: 2px;
+    }
+
+    .service-check-card input[type="checkbox"]:checked ~ .custom-check::after {
+        display: block;
+    }
+</style>
 
 <form asp-controller="Business" asp-action="SaveEmployeeServices" method="post">
     @Html.AntiForgeryToken()
@@ -26,14 +109,16 @@
             <p class="cell-muted">Henüz hizmet tanımlanmamış. Önce Hizmetler sayfasından hizmet ekleyin.</p>
         }
 
-        <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="service-check-list">
             @foreach (var service in Model)
             {
-                <label style="display:flex; align-items:center; gap:10px;">
-                    <input type="checkbox" name="serviceIds" value="@service.Id"
-                           checked="@assignedIds.Contains(service.Id)" />
-                    <span>@service.Name</span>
-                    <span class="cell-muted">— @service.Price.ToString("N2") ₺ / @service.DurationMinutes dk</span>
+                <label class="service-check-card">
+                    <div class="service-check-info">
+                        <span class="service-check-title">@service.Name</span>
+                        <span class="service-check-meta">@service.DurationMinutes dk • @service.Price.ToString("N2") ₺</span>
+                    </div>
+                    <input type="checkbox" name="serviceIds" value="@service.Id" checked="@assignedIds.Contains(service.Id)" />
+                    <div class="custom-check"></div>
                 </label>
             }
         </div>

@@ -1,4 +1,13 @@
-﻿@model List<RezerveApp.Models.WorkingHour>
+<style>
+.switch{position:relative;display:inline-block;width:44px;height:24px;margin-right:8px;vertical-align:middle;}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#333;transition:.2s;border-radius:34px}
+.slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:white;transition:.2s;border-radius:50%}
+input:checked+.slider{background-color:var(--gold)}
+input:checked+.slider:before{transform:translateX(20px)}
+</style>
+
+@model List<RezerveApp.Models.WorkingHour>
 
 @{
     Layout = "_BusinessLayout";
@@ -104,21 +113,11 @@
                         <!-- ÇALIŞIYOR -->
                         <td>
 
-                            <label style="
-                                    display:flex;
-                                    align-items:center;
-                                    gap:8px;
-                                    cursor:pointer;
-                                    white-space:nowrap;
-                                ">
-
-                                <input type="checkbox"
-                                       class="working-checkbox"
-                                       @(isWorking ? "checked" : "") />
-
-                                <span>Çalışıyor</span>
-
-                            </label>
+                                <label class="hours-toggle" style="cursor:pointer;" onclick="event.preventDefault(); toggleWorking(this)">
+                                    <input type="checkbox" class="working-checkbox" style="display:none;" @(isWorking ? "checked" : "") />
+                                    <span class="switch @(isWorking ? "on" : "")"></span>
+                                    <span class="status-label">@(isWorking ? "Çalışıyor" : "Kapalı")</span>
+                                </label>
 
                         </td>
 
@@ -499,6 +498,19 @@
 @section Scripts {
 
     <script>
+        function toggleWorking(el) {
+            const cb = el.querySelector('.working-checkbox');
+            const sw = el.querySelector('.switch');
+            const lbl = el.querySelector('.status-label');
+            cb.checked = !cb.checked;
+            if (cb.checked) {
+                sw.classList.add('on');
+                lbl.textContent = 'Çalışıyor';
+            } else {
+                sw.classList.remove('on');
+                lbl.textContent = 'Kapalı';
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
 

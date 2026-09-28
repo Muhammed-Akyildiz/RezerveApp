@@ -1518,7 +1518,7 @@ namespace RezerveApp.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (user?.EmployeeId != null && user.EmployeeId != employeeId)
                 {
-                    return Unauthorized();
+                    return await Fail("Yetkiniz dışındaki bir çalışana randevu oluşturamazsınız.");
                 }
             }
 
@@ -1669,10 +1669,16 @@ namespace RezerveApp.Controllers
             if (businessId == null)
                 return Unauthorized();
 
-            var employees = await _context.Employees
-                .Where(e => e.BusinessId == businessId && e.IsActive)
-                .OrderBy(e => e.Name)
-                .ToListAsync();
+            var empQuery = _context.Employees.Where(e => e.BusinessId == businessId && e.IsActive);
+            if (User.IsInRole("Employee") && !User.IsInRole("BusinessAdmin"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user?.EmployeeId != null)
+                {
+                    empQuery = empQuery.Where(e => e.Id == user.EmployeeId);
+                }
+            }
+            var employees = await empQuery.OrderBy(e => e.Name).ToListAsync();
 
             ViewBag.Employees = employees;
             ViewBag.View = view is "day" or "week" or "month" ? view : "day";
@@ -1774,6 +1780,8 @@ namespace RezerveApp.Controllers
                 if (user?.EmployeeId != null)
                 {
                     query = query.Where(x => x.EmployeeId == user.EmployeeId);
+                    if (newEmployeeId != user.EmployeeId)
+                        return Json(new { success = false, message = "Randevuyu başka bir çalışana taşıyamazsınız." });
                 }
             }
 
