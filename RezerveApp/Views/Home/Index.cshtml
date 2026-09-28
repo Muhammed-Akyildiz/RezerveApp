@@ -1,0 +1,1585 @@
+﻿@model IEnumerable<RezerveApp.Models.SubscriptionPlan>
+@{
+    ViewData["Title"] = "RezerveApp — Berberinizin Online Randevu Sistemi";
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RezerveApp — Berberinizin Online Randevu Sistemi</title>
+
+    <meta name="description"
+          content="Berber ve kuaför işletmeleri için online randevu yönetim sistemi. İşletmenizi oluşturun, çalışanlarınızı yönetin, müşterilerinizden online randevu alın.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="~/css/variables.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/base.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/components.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/navigation.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/landing.css" asp-append-version="true">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo.png?v=2" />
+</head>
+
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+
+    <nav class="nav" id="mainNav">
+
+        <div class="nav__inner">
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="nav__logo" style="display: flex; align-items: center; gap: 8px; justify-content: center; text-decoration: none;">
+
+                <img src="~/images/logo_dark.jpg" alt="RezerveApp Logo" style="height: 40px; object-fit: contain;" />
+                <span style="font-size: 24px; font-weight: 700; color: #fff;">Rezerve<span style="color: var(--color-gold);">App</span></span>
+            </a>
+
+            <div class="nav__links">
+
+                <a href="#features" class="nav__link">
+                    Özellikler
+                </a>
+
+                <a href="#how-it-works" class="nav__link">
+                    Nasıl Çalışır
+                </a>
+
+                <a href="#pricing" class="nav__link">
+                    Paketler
+                </a>
+
+            </div>
+
+            <div class="nav__actions">
+
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="btn btn--ghost">
+                    Giriş Yap
+                </a>
+
+                <a asp-controller="Account"
+                   asp-action="Register"
+                   class="btn btn--primary btn--sm">
+                    Ücretsiz Başla
+                </a>
+
+            </div>
+
+            <!-- Mobile -->
+
+            <div class="nav__hamburger" id="navHamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+        </div>
+
+        <div class="nav__mobile-menu" id="navMobile">
+
+            <a href="#features" class="nav__link">
+                Özellikler
+            </a>
+
+            <a href="#how-it-works" class="nav__link">
+                Nasıl Çalışır
+            </a>
+
+            <a href="#pricing" class="nav__link">
+                Paketler
+            </a>
+
+            <div class="nav__actions">
+
+                <a asp-controller="Account"
+                   asp-action="Login"
+                   class="btn btn--outline btn--full">
+                    Giriş Yap
+                </a>
+
+                <a asp-controller="Account"
+                   asp-action="Register"
+                   class="btn btn--primary btn--full">
+                    Ücretsiz Başla
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="nav__overlay" id="navOverlay"></div>
+
+    </nav>
+
+
+    <!-- ========== HERO ========== -->
+
+    <section class="hero">
+
+        <div class="hero__bg">
+
+            <img src="~/images/hero-barber.jpg"
+                 alt="Premium Berber Salonu"
+                 loading="eager">
+
+        </div>
+
+        <div class="container">
+
+            <div class="hero__content">
+
+                <div class="hero__badge">
+
+                    <span class="badge badge--gold">
+                        ✦ Online Randevu Platformu
+                    </span>
+
+                </div>
+
+                <h1 class="hero__title">
+
+                    Berberinizin randevularını
+                    <span class="highlight">tek yerden</span>
+                    yönetin.
+
+                </h1>
+
+                <p class="hero__description">
+
+                    İşletmenizi oluşturun, çalışanlarınızı ve hizmetlerinizi yönetin.
+                    Müşterileriniz size özel randevu sayfanızdan kolayca randevu alsın.
+
+                </p>
+
+                <div class="hero__actions">
+
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="btn btn--primary btn--lg">
+                        Ücretsiz Başla
+                    </a>
+
+                    <a href="#how-it-works"
+                       class="btn btn--outline btn--lg">
+                        Nasıl Çalışır?
+                    </a>
+
+                </div>
+
+                <div class="hero__stats">
+
+                    <div>
+                        <div class="hero__stat-value">
+                            500<span>+</span>
+                        </div>
+
+                        <div class="hero__stat-label">
+                            Aktif İşletme
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="hero__stat-value">
+                            15K<span>+</span>
+                        </div>
+
+                        <div class="hero__stat-label">
+                            Randevu
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="hero__stat-value">
+                            %98
+                        </div>
+
+                        <div class="hero__stat-label">
+                            Memnuniyet
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== FEATURES ========== -->
+
+    <section class="section section--dark" id="features">
+
+        <div class="container">
+
+            <div class="section-header text-center reveal">
+
+                <span class="section-label">
+                    Özellikler
+                </span>
+
+                <h2 class="section-title">
+                    İşletmeniz için ihtiyacınız olan her şey
+                </h2>
+
+                <p class="section-subtitle">
+                    Randevu yönetiminden müşteri takibine kadar tüm süreçlerinizi
+                    tek bir platformdan yönetin.
+                </p>
+
+            </div>
+
+            <div class="features__grid">
+
+                <div class="feature-item reveal reveal-delay-1">
+
+                    <div class="feature-item__icon">
+                        <i data-lucide="calendar-check"></i>
+                    </div>
+
+                    <div class="feature-item__content">
+
+                        <h4>
+                            Online Randevu
+                        </h4>
+
+                        <p>
+                            Müşterileriniz 7/24 online randevu alabilir.
+                            Otomatik onay ve hatırlatma bildirimleri.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-item reveal reveal-delay-2">
+
+                    <div class="feature-item__icon">
+                        <i data-lucide="users"></i>
+                    </div>
+
+                    <div class="feature-item__content">
+
+                        <h4>
+                            Çalışan Yönetimi
+                        </h4>
+
+                        <p>
+                            Çalışanlarınızı ekleyin, uzmanlık alanlarını
+                            ve çalışma saatlerini belirleyin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-item reveal reveal-delay-3">
+
+                    <div class="feature-item__icon">
+                        <i data-lucide="scissors"></i>
+                    </div>
+
+                    <div class="feature-item__content">
+
+                        <h4>
+                            Hizmet Yönetimi
+                        </h4>
+
+                        <p>
+                            Sunduğunuz hizmetleri, fiyatları ve sürelerini
+                            kolayca tanımlayın ve güncelleyin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-item reveal reveal-delay-1">
+
+                    <div class="feature-item__icon">
+                        <i data-lucide="clock"></i>
+                    </div>
+
+                    <div class="feature-item__content">
+
+                        <h4>
+                            Çalışma Saatleri
+                        </h4>
+
+                        <p>
+                            Esnek çalışma saatleri tanımlayın.
+                            Tatil günleri ve özel saatler belirleyin.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-item reveal reveal-delay-2">
+
+                    <div class="feature-item__icon">
+                        <i data-lucide="contact"></i>
+                    </div>
+
+                    <div class="feature-item__content">
+
+                        <h4>
+                            Müşteri Yönetimi
+                        </h4>
+
+                        <p>
+                            Müşteri bilgilerini ve randevu geçmişini takip edin.
+                            Sadık müşterilerinizi tanıyın.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="feature-item reveal reveal-delay-3">
+
+                    <div class="feature-item__icon">
+                        <i data-lucide="calendar-days"></i>
+                    </div>
+
+                    <div class="feature-item__content">
+
+                        <h4>
+                            Randevu Takvimi
+                        </h4>
+
+                        <p>
+                            Tüm randevularınızı takvim görünümünde takip edin.
+                            Günlük, haftalık ve aylık görünüm.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== HOW IT WORKS ========== -->
+
+    <section class="section" id="how-it-works">
+
+        <div class="container">
+
+            <div class="section-header text-center reveal">
+
+                <span class="section-label">
+                    Nasıl Çalışır
+                </span>
+
+                <h2 class="section-title">
+                    Üç adımda başlayın
+                </h2>
+
+                <p class="section-subtitle">
+                    Dakikalar içinde işletmenizi dijitalleştirin
+                    ve online randevu almaya başlayın.
+                </p>
+
+            </div>
+
+            <div class="steps">
+
+                <div class="step reveal reveal-delay-1">
+
+                    <div class="step__number">
+                        01
+                    </div>
+
+                    <h4 class="step__title">
+                        Hesabınızı oluşturun
+                    </h4>
+
+                    <p class="step__desc">
+                        Ücretsiz kayıt olun. E-posta ve temel bilgilerinizle
+                        saniyeler içinde başlayın.
+                    </p>
+
+                </div>
+
+
+                <div class="step reveal reveal-delay-2">
+
+                    <div class="step__number">
+                        02
+                    </div>
+
+                    <h4 class="step__title">
+                        İşletmenizi kurun
+                    </h4>
+
+                    <p class="step__desc">
+                        İşletme bilgilerini girin, çalışanlarınızı
+                        ve hizmetlerinizi ekleyin.
+                    </p>
+
+                </div>
+
+
+                <div class="step reveal reveal-delay-3">
+
+                    <div class="step__number">
+                        03
+                    </div>
+
+                    <h4 class="step__title">
+                        Randevu almaya başlayın
+                    </h4>
+
+                    <p class="step__desc">
+                        Size özel randevu sayfanızı paylaşın ve
+                        müşterilerinizden online randevu alın.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== APPOINTMENT PREVIEW ========== -->
+
+    <section class="section section--dark preview-section"
+             id="appointment-preview">
+
+        <div class="container">
+
+            <div class="preview-container">
+
+                <div class="preview-text reveal">
+
+                    <span class="section-label">
+                        Randevu Sayfası
+                    </span>
+
+                    <h2>
+                        Müşterilerinizin göreceği sayfa
+                    </h2>
+
+                    <p>
+                        Her işletmenin kendine özel randevu sayfası olur.
+                        Müşterileriniz bu sayfadan hizmet, berber, tarih ve
+                        saat seçerek kolayca randevu alır.
+                    </p>
+
+                    <div class="feature-bullets">
+
+                        <div class="feature-bullet">
+                            <span class="icon">✓</span>
+                            Mobil uyumlu randevu sayfası
+                        </div>
+
+                        <div class="feature-bullet">
+                            <span class="icon">✓</span>
+                            Hizmet ve berber seçimi
+                        </div>
+
+                        <div class="feature-bullet">
+                            <span class="icon">✓</span>
+                            Anlık müsaitlik kontrolü
+                        </div>
+
+                        <div class="feature-bullet">
+                            <span class="icon">✓</span>
+                            Tek tıkla randevu onayı
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="appointment-mockup reveal reveal-delay-2">
+
+                    <!-- Mockup Header -->
+
+                    <div class="mockup-header">
+
+                        <div class="mockup-shop-info">
+
+                            <div class="mockup-shop-avatar">
+                                KM
+                            </div>
+
+                            <div>
+
+                                <div class="mockup-shop-name">
+                                    Kuaför Mert
+                                </div>
+
+                                <div class="mockup-shop-rating">
+
+                                    <span class="stars">
+                                        ★★★★★
+                                    </span>
+
+                                    <span>4.8</span>
+
+                                    <span style="color: var(--color-gray-600)">
+                                        •
+                                    </span>
+
+                                    <span>
+                                        124 değerlendirme
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mockup-shop-meta">
+
+                            <span>
+                                <i data-lucide="map-pin" class="icon-sm" style="vertical-align: text-bottom; margin-right: 4px;"></i> Kadıköy, İstanbul
+                            </span>
+
+                            <span>
+                                <i data-lucide="phone" class="icon-sm" style="vertical-align: text-bottom; margin-right: 4px;"></i> 0532 123 45 67
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Mockup Body -->
+
+                    <div class="mockup-body">
+
+                        <!-- Services -->
+
+                        <div class="mockup-section">
+
+                            <div class="mockup-section-title">
+                                Hizmet Seçin
+                            </div>
+
+                            <div class="mockup-services">
+
+                                <div class="mockup-service selected">
+
+                                    <span class="mockup-service__name">
+                                        Saç Kesimi
+                                    </span>
+
+                                    <div class="mockup-service__meta">
+
+                                        <span class="mockup-service__duration">
+                                            30 dk
+                                        </span>
+
+                                        <span class="mockup-service__price">
+                                            150 ₺
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mockup-service">
+
+                                    <span class="mockup-service__name">
+                                        Sakal Kesimi
+                                    </span>
+
+                                    <div class="mockup-service__meta">
+
+                                        <span class="mockup-service__duration">
+                                            20 dk
+                                        </span>
+
+                                        <span class="mockup-service__price">
+                                            100 ₺
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="mockup-service">
+
+                                    <span class="mockup-service__name">
+                                        Saç + Sakal
+                                    </span>
+
+                                    <div class="mockup-service__meta">
+
+                                        <span class="mockup-service__duration">
+                                            45 dk
+                                        </span>
+
+                                        <span class="mockup-service__price">
+                                            220 ₺
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Barbers -->
+
+                        <div class="mockup-section">
+
+                            <div class="mockup-section-title">
+                                Berber Seçin
+                            </div>
+
+                            <div class="mockup-barbers">
+
+                                <div class="mockup-barber selected">
+
+                                    <div class="avatar">
+                                        M
+                                    </div>
+
+                                    <span class="mockup-barber__name">
+                                        Mert
+                                    </span>
+
+                                </div>
+
+
+                                <div class="mockup-barber">
+
+                                    <div class="avatar">
+                                        A
+                                    </div>
+
+                                    <span class="mockup-barber__name">
+                                        Ahmet
+                                    </span>
+
+                                </div>
+
+
+                                <div class="mockup-barber">
+
+                                    <div class="avatar">
+                                        E
+                                    </div>
+
+                                    <span class="mockup-barber__name">
+                                        Emre
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Date -->
+
+                        <div class="mockup-section">
+
+                            <div class="mockup-section-title">
+                                Tarih & Saat
+                            </div>
+
+                            <div style="margin-bottom: var(--space-md);">
+
+                                <div class="form-input"
+                                     style="background: var(--color-dark-secondary); display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: var(--fs-sm); cursor: pointer;">
+
+                                     3 Eylül 2026, Perşembe
+
+                                </div>
+
+                            </div>
+
+                            <div class="mockup-times">
+
+                                <div class="mockup-time">
+                                    09:00
+                                </div>
+
+                                <div class="mockup-time">
+                                    09:30
+                                </div>
+
+                                <div class="mockup-time selected">
+                                    10:00
+                                </div>
+
+                                <div class="mockup-time">
+                                    10:30
+                                </div>
+
+                                <div class="mockup-time">
+                                    11:00
+                                </div>
+
+                                <div class="mockup-time">
+                                    11:30
+                                </div>
+
+                                <div class="mockup-time">
+                                    13:00
+                                </div>
+
+                                <div class="mockup-time">
+                                    13:30
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Mockup Footer -->
+
+                    <div class="mockup-footer">
+
+                        <button class="btn btn--primary btn--full"
+                                type="button">
+                            Randevu Al
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== DASHBOARD PREVIEW ========== -->
+
+    <section class="section" id="dashboard-preview">
+
+        <div class="container">
+
+            <div class="section-header text-center reveal">
+
+                <span class="section-label">
+                    Yönetim Paneli
+                </span>
+
+                <h2 class="section-title">
+                    İşletmenizi kontrol altında tutun
+                </h2>
+
+                <p class="section-subtitle">
+                    Modern yönetim paneliniz ile tüm randevuları,
+                    müşterileri ve gelirleri tek ekrandan takip edin.
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-mockup reveal reveal-delay-1">
+
+                <!-- Dashboard Topbar -->
+
+                <div class="dashboard-topbar">
+
+                    <div class="dashboard-topbar__left">
+
+                        <span class="dashboard-topbar__logo">
+                            Rezerve<span>App</span>
+                        </span>
+
+                        <span class="dashboard-topbar__breadcrumb">
+                            / Kuaför Mert / Dashboard
+                        </span>
+
+                    </div>
+
+                    <div class="dashboard-topbar__right">
+
+                        <span class="tag tag--success">
+                            ● Çevrimiçi
+                        </span>
+
+                        <div class="avatar">
+                            M
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Dashboard Content -->
+
+                <div class="dashboard-content">
+
+                    <!-- Stats -->
+
+                    <div class="dashboard-stats">
+
+                        <div class="stat-card">
+
+                            <div class="stat-card__icon stat-card__icon--gold">
+                                <i data-lucide="calendar-check"></i>
+                            </div>
+
+                            <div class="stat-card__value">
+                                12
+                            </div>
+
+                            <div class="stat-card__label">
+                                Bugünkü Randevular
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-card__icon stat-card__icon--gold">
+                                <i data-lucide="users"></i>
+                            </div>
+
+                            <div class="stat-card__value">
+                                847
+                            </div>
+
+                            <div class="stat-card__label">
+                                Toplam Müşteri
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-card__icon stat-card__icon--gold">
+                                <i data-lucide="scissors"></i>
+                            </div>
+
+                            <div class="stat-card__value">
+                                3
+                            </div>
+
+                            <div class="stat-card__label">
+                                Aktif Çalışan
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <div class="stat-card__icon stat-card__icon--gold">
+                                <i data-lucide="coins"></i>
+                            </div>
+
+                            <div class="stat-card__value">
+                                2.450 ₺
+                            </div>
+
+                            <div class="stat-card__label">
+                                Bugünkü Gelir
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Appointment Table -->
+
+                    <div class="dashboard-table">
+
+                        <div class="dashboard-table__header">
+
+                            <span class="dashboard-table__title">
+                                Bugünkü Randevular
+                            </span>
+
+                            <span class="tag tag--gold">
+                                12 randevu
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-table__head">
+
+                            <span>Müşteri</span>
+                            <span>Hizmet</span>
+                            <span>Saat</span>
+                            <span>Berber</span>
+                            <span>Durum</span>
+
+                        </div>
+
+
+                        <div class="dashboard-table__row">
+
+                            <span class="customer-info">
+
+                                <div class="avatar">
+                                    AY
+                                </div>
+
+                                Ali Yılmaz
+
+                            </span>
+
+                            <span>
+                                Saç Kesimi
+                            </span>
+
+                            <span>
+                                09:00
+                            </span>
+
+                            <span>
+                                Mert
+                            </span>
+
+                            <span>
+                                <span class="tag tag--success">
+                                    Tamamlandı
+                                </span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-table__row">
+
+                            <span class="customer-info">
+
+                                <div class="avatar">
+                                    MK
+                                </div>
+
+                                Mehmet Kaya
+
+                            </span>
+
+                            <span>
+                                Saç + Sakal
+                            </span>
+
+                            <span>
+                                09:30
+                            </span>
+
+                            <span>
+                                Ahmet
+                            </span>
+
+                            <span>
+                                <span class="tag tag--success">
+                                    Tamamlandı
+                                </span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-table__row">
+
+                            <span class="customer-info">
+
+                                <div class="avatar">
+                                    EÖ
+                                </div>
+
+                                Emre Özdemir
+
+                            </span>
+
+                            <span>
+                                Sakal Kesimi
+                            </span>
+
+                            <span>
+                                10:00
+                            </span>
+
+                            <span>
+                                Mert
+                            </span>
+
+                            <span>
+                                <span class="tag tag--gold">
+                                    Devam Ediyor
+                                </span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-table__row">
+
+                            <span class="customer-info">
+
+                                <div class="avatar">
+                                    CŞ
+                                </div>
+
+                                Can Şahin
+
+                            </span>
+
+                            <span>
+                                Saç Kesimi
+                            </span>
+
+                            <span>
+                                10:30
+                            </span>
+
+                            <span>
+                                Emre
+                            </span>
+
+                            <span>
+                                <span class="tag tag--dark">
+                                    Bekliyor
+                                </span>
+                            </span>
+
+                        </div>
+
+
+                        <div class="dashboard-table__row">
+
+                            <span class="customer-info">
+
+                                <div class="avatar">
+                                    BD
+                                </div>
+
+                                Burak Demir
+
+                            </span>
+
+                            <span>
+                                Saç + Sakal
+                            </span>
+
+                            <span>
+                                11:00
+                            </span>
+
+                            <span>
+                                Mert
+                            </span>
+
+                            <span>
+                                <span class="tag tag--dark">
+                                    Bekliyor
+                                </span>
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== PRICING ========== -->
+
+    <section class="section section--dark" id="pricing">
+
+        <div class="container">
+
+            <div class="section-header text-center reveal">
+
+                <span class="section-label">
+                    Paketler
+                </span>
+
+                <h2 class="section-title">
+                    İşletmenize uygun planı seçin
+                </h2>
+
+                <p class="section-subtitle">
+                    Her ölçekteki işletme için uygun fiyatlı planlar.
+                    İstediğiniz zaman yükseltin.
+                </p>
+
+            </div>
+
+
+            <div class="pricing__grid">
+
+                <!-- Free -->
+
+                <div class="pricing-card reveal reveal-delay-1">
+
+                    <div class="pricing-card__badge">
+
+                        <span class="badge badge--dark">
+                            Ücretsiz
+                        </span>
+
+                    </div>
+
+                    <h3 class="pricing-card__name">
+                        Başlangıç
+                    </h3>
+
+                    <p class="pricing-card__desc">
+                        Küçük işletmeler için temel özellikler.
+                    </p>
+
+                    <div class="price">
+
+                        <span class="price__currency">
+                            ₺
+                        </span>
+
+                        <span class="price__amount">
+                            @(Model?.FirstOrDefault(p => p.Type == RezerveApp.Models.SubscriptionPlanType.Starter)?.MonthlyPrice.ToString("0") ?? "0")
+                        </span>
+
+                        <span class="price__period">
+                            / ay
+                        </span>
+
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="check-list">
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            1 çalışan
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            5 hizmet
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Online randevu sayfası
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Aylık 50 randevu
+                        </div>
+
+                        <div class="check-list__item check-list__item--disabled">
+                            <span class="check-list__icon">✕</span>
+                            SMS bildirimleri
+                        </div>
+
+                        <div class="check-list__item check-list__item--disabled">
+                            <span class="check-list__icon">✕</span>
+                            Gelir raporları
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="btn btn--outline btn--full pricing-btn">
+                        14 Gün Ücretsiz Dene
+                    </a>
+
+                </div>
+
+
+                <!-- Basic -->
+
+                <div class="pricing-card reveal reveal-delay-2">
+
+                    <div class="pricing-card__badge">
+
+                        <span class="badge badge--gold">
+                            Popüler
+                        </span>
+
+                    </div>
+
+                    <h3 class="pricing-card__name">
+                        Basic
+                    </h3>
+
+                    <p class="pricing-card__desc">
+                        Büyüyen işletmeler için gelişmiş özellikler.
+                    </p>
+
+                    <div class="price">
+
+                        <span class="price__currency">
+                            ₺
+                        </span>
+
+                        <span class="price__amount">
+                            @(Model?.FirstOrDefault(p => p.Type == RezerveApp.Models.SubscriptionPlanType.Basic)?.MonthlyPrice.ToString("0") ?? "299")
+                        </span>
+
+                        <span class="price__period">
+                            / ay
+                        </span>
+
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="check-list">
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            2 çalışan
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Sınırsız hizmet
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Online randevu sayfası
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Sınırsız randevu
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            SMS bildirimleri
+                        </div>
+
+                        <div class="check-list__item check-list__item--disabled">
+                            <span class="check-list__icon">✕</span>
+                            Gelir raporları
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="btn btn--outline btn--full pricing-btn">
+                        14 Gün Ücretsiz Dene
+                    </a>
+
+                </div>
+
+
+                <!-- Premium -->
+
+                <div class="pricing-card reveal reveal-delay-3">
+
+                    <div class="pricing-card__badge">
+
+                        <span class="badge badge--dark">
+                            Premium
+                        </span>
+
+                    </div>
+
+                    <h3 class="pricing-card__name">
+                        Premium
+                    </h3>
+
+                    <p class="pricing-card__desc">
+                        Tüm özelliklere sınırsız erişim.
+                    </p>
+
+                    <div class="price">
+
+                        <span class="price__currency">
+                            ₺
+                        </span>
+
+                        <span class="price__amount">
+                            @(Model?.FirstOrDefault(p => p.Type == RezerveApp.Models.SubscriptionPlanType.Premium)?.MonthlyPrice.ToString("0") ?? "449")
+                        </span>
+
+                        <span class="price__period">
+                            / ay
+                        </span>
+
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="check-list">
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Sınırsız çalışan
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Sınırsız hizmet
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Online randevu sayfası
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Sınırsız randevu
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            SMS bildirimleri
+                        </div>
+
+                        <div class="check-list__item">
+                            <span class="check-list__icon">✓</span>
+                            Gelir raporları
+                        </div>
+
+                    </div>
+
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="btn btn--outline btn--full pricing-btn">
+                        14 Gün Ücretsiz Dene
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== CTA ========== -->
+
+    <section class="section cta-section">
+
+        <div class="container">
+
+            <div class="reveal">
+
+                <span class="section-label">
+                    Başlamaya Hazır mısınız?
+                </span>
+
+                <h2 class="section-title">
+                    İşletmenizi bugün dijitalleştirin.
+                </h2>
+
+                <p>
+                    Online randevu sistemi ile müşterilerinize modern
+                    bir deneyim sunun. Ücretsiz başlayın,
+                    işletmeniz büyüdükçe yükseltin.
+                </p>
+
+                <a asp-controller="Account"
+                   asp-action="Register"
+                   class="btn btn--primary btn--lg">
+                    Ücretsiz Başla
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========== FOOTER ========== -->
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <div class="footer__inner">
+
+                <div class="footer__brand">
+
+                    <div class="nav__logo" style="justify-content: center; text-decoration: none; margin-bottom: 1rem;">
+                        <img src="~/images/logo_dark.jpg" alt="RezerveApp Logo" style="height: 40px; object-fit: contain;" />
+                    </div>
+
+                    <p class="footer__desc">
+                        Berber ve kuaför işletmeleri için profesyonel
+                        online randevu yönetim sistemi.
+                    </p>
+
+                </div>
+
+
+                <div class="footer__column">
+
+                    <h4>
+                        Ürün
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="#features">
+                                Özellikler
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#pricing">
+                                Paketler
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#how-it-works">
+                                Nasıl Çalışır
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <div class="footer__column">
+
+                    <h4>
+                        Hesap
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a asp-controller="Account"
+                               asp-action="Login">
+                                Giriş Yap
+                            </a>
+                        </li>
+
+                        <li>
+                            <a asp-controller="Account"
+                               asp-action="Register">
+                                Kayıt Ol
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+
+                <div class="footer__column">
+
+                    <h4>
+                        İletişim
+                    </h4>
+
+                    <ul>
+
+                        <li>
+                            <a href="mailto:info@RezerveApp.com">
+                                info@RezerveApp.com
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                Destek
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer__bottom">
+
+                <span class="footer__copyright">
+                    © 2026 RezerveApp. Tüm hakları saklıdır.
+                </span>
+
+                <div class="footer__bottom-links">
+
+                    <a href="#">
+                        Gizlilik Politikası
+                    </a>
+
+                    <a href="#">
+                        Kullanım Koşulları
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- Main JavaScript -->
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="~/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+
+</body>
+</html>
+

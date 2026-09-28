@@ -1,0 +1,597 @@
+@{
+    Layout = "_BusinessLayout";
+
+    ViewBag.BusinessName = ViewBag.BusinessName ?? "Atölye Berber";
+    ViewBag.PageEyebrow = "Genel Bakış";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.ActiveNav = "Dashboard";
+
+    var bookingUrl = !string.IsNullOrWhiteSpace(ViewBag.BusinessSlug as string)
+        ? $"{Context.Request.Scheme}://{Context.Request.Host}/Booking/{ViewBag.BusinessSlug}"
+        : "";
+}
+
+<div class="welcome-banner">
+    <div>
+        <h2>Hoş geldiniz, @ViewBag.BusinessName</h2>
+        <p>İşletmenizin bugünkü durumuna genel bir bakış.</p>
+    </div>
+
+    <a asp-controller="Business"
+       asp-action="CreateAppointment"
+       class="btn btn-gold">
+        <i data-lucide="plus-circle" style="width:18px; height:18px; margin-right:6px;"></i>
+        Yeni Randevu
+    </a>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(bookingUrl))
+{
+    <div class="card" style="margin-bottom:22px;">
+        <div class="card-header">
+            <div>
+                <h3>Müşteri Randevu Linkiniz</h3>
+                <div class="card-header-sub">
+                    Bu linki müşterilerinizle paylaşabilirsiniz.
+                </div>
+            </div>
+
+            <a href="@bookingUrl"
+               target="_blank"
+               rel="noopener"
+               class="btn btn-ghost btn-sm">
+                Randevu Sayfasını Gör
+            </a>
+        </div>
+
+        <div style="
+                display:flex;
+                gap:10px;
+                align-items:center;
+                flex-wrap:wrap;
+                padding:0 20px 20px;">
+
+            <input type="text"
+                   id="bookingLink"
+                   value="@bookingUrl"
+                   readonly
+                   class="input"
+                   style="flex:1; min-width:260px;" />
+
+            <button type="button"
+                    class="btn btn-gold"
+                    id="copyBookingLink">
+                Linki Kopyala
+            </button>
+        </div>
+    </div>
+}
+
+<div class="stat-grid">
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">Bugünkü Randevular</div>
+            <div class="stat-icon">
+                <i data-lucide="calendar" style="width:24px; height:24px;"></i>
+            </div>
+        </div>
+        <div class="stat-value">@(ViewBag.TodayAppointmentsCount ?? 0)</div>
+        <div class="stat-delta flat">Bugünkü toplam randevu</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">Bekleyen Randevular</div>
+            <div class="stat-icon">
+                <i data-lucide="clock" style="width:24px; height:24px;"></i>
+            </div>
+        </div>
+        <div class="stat-value">@(ViewBag.PendingAppointmentsCount ?? 0)</div>
+        <div class="stat-delta down">Onay bekliyor</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">Hizmetler</div>
+            <div class="stat-icon">
+                <i data-lucide="scissors" style="width:24px; height:24px;"></i>
+            </div>
+        </div>
+        <div class="stat-value">@(ViewBag.ServicesCount ?? 0)</div>
+        <div class="stat-delta flat">Aktif hizmet sayısı</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">Çalışanlar</div>
+            <div class="stat-icon">
+                <i data-lucide="users" style="width:24px; height:24px;"></i>
+            </div>
+        </div>
+        <div class="stat-value">@(ViewBag.EmployeesCount ?? 0)</div>
+        <div class="stat-delta flat">Aktif çalışan sayısı</div>
+    </div>
+
+</div>
+
+<div class="stat-grid" style="margin-top:18px;">
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">Günlük Ciro</div>
+        </div>
+        <div class="stat-value">
+            @(((decimal)(ViewBag.DailyRevenue ?? 0m)).ToString("N2")) ₺
+        </div>
+        <div class="stat-delta flat">
+            Bugün onaylanan/tamamlanan randevular
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">En Çok Tercih Edilen Hizmet</div>
+        </div>
+        <div class="stat-value" style="font-size:19px;">
+            @(ViewBag.TopServiceName ?? "—")
+        </div>
+        <div class="stat-delta flat">
+            Son 90 günde @(ViewBag.TopServiceCount ?? 0) randevu
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">En Verimli Personel</div>
+        </div>
+        <div class="stat-value" style="font-size:19px;">
+            @(ViewBag.TopEmployeeName ?? "—")
+        </div>
+        <div class="stat-delta flat">
+            Son 90 günde
+            @(((decimal)(ViewBag.TopEmployeeRevenue ?? 0m)).ToString("N0")) ₺ ciro
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-label">Müşteri Memnuniyeti</div>
+            <div class="stat-icon" style="color:var(--gold);">
+                <i data-lucide="star" style="width:24px; height:24px; fill:var(--gold);"></i>
+            </div>
+        </div>
+        <div class="stat-value" style="display:flex; align-items:center; gap:8px;">
+            @(((double)(ViewBag.AverageRating ?? 0.0)).ToString("0.0"))
+            <span style="font-size:14px; color:var(--text-muted); font-weight:normal;">/ 5.0</span>
+        </div>
+        <div class="stat-delta flat">Toplam @(ViewBag.ReviewCount ?? 0) değerlendirme</div>
+    </div>
+
+</div>
+
+<!-- CHARTS SECTION -->
+<div class="stat-grid" style="grid-template-columns: 2fr 1fr; margin-top:22px;">
+    <div class="card" style="display:flex; flex-direction:column;">
+        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <h3 id="revenueChartTitle">Aylık Ciro Eğilimi</h3>
+                <div class="card-header-sub" id="revenueChartSubtitle">Yükleniyor...</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button id="btnPrevPeriod" class="btn btn-ghost btn-sm" style="padding:4px 8px;">&lt;</button>
+                <div class="chart-filters" style="display:flex; gap:5px; background:rgba(255,255,255,0.03); padding:4px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+                    <button class="btn-filter active" data-period="monthly" style="background:#1a1a1a; color:#fff; border:none; padding:4px 12px; border-radius:6px; font-size:12px; cursor:pointer;">Aylık</button>
+                    <button class="btn-filter" data-period="daily" style="background:transparent; color:#888; border:none; padding:4px 12px; border-radius:6px; font-size:12px; cursor:pointer;">Günlük</button>
+                    <button class="btn-filter" data-period="yearly" style="background:transparent; color:#888; border:none; padding:4px 12px; border-radius:6px; font-size:12px; cursor:pointer;">Yıllık</button>
+                </div>
+                <button id="btnNextPeriod" class="btn btn-ghost btn-sm" style="padding:4px 8px;" disabled>&gt;</button>
+            </div>
+        </div>
+        <div style="flex:1; padding: 20px; position: relative; height:300px;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+
+    <div class="card" style="display:flex; flex-direction:column;">
+        <div class="card-header">
+            <div>
+                <h3>Randevu Dağılımı</h3>
+                <div class="card-header-sub">Son 30 gündeki durumlar</div>
+            </div>
+        </div>
+        <div style="flex:1; padding: 20px; position: relative; height:300px; display:flex; justify-content:center; align-items:center;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+
+    <div class="card-header">
+        <div>
+            <h3>Bugünün Randevuları</h3>
+            <div class="card-header-sub">
+                @DateTime.Now.ToString("dd MMMM yyyy, dddd")
+            </div>
+        </div>
+
+        <a asp-controller="Business"
+           asp-action="Appointments"
+           class="btn btn-ghost btn-sm">
+            Tümünü gör
+        </a>
+    </div>
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>Saat</th>
+                    <th>Müşteri</th>
+                    <th>Hizmet</th>
+                    <th>Berber</th>
+                    <th>Durum</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @{
+                    var todays = ViewBag.TodayAppointments as System.Collections.IEnumerable
+                    ?? new object[0];
+
+                    var todaysList = todays.Cast<object>().ToList();
+                }
+
+                @if (!todaysList.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="cell-muted">
+                            Bugün için randevu bulunmuyor.
+                        </td>
+                    </tr>
+                }
+
+                @foreach (dynamic a in todaysList)
+                {
+                    <tr>
+                        <td class="cell-primary">@a.Time</td>
+                        <td>@a.CustomerName</td>
+                        <td class="cell-muted">@a.ServiceName</td>
+                        <td class="cell-muted">@a.EmployeeName</td>
+                        <td>
+                            @if (a.Status == "confirmed")
+                            {
+                                <span class="badge badge-success">Onaylandı</span>
+                            }
+                            else if (a.Status == "pending")
+                            {
+                                <span class="badge badge-gold">Bekliyor</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger">İptal</span>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="card" style="margin-top:22px;">
+
+    <div class="card-header">
+        <div>
+            <h3>Yaklaşan Randevular</h3>
+            <div class="card-header-sub">Sıradaki 6 randevu</div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                    <th>Müşteri</th>
+                    <th>Hizmet</th>
+                    <th>Berber</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @{
+                    var upcoming =
+                    (ViewBag.UpcomingAppointments as List<RezerveApp.Models.Appointment>)
+                    ?? new List<RezerveApp.Models.Appointment>();
+                }
+
+                @if (!upcoming.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="cell-muted">
+                            Yaklaşan randevu bulunmuyor.
+                        </td>
+                    </tr>
+                }
+
+                @foreach (var a in upcoming)
+                {
+                    <tr>
+                        <td class="cell-primary">
+                            @a.AppointmentDate.ToString("dd.MM.yyyy")
+                        </td>
+
+                        <td class="cell-muted">
+                            @a.StartTime.ToString("hh\\:mm")
+                        </td>
+
+                        <td>@a.CustomerName</td>
+
+                        <td class="cell-muted">
+                            @a.Service?.Name
+                        </td>
+
+                        <td class="cell-muted">
+                            @a.Employee?.Name
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<div class="section-head">
+    <h3>Hızlı İşlemler</h3>
+</div>
+
+<div class="quick-actions">
+
+    <a class="quick-action"
+       asp-controller="Business"
+       asp-action="Appointments">
+
+        <div class="quick-action-icon">
+            <i data-lucide="calendar-plus" style="width:24px; height:24px;"></i>
+        </div>
+
+        <div>
+            <div class="quick-action-title">Yeni Randevu Ekle</div>
+            <div class="quick-action-sub">Manuel randevu oluştur</div>
+        </div>
+
+    </a>
+
+    <a class="quick-action"
+       asp-controller="Business"
+       asp-action="Services">
+
+        <div class="quick-action-icon">
+            <i data-lucide="scissors" style="width:24px; height:24px;"></i>
+        </div>
+
+        <div>
+            <div class="quick-action-title">Hizmet Ekle</div>
+            <div class="quick-action-sub">Yeni bir hizmet tanımla</div>
+        </div>
+
+    </a>
+
+    <a class="quick-action"
+       asp-controller="Business"
+       asp-action="Employees">
+
+        <div class="quick-action-icon">
+            <i data-lucide="user-plus" style="width:24px; height:24px;"></i>
+        </div>
+
+        <div>
+            <div class="quick-action-title">Çalışan Ekle</div>
+            <div class="quick-action-sub">Ekibinize yeni üye ekleyin</div>
+        </div>
+
+    </a>
+
+    <a class="quick-action"
+       asp-controller="Business"
+       asp-action="WorkingHours">
+
+        <div class="quick-action-icon">
+            <i data-lucide="clock" style="width:24px; height:24px;"></i>
+        </div>
+
+        <div>
+            <div class="quick-action-title">Saatleri Düzenle</div>
+            <div class="quick-action-sub">Çalışma saatlerini güncelle</div>
+        </div>
+
+    </a>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctxRevenue = document.getElementById('revenueChart');
+            let revenueChart = null;
+            let currentPeriod = 'monthly';
+            let currentOffset = 0;
+
+            if (ctxRevenue) {
+                const gradient = ctxRevenue.getContext('2d').createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(213, 174, 97, 0.4)');
+                gradient.addColorStop(1, 'rgba(213, 174, 97, 0.0)');
+
+                revenueChart = new Chart(ctxRevenue, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Ciro (₺)',
+                            data: [],
+                            borderColor: '#d5ae61',
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#121212',
+                            pointBorderColor: '#d5ae61',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false, drawBorder: false },
+                                ticks: { color: '#888' }
+                            },
+                            y: {
+                                grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+                                ticks: { color: '#888', callback: function(value) { return value + ' ₺'; } }
+                            }
+                        }
+                    }
+                });
+
+                function loadChartData() {
+                    fetch(`/Business/GetRevenueChartData?period=${currentPeriod}&offset=${currentOffset}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            document.getElementById('revenueChartTitle').innerText = data.title;
+                            document.getElementById('revenueChartSubtitle').innerText = data.subtitle;
+                            
+                            revenueChart.data.labels = data.labels;
+                            revenueChart.data.datasets[0].data = data.data;
+                            revenueChart.update();
+                            
+                            document.getElementById('btnNextPeriod').disabled = (currentOffset === 0);
+                        })
+                        .catch(err => console.error("Chart verisi alınamadı", err));
+                }
+
+                // Initial Load
+                loadChartData();
+
+                // Filter tabs
+                document.querySelectorAll('.btn-filter').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.btn-filter').forEach(b => {
+                            b.classList.remove('active');
+                            b.style.background = 'transparent';
+                            b.style.color = '#888';
+                        });
+                        this.classList.add('active');
+                        this.style.background = '#1a1a1a';
+                        this.style.color = '#fff';
+
+                        currentPeriod = this.getAttribute('data-period');
+                        currentOffset = 0; // Reset offset on tab change
+                        loadChartData();
+                    });
+                });
+
+                // Prev / Next logic
+                document.getElementById('btnPrevPeriod').addEventListener('click', function() {
+                    currentOffset--;
+                    loadChartData();
+                });
+                
+                document.getElementById('btnNextPeriod').addEventListener('click', function() {
+                    if (currentOffset < 0) {
+                        currentOffset++;
+                        loadChartData();
+                    }
+                });
+            }
+
+            // Randevu Durum Dağılımı (Doughnut Chart)
+            const ctxStatus = document.getElementById('statusChart');
+            if (ctxStatus) {
+                const statusLabels = @Html.Raw(ViewBag.StatusLabels ?? "[]");
+                const statusData = @Html.Raw(ViewBag.StatusData ?? "[]");
+
+                new Chart(ctxStatus, {
+                    type: 'doughnut',
+                    data: {
+                        labels: statusLabels,
+                        datasets: [{
+                            data: statusData,
+                            backgroundColor: [
+                                '#4ade80', // Onaylandı (Green)
+                                '#d5ae61', // Bekliyor (Gold)
+                                '#3b82f6', // Tamamlandı (Blue)
+                                '#f87171'  // İptal (Red)
+                            ],
+                            borderWidth: 0,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#aaa',
+                                    padding: 20,
+                                    font: { size: 12, family: "'Inter', sans-serif" },
+                                    usePointStyle: true,
+                                    boxWidth: 8
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Kopyalama Butonu
+            const copyButton = document.getElementById("copyBookingLink");
+            const bookingLink = document.getElementById("bookingLink");
+            
+            if (copyButton && bookingLink) {
+                copyButton.addEventListener("click", async function () {
+                    try {
+                        bookingLink.select();
+                        bookingLink.setSelectionRange(0, 99999);
+                        await navigator.clipboard.writeText(bookingLink.value);
+                        
+                        const originalText = copyButton.textContent;
+                        copyButton.textContent = "Kopyalandı ✓";
+                        
+                        setTimeout(function () {
+                            copyButton.textContent = originalText;
+                        }, 1800);
+                    } catch (e) {
+                        console.error("Link kopyalanamadı:", e);
+                    }
+                });
+            }
+        });
+    </script>
+}

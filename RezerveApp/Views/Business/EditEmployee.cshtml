@@ -1,0 +1,36 @@
+﻿@model RezerveApp.Models.Employee
+
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Çalışanlar";
+    ViewBag.PageTitle = "Çalışanı Düzenle";
+    ViewBag.PageSubtitle = Model.Name;
+    ViewBag.ActiveNav = "Employees";
+}
+
+<form asp-controller="Business" asp-action="EditEmployee" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card card-pad">
+        <div class="form-grid" style="grid-template-columns: 2fr 1fr;">
+            <div class="field">
+                <label for="name">Ad Soyad</label>
+                <input class="input" type="text" id="name" name="name" value="@Model.Name" required />
+            </div>
+            <div class="field">
+                <label for="isActive">Durum</label>
+                <select class="input" id="isActive" name="isActive">
+                    <option value="true" selected="@Model.IsActive">Aktif</option>
+                    <option value="false" selected="@(!Model.IsActive)">Pasif</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <a asp-controller="Business" asp-action="Employees" class="btn btn-outline">Vazgeç</a>
+            <button type="submit" class="btn btn-gold">Kaydet</button>
+        </div>
+    </div>
+</form>

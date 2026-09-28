@@ -1,0 +1,802 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5B930CBD-5166-4A63-9B67-06DDE01B9862}|BerberSaaS.E2ETests\\BerberSaaS.E2ETests.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas.e2etests\\tests\\authtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B930CBD-5166-4A63-9B67-06DDE01B9862}|BerberSaaS.E2ETests\\BerberSaaS.E2ETests.csproj|solutionrelative:berbersaas.e2etests\\tests\\authtests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\booking\\success.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\booking\\success.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\booking\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\booking\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\calendar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\calendar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\holidays.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\holidays.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:2:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:2:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:1:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:1:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\shared\\_businesslayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\shared\\_businesslayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\shared\\_bookinglayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\shared\\_bookinglayout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\controllers\\businesscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\controllers\\businesscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\pending.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\pending.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\admin\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\admin\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\OneDrive\\Desktop\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194528_AddPaymentFields.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\models\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\models\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\models\\paymentstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\models\\paymentstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\models\\businesssubscription.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\models\\businesssubscription.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\navigation.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\navigation.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\services.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\services.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\account\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\js\\create-business.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\js\\create-business.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\js\\address-cascade.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\js\\address-cascade.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\js\\business.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\js\\business.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\models\\business.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\models\\business.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\js\\main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\js\\main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\variables.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\variables.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\landing.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\landing.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\components.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\components.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\base.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\base.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\auth.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\auth.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\services\\subscriptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\services\\subscriptionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\employees.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\employees.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\SQLQuery1.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SQLQuery1.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\js\\calendar.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\js\\calendar.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\calendar.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\calendar.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\views\\business\\employeeworkinghours.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\views\\business\\employeeworkinghours.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\css\\booking.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\css\\booking.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|c:\\users\\asus\\onedrive\\desktop\\rezerveapp\\berbersaas\\wwwroot\\js\\booking.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{E7620570-3806-4F26-BF99-F1DD28FA4DB8}|BerberSaaS\\BerberSaaS.csproj|solutionrelative:berbersaas\\wwwroot\\js\\booking.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Asus\\OneDrive\\Desktop\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194804_AddPaymentFields.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthTests.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS.E2ETests\\Tests\\AuthTests.cs",
+              "RelativeDocumentMoniker": "BerberSaaS.E2ETests\\Tests\\AuthTests.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS.E2ETests\\Tests\\AuthTests.cs",
+              "RelativeToolTip": "BerberSaaS.E2ETests\\Tests\\AuthTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-06T18:26:05.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Holidays.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Holidays.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Holidays.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Holidays.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Holidays.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-06T17:43:32.759Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Profile.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAgwBwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-05T21:32:52.903Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Home\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAABwFAAAAAAAAAAAAADgFAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T15:12:11.1Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Calendar.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Calendar.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Calendar.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Calendar.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Calendar.cshtml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAIwDkAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T14:07:31.598Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Create.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Create.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Create.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Create.cshtml",
+              "ViewState": "AgIAAA8BAAAAAAAAAAAIwK0BAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T17:49:08.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Booking\\Index.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Booking\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Booking\\Index.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Booking\\Index.cshtml",
+              "ViewState": "AgIAAEYCAAAAAAAAAAAAAKIAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T12:44:57.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Success.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Booking\\Success.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Booking\\Success.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Booking\\Success.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Booking\\Success.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADYBAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T13:12:44.098Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Admin\\Index.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Admin\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Admin\\Index.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Admin\\Index.cshtml",
+              "ViewState": "AgIAAKQAAAAAAAAAAAAIwMcBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T14:55:35.873Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Profile.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Profile.cshtml",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAQwDcAAAB3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-05T21:15:33.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "_BookingLayout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Shared\\_BookingLayout.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Shared\\_BookingLayout.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Shared\\_BookingLayout.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Shared\\_BookingLayout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T13:18:21.363Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "BerberSaaS\\Controllers\\AccountController.cs",
+              "ViewState": "AgIAANQAAAAAAAAAAAAQwOQAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T16:58:42.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Microsoft.Common.CurrentVersion.targets",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ViewState": "AgIAAKcUAAAAAAAAAAAewBEVAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-09-04T18:49:46.229Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "_BusinessLayout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Shared\\_BusinessLayout.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Shared\\_BusinessLayout.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Shared\\_BusinessLayout.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Shared\\_BusinessLayout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T18:45:08.612Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "BerberSaaS\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAMcCAAAAAAAAAAAiwN4CAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T14:48:02.83Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "20260903194804_AddPaymentFields.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194804_AddPaymentFields.cs",
+              "RelativeDocumentMoniker": "..\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194804_AddPaymentFields.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194804_AddPaymentFields.cs",
+              "RelativeToolTip": "..\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194804_AddPaymentFields.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAiwCQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T19:48:05.076Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Admin\\Details.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Admin\\Details.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Admin\\Details.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Admin\\Details.cshtml",
+              "ViewState": "AgIAAJQCAAAAAAAAAAAYwLICAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T20:01:07.83Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Pending.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Pending.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Pending.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Pending.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Pending.cshtml",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAYwEwAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T20:27:48.782Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Index.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Index.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Index.cshtml",
+              "ViewState": "AgIAAJMBAAAAAAAAAAAwwMIBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T20:39:27.367Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "BusinessController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\BusinessController.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Controllers\\BusinessController.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\BusinessController.cs",
+              "RelativeToolTip": "BerberSaaS\\Controllers\\BusinessController.cs",
+              "ViewState": "AgIAAKoFAAAAAAAAAAAwwLsFAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T12:51:27.104Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "20260903194528_AddPaymentFields.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194528_AddPaymentFields.cs",
+              "RelativeDocumentMoniker": "..\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194528_AddPaymentFields.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194528_AddPaymentFields.cs",
+              "RelativeToolTip": "..\\BerberSaaSson\\BerberSaaS\\Migrations\\20260903194528_AddPaymentFields.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T19:45:28.991Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Enums.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\Enums.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Models\\Enums.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\Enums.cs",
+              "RelativeToolTip": "BerberSaaS\\Models\\Enums.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAkwCIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T19:30:29.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "PaymentStatus.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\PaymentStatus.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Models\\PaymentStatus.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\PaymentStatus.cs",
+              "RelativeToolTip": "BerberSaaS\\Models\\PaymentStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T19:25:44.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "BusinessSubscription.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\BusinessSubscription.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Models\\BusinessSubscription.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\BusinessSubscription.cs",
+              "RelativeToolTip": "BerberSaaS\\Models\\BusinessSubscription.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAswBkAAABJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T19:25:16.234Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAwwEwAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T18:44:08.3Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Account\\Register.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Account\\Register.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Account\\Register.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Account\\Register.cshtml",
+              "ViewState": "AgIAADcBAAAAAAAAAAAIwFQBAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T17:24:25.564Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "navigation.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\navigation.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\navigation.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\navigation.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\navigation.css",
+              "ViewState": "AgIAACwBAAAAAAAAAAAqwE4BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T15:54:29.124Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "create-business.js",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\create-business.js",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\js\\create-business.js",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\create-business.js",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\js\\create-business.js",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAIwKEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-09-03T17:54:48.451Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Services.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Services.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Services.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Services.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Services.cshtml",
+              "ViewState": "AgIAADkAAAAAAAAAAAAIwEkAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T14:06:21.227Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "address-cascade.js",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\address-cascade.js",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\js\\address-cascade.js",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\address-cascade.js",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\js\\address-cascade.js",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAIwCsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-09-03T17:54:13.29Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Account\\Login.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAkwH4AAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T16:59:10.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "business.js",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\business.js",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\js\\business.js",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\business.js",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\js\\business.js",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAwwCIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-09-03T17:53:21.889Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Business.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\Business.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Models\\Business.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\Business.cs",
+              "RelativeToolTip": "BerberSaaS\\Models\\Business.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAwBgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T17:42:20.754Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Models\\ApplicationUser.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Models\\ApplicationUser.cs",
+              "RelativeToolTip": "BerberSaaS\\Models\\ApplicationUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T17:16:18.738Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "main.js",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\main.js",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\js\\main.js",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\main.js",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\js\\main.js",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAIwIMAAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-09-03T16:00:33.838Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "variables.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\variables.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\variables.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\variables.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\variables.css",
+              "ViewState": "AgIAADsAAAAAAAAAAAAqwFoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T15:54:52.518Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "landing.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\landing.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\landing.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\landing.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\landing.css",
+              "ViewState": "AgIAAPYCAAAAAAAAAAAqwBUDAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T15:54:11.429Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "components.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\components.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\components.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\components.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\components.css",
+              "ViewState": "AgIAAAUBAAAAAAAAAAAqwCQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T15:53:51.547Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "base.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\base.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\base.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\base.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\base.css",
+              "ViewState": "AgIAAAgBAAAAAAAAAAAqwCcBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T15:53:32.115Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "auth.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\auth.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\auth.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\auth.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\auth.css",
+              "ViewState": "AgIAAIYBAAAAAAAAAAAqwKUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T15:53:11.879Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "BerberSaaS\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAA7wB8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T15:11:04.442Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "SQLQuery1.sql",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\SQLQuery1.sql",
+              "RelativeDocumentMoniker": "SQLQuery1.sql",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\SQLQuery1.sql",
+              "RelativeToolTip": "SQLQuery1.sql",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-09-03T14:24:21.921Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "SubscriptionService.cs",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Services\\SubscriptionService.cs",
+              "RelativeDocumentMoniker": "BerberSaaS\\Services\\SubscriptionService.cs",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Services\\SubscriptionService.cs",
+              "RelativeToolTip": "BerberSaaS\\Services\\SubscriptionService.cs",
+              "ViewState": "AgIAAHYAAAAAAAAAAAAIwJMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-03T14:22:57.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "calendar.js",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\calendar.js",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\js\\calendar.js",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\calendar.js",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\js\\calendar.js",
+              "ViewState": "AgIAACsFAAAAAAAAAAAIwD4FAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-09-03T14:11:38.368Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "calendar.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\calendar.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\calendar.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\calendar.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\calendar.css",
+              "ViewState": "AgIAAC0BAAAAAAAAAAAqwEwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T14:11:25.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "Employees.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Employees.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\Employees.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\Employees.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\Employees.cshtml",
+              "ViewState": "AgIAANIBAAAAAAAAAAAIwOwBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T14:01:25.199Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "EmployeeWorkingHours.cshtml",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\EmployeeWorkingHours.cshtml",
+              "RelativeDocumentMoniker": "BerberSaaS\\Views\\Business\\EmployeeWorkingHours.cshtml",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\Views\\Business\\EmployeeWorkingHours.cshtml",
+              "RelativeToolTip": "BerberSaaS\\Views\\Business\\EmployeeWorkingHours.cshtml",
+              "ViewState": "AgIAAH0CAAAAAAAAAAAIwJUCAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-09-03T13:34:09.358Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "booking.js",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\booking.js",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\js\\booking.js",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\js\\booking.js",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\js\\booking.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAP8AAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-09-03T12:51:01.311Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "booking.css",
+              "DocumentMoniker": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\booking.css",
+              "RelativeDocumentMoniker": "BerberSaaS\\wwwroot\\css\\booking.css",
+              "ToolTip": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\BerberSaaS\\wwwroot\\css\\booking.css",
+              "RelativeToolTip": "BerberSaaS\\wwwroot\\css\\booking.css",
+              "ViewState": "AgIAAKUDAAAAAAAAAAAqwMcDAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-09-03T12:45:32.133Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

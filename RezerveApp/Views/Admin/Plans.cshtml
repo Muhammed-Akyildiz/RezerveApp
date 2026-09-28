@@ -1,0 +1,109 @@
+﻿@model IEnumerable<RezerveApp.Models.SubscriptionPlan>
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = "Paketler (Planlar)";
+    ViewBag.PageEyebrow = "YÖNETİM";
+    ViewBag.PageSubtitle = "Sistemdeki abonelik paketlerini ve limitlerini yönetin";
+    ViewBag.ActiveNav = "Plans";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="background:rgba(90,138,94,0.15); border:1px solid #5a8a5e; color:#8fd493; padding:16px; border-radius:10px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+        <i data-lucide="check-circle" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span>@TempData["SuccessMessage"]</span>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div style="background:rgba(200,60,60,0.12); border:1px solid rgba(200,60,60,0.4); color:#f87171; padding:16px; border-radius:10px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+        <i data-lucide="alert-circle" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span>@TempData["ErrorMessage"]</span>
+    </div>
+}
+
+<div class="card card-pad">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="font-size:16px; font-weight:600;">Mevcut Paketler</h2>
+        <a asp-action="CreatePlan" class="btn btn-primary btn-sm">
+            <i data-lucide="plus" style="width:16px;height:16px;margin-right:6px;"></i> Yeni Paket Ekle
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Paket Adı</th>
+                    <th>Tür</th>
+                    <th>Aylık / Yıllık Fiyat</th>
+                    <th>Limitler</th>
+                    <th>Durum</th>
+                    <th style="text-align: right;">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var plan in Model)
+                {
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600;">@plan.Name</div>
+                            <div style="font-size: 12px; color: var(--color-gray-400);">ID: @plan.Id</div>
+                        </td>
+                        <td>
+                            @switch (plan.Type)
+                            {
+                                case RezerveApp.Models.SubscriptionPlanType.Basic:
+                                    <span class="badge" style="background:rgba(255,255,255,0.1); color:#fff;">Temel</span>
+                                    break;
+                                case RezerveApp.Models.SubscriptionPlanType.Premium:
+                                    <span class="badge" style="background:rgba(210,170,89,0.15); color:var(--color-gold);">Premium</span>
+                                    break;
+                                case RezerveApp.Models.SubscriptionPlanType.Starter:
+                                    <span class="badge" style="background:rgba(143,212,147,0.15); color:#8fd493;">Deneme (Starter)</span>
+                                    break;
+                            }
+                        </td>
+                        <td>
+                            <div style="font-weight: 500;">@plan.MonthlyPrice.ToString("C") <span style="font-size:12px; font-weight:normal; color:#888;">/ay</span></div>
+                            <div style="font-weight: 500; font-size:13px; color:var(--color-gray-300);">@plan.YearlyPrice.ToString("C") <span style="font-size:11px; font-weight:normal; color:#888;">/yıl</span></div>
+                        </td>
+                        <td>
+                            <div style="font-size: 13px; margin-bottom: 4px;">
+                                <i data-lucide="users" style="width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:4px;color:#888;"></i>
+                                @(plan.MaxEmployees.HasValue ? plan.MaxEmployees.Value.ToString() : "Sınırsız") Çalışan
+                            </div>
+                            <div style="font-size: 13px;">
+                                <i data-lucide="scissors" style="width:14px;height:14px;display:inline-block;vertical-align:-2px;margin-right:4px;color:#888;"></i>
+                                @(plan.MaxServices.HasValue ? plan.MaxServices.Value.ToString() : "Sınırsız") Hizmet
+                            </div>
+                        </td>
+                        <td>
+                            @if (plan.IsActive)
+                            {
+                                <span class="badge badge-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge" style="background:rgba(200,60,60,0.15); color:#f87171;">Pasif</span>
+                            }
+                        </td>
+                        <td style="text-align: right;">
+                            <a asp-action="EditPlan" asp-route-id="@plan.Id" class="btn btn-outline btn-sm" style="margin-right: 8px;">
+                                Düzenle
+                            </a>
+                            <form asp-action="DeletePlan" asp-route-id="@plan.Id" method="post" style="display:inline;"
+                                  onsubmit="event.preventDefault(); Swal.fire({ title: 'Silmek İstediğinize Emin Misiniz?', text: 'Bu planı silmek üzeresiniz. Bu işlem geri alınamaz.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Evet, Sil!', cancelButtonText: 'İptal' }).then((result) => { if (result.isConfirmed) { this.submit(); } });">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger-outline btn-sm">
+                                    Sil
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,499 @@
+@{
+    Layout = "_AdminLayout";
+
+    ViewBag.PageEyebrow = "İşletmeler";
+    ViewBag.PageTitle = "Yeni İşletme";
+    ViewBag.PageSubtitle = "Sisteme yeni bir berber işletmesi ekleyin";
+    ViewBag.ActiveNav = "Create";
+}
+
+<form asp-controller="Admin"
+      asp-action="Create"
+      method="post"
+      enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="create-business-grid">
+
+        <!-- SOL TARAF -->
+
+        <div class="card card-pad">
+
+            <!-- İŞLETME BİLGİLERİ -->
+
+            <div class="field">
+
+                <label for="Name">
+                    İşletme Adı
+                </label>
+
+                <input class="input"
+                       type="text"
+                       id="Name"
+                       name="Name"
+                       placeholder="Örn. Atölye Berber"
+                       required />
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- TELEFON -->
+
+                <div class="field">
+
+                    <label for="Phone">
+                        Telefon
+                    </label>
+
+                    <div class="input-with-icon">
+
+                        <svg class="icon-sm"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor">
+
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+                                     19.79 19.79 0 0 1-8.63-3.07
+                                     19.5 19.5 0 0 1-6-6
+                                     19.79 19.79 0 0 1-3.07-8.67
+                                     A2 2 0 0 1 4.11 2h3
+                                     a2 2 0 0 1 2 1.72
+                                     c.127.96.361 1.903.7 2.81
+                                     a2 2 0 0 1-.45 2.11L8.09 9.91
+                                     a16 16 0 0 0 6 6l1.27-1.27
+                                     a2 2 0 0 1 2.11-.45
+                                     c.907.339 1.85.573 2.81.7
+                                     A2 2 0 0 1 22 16.92z" />
+
+                        </svg>
+
+                        <input class="input"
+                               type="tel"
+                               id="Phone"
+                               name="Phone"
+                               maxlength="11"
+                               minlength="11"
+                               pattern="[0-9]{11}"
+                               inputmode="numeric"
+                               placeholder="05320000000"
+                               required />
+
+                    </div>
+
+                    <div class="hint">
+                        Telefon numarası 11 haneli olmalıdır.
+                    </div>
+
+                </div>
+
+
+                <!-- SLUG -->
+
+                <div class="field">
+
+                    <label for="Slug">
+                        Slug (URL adresi)
+                    </label>
+
+                    <div class="input-with-icon">
+
+                        <svg class="icon-sm"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor">
+
+                            <path d="M10 13a5 5 0 0 0
+                                     7.54.54l3-3a5 5 0 0 0
+                                     -7.07-7.07l-1.72 1.71" />
+
+                            <path d="M14 11a5 5 0 0 0
+                                     -7.54-.54l-3 3a5 5 0 0 0
+                                     7.07 7.07l1.71-1.71" />
+
+                        </svg>
+
+                        <input class="input"
+                               type="text"
+                               id="Slug"
+                               name="Slug"
+                               placeholder="atolye-berber"
+                               required />
+
+                    </div>
+
+                    <div class="hint">
+                        Müşteri randevu adresi: /Booking/atolye-berber
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADRES -->
+
+            <div class="field">
+
+                <label for="Address">
+                    Açık Adres
+                </label>
+
+                <textarea class="input"
+                          id="Address"
+                          name="Address"
+                          rows="3"
+                          placeholder="Cadde, sokak, bina no, daire"
+                          required></textarea>
+
+            </div>
+
+
+            <!-- ?EH?R / ?L?E / MAHALLE -->
+
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+
+                <div class="field">
+                    <label for="City">Şehir</label>
+                    <select class="input" id="City" name="City"></select>
+                </div>
+
+                <div class="field">
+                    <label for="District">İlçe</label>
+                    <select class="input" id="District" name="District" disabled>
+                        <option value="">Önce Şehir seçin</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="Neighborhood">Mahalle</label>
+                    <input class="input" type="text" id="Neighborhood" name="Neighborhood" placeholder="Mahalle adı" />
+                    <div class="hint">Mahalle listesi için resmi kaynak yok; serbest metin.</div>
+                </div>
+
+            </div>
+
+
+            <!-- KONUM (HAR?TA) -->
+
+            <div class="field">
+                <label>Harita ?üzerinde Konum</label>
+                <div class="hint" style="margin-bottom:8px;">
+                    Haritada işletmenin konumuna tıklayarak pin bırakın (opsiyonel ? müşteri sayfasında gösterilir).
+                </div>
+                <div id="locationPicker" style="height:260px; border-radius:12px; overflow:hidden; border:1px solid var(--border);"></div>
+                <input type="hidden" id="Latitude" name="Latitude" />
+                <input type="hidden" id="Longitude" name="Longitude" />
+            </div>
+
+
+            <!-- AYIRICI -->
+
+            <div class="divider"></div>
+
+
+            <!-- İŞLETME ADMİN HESABI -->
+
+            <div style="margin-bottom:20px;">
+
+                <h3 style="margin-bottom:6px;">
+                    İşletme Admin Hesabı
+                </h3>
+
+                <div class="hint">
+                    Bu bilgiler işletme yöneticisinin panele giriş yapması için kullanılacaktır.
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- ADMİN E-POSTA -->
+
+                <div class="field">
+
+                    <label for="adminEmail">
+                        Admin E-posta
+                    </label>
+
+                    <input class="input"
+                           type="email"
+                           id="adminEmail"
+                           name="adminEmail"
+                           placeholder="admin@RezerveApp.com"
+                           autocomplete="off"
+                           required />
+
+                </div>
+
+
+                <!-- ADMİN ??FRE -->
+
+                <div class="field">
+
+                    <label for="adminPassword">
+                        Admin Şifre
+                    </label>
+
+                    <input class="input"
+                           type="password"
+                           id="adminPassword"
+                           name="adminPassword"
+                           placeholder="????????"
+                           autocomplete="new-password"
+                           minlength="6"
+                           required />
+
+                    <div class="hint">
+                        En az 6 karakter.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOGO -->
+
+            <div class="field">
+
+                <label for="logoFile">
+                    İşletme Logosu
+                </label>
+
+                <label class="logo-drop"
+                       for="logoFile">
+
+                    <svg class="icon-lg"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5
+                                 a2 2 0 0 1-2-2v-4" />
+
+                        <polyline points="17 8 12 3 7 8" />
+
+                        <line x1="12"
+                              y1="3"
+                              x2="12"
+                              y2="15" />
+
+                    </svg>
+
+                    <div id="logoDropLabel">
+                        Logo yüklemek için tıklayın
+                    </div>
+
+                    <div class="hint">
+                        PNG, JPG, WEBP ? maks. 2MB
+                    </div>
+
+                </label>
+
+                <input type="file"
+                       id="logoFile"
+                       name="logoFile"
+                       accept="image/png,image/jpeg,image/webp"
+                       style="display:none;" />
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <!-- BUTONLAR -->
+
+            <div style="display:flex;
+                        gap:12px;
+                        justify-content:flex-end;">
+
+                <a asp-controller="Admin"
+                   asp-action="Index"
+                   class="btn btn-outline">
+
+                    Vazgeç
+
+                </a>
+
+                <button type="submit"
+                        class="btn btn-gold">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <polyline points="20 6 9 17 4 12" />
+
+                    </svg>
+
+                    İşletmeyi Oluştur
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAç TARAF / ?N?ZLEME -->
+
+        <div class="preview-panel">
+
+            <div class="preview-eyebrow">
+                Canlı Önizleme
+            </div>
+
+            <div class="preview-card">
+
+                <div class="preview-logo">
+
+                    <svg class="icon-lg"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <path d="M3 21V8l9-5 9 5v13" />
+
+                        <path d="M9 21v-6h6v6" />
+
+                    </svg>
+
+                </div>
+
+                <div class="preview-name"
+                     id="previewName">
+
+                    İşletme Adı
+
+                </div>
+
+                <div class="preview-meta"
+                     id="previewAddress">
+
+                    Adres burada görünecek
+
+                </div>
+
+                <div class="preview-meta"
+                     id="previewPhone">
+
+                    Telefon burada görünecek
+
+                </div>
+
+            </div>
+
+            <p class="hint"
+               style="margin-top:14px;">
+
+                Müşteri randevu sayfasında bu bilgiler
+                işletme başlığında gösterilir.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+@section Scripts {
+
+    <script>
+
+        const nameInput =
+            document.getElementById("Name");
+
+        const addressInput =
+            document.getElementById("Address");
+
+        const phoneInput =
+            document.getElementById("Phone");
+
+
+        nameInput?.addEventListener("input", function (e) {
+
+            document.getElementById("previewName").textContent =
+                e.target.value || "İşletme Adı";
+
+        });
+
+
+        addressInput?.addEventListener("input", function (e) {
+
+            document.getElementById("previewAddress").textContent =
+                e.target.value || "Adres burada görünecek";
+
+        });
+
+
+        phoneInput?.addEventListener("input", function (e) {
+
+            e.target.value =
+                e.target.value
+                    .replace(/\D/g, "")
+                    .slice(0, 11);
+
+            document.getElementById("previewPhone").textContent =
+                e.target.value || "Telefon burada görünecek";
+
+        });
+
+
+        // Şehir/ilçe cascade-select
+        if (window.initAddressCascade) {
+            window.initAddressCascade("City", "District", null, null);
+        }
+
+        // Logo dosya adı Önizlemesi
+        document.getElementById("logoFile")?.addEventListener("change", function (e) {
+            const label = document.getElementById("logoDropLabel");
+            if (label && e.target.files && e.target.files[0]) {
+                label.textContent = e.target.files[0].name;
+            }
+        });
+
+        // Konum seçici harita (tıklayınca pin bırakır)
+        (function () {
+            const mapEl = document.getElementById("locationPicker");
+            if (!mapEl || typeof L === "undefined") return;
+
+            const defaultLat = 39.9208; // Ankara
+            const defaultLng = 32.8541;
+
+            const map = L.map(mapEl).setView([defaultLat, defaultLng], 6);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap katkıda bulunanlar',
+                maxZoom: 19
+            }).addTo(map);
+
+            let marker = null;
+
+            map.on('click', function (e) {
+                const { lat, lng } = e.latlng;
+
+                if (marker) {
+                    marker.setLatLng(e.latlng);
+                } else {
+                    marker = L.marker(e.latlng).addTo(map);
+                }
+
+                document.getElementById("Latitude").value = lat.toFixed(6);
+                document.getElementById("Longitude").value = lng.toFixed(6);
+            });
+        })();
+
+    </script>
+
+}
+

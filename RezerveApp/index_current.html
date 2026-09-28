@@ -1,0 +1,1954 @@
+﻿@{
+    Layout = "_BookingLayout";
+    ViewBag.PageTitle = "Randevu Al";
+
+    var biz = (RezerveApp.Models.Business)ViewBag.Business;
+    var services = ViewBag.Services as IEnumerable<dynamic>;
+    var employees = ViewBag.Employees as IEnumerable<dynamic>;
+
+    var hasLocation = biz.Latitude.HasValue && biz.Longitude.HasValue;
+
+    var addressParts = new List<string>();
+
+    if (!string.IsNullOrWhiteSpace(biz.City))
+        addressParts.Add(biz.City);
+
+    if (!string.IsNullOrWhiteSpace(biz.District))
+        addressParts.Add(biz.District);
+
+    if (!string.IsNullOrWhiteSpace(biz.Neighborhood))
+        addressParts.Add(biz.Neighborhood);
+
+    var shortAddress = string.Join(" / ", addressParts);
+}
+
+
+<style>
+    :root {
+        --bk-bg: #0b0c0e;
+        --bk-panel: #121417;
+        --bk-panel2: #171a1e;
+        --bk-line: #292d33;
+        --bk-text: #f3f1ec;
+        --bk-muted: #9b9fa6;
+        --bk-gold: #c9a24a;
+        --bk-gold2: #e0bd69;
+        --bk-max: 1180px;
+    }
+
+    .booking-page {
+        min-height: 100vh;
+        background: var(--bk-bg);
+        color: var(--bk-text);
+        font-family: Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    }
+
+        .booking-page * {
+            box-sizing: border-box
+        }
+
+    .biz-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: rgba(11,12,14,.94);
+        border-bottom: 1px solid var(--bk-line);
+        backdrop-filter: blur(14px);
+    }
+
+    .biz-topbar-inner {
+        width: min(var(--bk-max),calc(100% - 40px));
+        height: 72px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+    }
+
+    .biz-topbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0
+    }
+
+    .biz-topbar-logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        object-fit: cover;
+        background: var(--bk-gold);
+        color: #111;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        font-size: 18px;
+        flex: none;
+    }
+
+    .biz-topbar-name {
+        display: block;
+        font-size: 16px;
+        font-weight: 750;
+        letter-spacing: -.02em
+    }
+
+    .biz-topbar-sub {
+        display: block;
+        color: var(--bk-muted);
+        font-size: 10px;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+        margin-top: 2px
+    }
+
+    .biz-topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px
+    }
+
+    .topbar-phone {
+        color: var(--bk-text);
+        text-decoration: none;
+        font-size: 14px;
+        white-space: nowrap;
+        padding: 10px 12px;
+        border: 1px solid var(--bk-line);
+        border-radius: 10px;
+    }
+
+    .topbar-cta, .hero-cta-btn, .btn-gold, .topbar-cta {
+        border: 0;
+        border-radius: 10px;
+        background: var(--bk-gold);
+        color: #111;
+        font-weight: 750;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .topbar-cta {
+        padding: 11px 18px
+    }
+
+        .topbar-cta:hover, .hero-cta-btn:hover, .btn-gold:hover {
+            background: var(--bk-gold2);
+            transform: translateY(-1px)
+        }
+
+    .business-hero {
+        width: min(var(--bk-max),calc(100% - 40px));
+        margin: 0 auto;
+        padding: 34px 0 70px
+    }
+
+    .hero-banner {
+        min-height: 450px;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--bk-line);
+        border-radius: 18px;
+        background: #111;
+    }
+
+        .hero-banner img {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            object-fit: cover;
+            display: block;
+            filter: brightness(.56)
+        }
+
+        .hero-banner:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg,rgba(5,6,7,.9) 0%,rgba(5,6,7,.56) 43%,rgba(5,6,7,.12) 100%);
+        }
+
+    .hero-banner-overlay {
+        position: absolute;
+        z-index: 2;
+        left: 54px;
+        bottom: 54px;
+        max-width: 510px
+    }
+
+        .hero-banner-overlay h1 {
+            font-size: clamp(42px,6vw,72px);
+            line-height: .98;
+            margin: 0 0 18px;
+            letter-spacing: -.055em
+        }
+
+        .hero-banner-overlay p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #d2d1ce;
+            margin: 0 0 24px
+        }
+
+    .hero-cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 14px 22px;
+        font-size: 15px
+    }
+
+        .hero-cta-btn svg {
+            width: 18px;
+            height: 18px
+        }
+
+    .hero-info-row {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 22px;
+        align-items: center;
+        padding: 18px 2px;
+        border-bottom: 1px solid var(--bk-line)
+    }
+
+    .hero-rating, .hero-address, .hero-phone {
+        font-size: 14px;
+        color: #c9c9c6
+    }
+
+        .hero-rating strong {
+            color: var(--bk-text);
+            margin: 0 5px
+        }
+
+    .star-icon {
+        color: var(--bk-gold)
+    }
+
+    .hero-phone {
+        color: var(--bk-text);
+        text-decoration: none
+    }
+
+    .hero-info-sep {
+        height: 24px;
+        width: 1px;
+        background: var(--bk-line)
+    }
+
+    .hero-features {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 1px;
+        margin-top: 1px;
+        border: 1px solid var(--bk-line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: var(--bk-line)
+    }
+
+    .feature-item {
+        background: var(--bk-panel);
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 13px
+    }
+
+    .feature-icon {
+        font-size: 20px;
+        color: var(--bk-gold)
+    }
+
+    .feature-label {
+        font-size: 13px;
+        color: #d4d2ce
+    }
+
+    .hero-biz-card {
+        position: relative;
+        margin-top: 34px;
+        height: 250px;
+        border: 1px solid var(--bk-line);
+        border-radius: 16px;
+        overflow: hidden
+    }
+
+        .hero-biz-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(.62)
+        }
+
+        .hero-biz-card:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg,rgba(0,0,0,.8),transparent 70%)
+        }
+
+    .hero-biz-card-label {
+        position: absolute;
+        z-index: 2;
+        left: 25px;
+        bottom: 22px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 12px
+    }
+
+    .biz-logo-small {
+        grid-row: span 2;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: var(--bk-gold);
+        color: #111;
+        display: grid;
+        place-items: center;
+        font-weight: 800
+    }
+
+    .hero-biz-card-label strong {
+        align-self: end
+    }
+
+    .hero-biz-card-label small {
+        color: #bbb;
+        font-size: 11px;
+        margin-top: 3px
+    }
+
+    .hero-services {
+        margin-top: 34px
+    }
+
+    .hero-services-header, .location-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 20px;
+        margin-bottom: 16px
+    }
+
+        .hero-services h3, .location-header h2 {
+            margin: 0;
+            font-size: 26px;
+            letter-spacing: -.035em
+        }
+
+        .hero-services-header a, .directions-button {
+            color: var(--bk-gold2);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700
+        }
+
+    .service-preview-row {
+        display: grid;
+        grid-template-columns: 52px 1fr auto;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 16px;
+        border: 1px solid var(--bk-line);
+        background: var(--bk-panel);
+        border-radius: 12px;
+        margin-bottom: 8px
+    }
+
+    .service-preview-img {
+        width: 52px;
+        height: 52px;
+        border-radius: 10px;
+        background: #1d2024;
+        display: grid;
+        place-items: center;
+        color: var(--bk-gold);
+        font-size: 19px
+    }
+
+    .service-preview-name {
+        font-weight: 700
+    }
+
+    .service-preview-dur {
+        font-size: 12px;
+        color: var(--bk-muted);
+        margin-top: 4px
+    }
+
+    .service-preview-price {
+        font-weight: 800;
+        color: var(--bk-gold2)
+    }
+
+    .hero-location {
+        margin-top: 34px;
+        border: 1px solid var(--bk-line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--bk-panel)
+    }
+
+    .hero-location-map {
+        height: 270px
+    }
+
+    .hero-location-footer {
+        padding: 16px 18px;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center
+    }
+
+    .hero-location-text {
+        font-weight: 700
+    }
+
+    .hero-location-sub {
+        font-size: 12px;
+        color: var(--bk-muted);
+        margin-top: 4px
+    }
+
+    .hero-quote {
+        padding: 35px 0 0;
+        text-align: center;
+        color: #aaa
+    }
+
+        .hero-quote blockquote {
+            margin: 0;
+            font-size: 19px;
+            font-style: italic
+        }
+
+        .hero-quote cite {
+            display: block;
+            color: var(--bk-gold);
+            font-size: 11px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+            margin-top: 10px
+        }
+
+    .booking-section {
+        width: min(var(--bk-max),calc(100% - 40px));
+        margin: 0 auto 80px
+    }
+
+    .step-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        border: 1px solid var(--bk-line);
+        border-radius: 15px 15px 0 0;
+        background: #101215;
+        padding: 16px 20px
+    }
+
+    .step-bar-title {
+        font-size: 11px;
+        letter-spacing: .17em;
+        color: var(--bk-gold);
+        font-weight: 800
+    }
+
+    .step-indicators {
+        display: flex;
+        gap: 20px
+    }
+
+    .step-ind-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #777;
+        font-size: 12px
+    }
+
+        .step-ind-item.active {
+            color: var(--bk-text)
+        }
+
+    .step-ind-num {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        border: 1px solid #3a3e44
+    }
+
+    .step-ind-item.active .step-ind-num {
+        background: var(--bk-gold);
+        color: #111;
+        border-color: var(--bk-gold);
+        font-weight: 800
+    }
+
+    .wizard {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        border: 1px solid var(--bk-line);
+        border-top: 0;
+        border-radius: 0 0 15px 15px;
+        background: var(--bk-panel);
+        overflow: hidden
+    }
+
+    .step-rail {
+        padding: 24px 16px;
+        border-right: 1px solid var(--bk-line);
+        background: #0f1114
+    }
+
+    .step-rail-item {
+        display: flex;
+        gap: 11px;
+        align-items: center;
+        padding: 13px 11px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+        color: #73777e
+    }
+
+        .step-rail-item.active {
+            background: #1b1b18;
+            color: var(--bk-text)
+        }
+
+    .step-num {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #353940;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 12px
+    }
+
+    .step-rail-item.active .step-num {
+        background: var(--bk-gold);
+        border-color: var(--bk-gold);
+        color: #111;
+        font-weight: 800
+    }
+
+    .step-title {
+        font-size: 13px;
+        font-weight: 750
+    }
+
+    .step-sub {
+        font-size: 10px;
+        color: #696d74;
+        margin-top: 2px
+    }
+
+    .wizard-panel {
+        min-width: 0
+    }
+
+    .step-rail-mobile {
+        display: none
+    }
+
+    .wizard-step {
+        min-height: 570px;
+        display: flex;
+        flex-direction: column
+    }
+
+    .wizard-panel-head {
+        padding: 30px 34px 20px;
+        border-bottom: 1px solid var(--bk-line)
+    }
+
+    .step-kicker {
+        font-size: 10px;
+        letter-spacing: .18em;
+        color: var(--bk-gold);
+        font-weight: 800
+    }
+
+    .wizard-panel-head h2 {
+        font-size: 28px;
+        letter-spacing: -.04em;
+        margin: 8px 0 7px
+    }
+
+    .wizard-panel-head p {
+        margin: 0;
+        color: var(--bk-muted);
+        font-size: 13px
+    }
+
+    .wizard-body {
+        padding: 26px 34px;
+        flex: 1
+    }
+
+    .pick-grid {
+        display: grid;
+        gap: 10px
+    }
+
+    .pick-card {
+        display: grid;
+        grid-template-columns: 18px 1fr auto;
+        gap: 13px;
+        align-items: center;
+        border: 1px solid var(--bk-line);
+        background: #15181c;
+        border-radius: 12px;
+        padding: 14px;
+        cursor: pointer;
+        transition: .18s ease
+    }
+
+        .pick-card:hover {
+            border-color: #6c5729;
+            transform: translateY(-1px)
+        }
+
+        .pick-card.selected {
+            border-color: var(--bk-gold);
+            background: #1b1914;
+            box-shadow: 0 0 0 1px rgba(201,162,74,.15)
+        }
+
+    .service-radio {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid #666
+    }
+
+    .pick-card.selected .service-radio {
+        background: var(--bk-gold);
+        border-color: var(--bk-gold);
+        box-shadow: inset 0 0 0 3px #17181a
+    }
+
+    .service-img {
+        display: none
+    }
+
+    .pick-service-name {
+        font-weight: 750
+    }
+
+    .pick-service-duration {
+        font-size: 12px;
+        color: var(--bk-muted);
+        margin-top: 4px
+    }
+
+    .pick-service-price {
+        font-weight: 800;
+        color: var(--bk-gold2)
+    }
+
+    .employee-pick-grid {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 10px
+    }
+
+    .employee-pick-card {
+        border: 1px solid var(--bk-line);
+        background: #15181c;
+        border-radius: 12px;
+        padding: 18px 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: .18s ease
+    }
+
+        .employee-pick-card:hover {
+            border-color: #6c5729;
+            transform: translateY(-1px)
+        }
+
+        .employee-pick-card.selected {
+            border-color: var(--bk-gold);
+            background: #1b1914
+        }
+
+    .employee-pick-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        margin: 0 auto 10px;
+        background: #25282d;
+        color: var(--bk-gold);
+        display: grid;
+        place-items: center;
+        font-weight: 800
+    }
+
+    .employee-pick-name {
+        font-weight: 750
+    }
+
+    .employee-pick-card small {
+        display: block;
+        color: var(--bk-muted);
+        font-size: 11px;
+        margin-top: 4px
+    }
+
+    .calendar {
+        border: 1px solid var(--bk-line);
+        border-radius: 12px;
+        background: #15181c;
+        min-height: 330px;
+        padding: 15px
+    }
+
+    #timeSlotsContainer {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 10px
+    }
+
+    .time-slot, .available-slot {
+        border: 1px solid var(--bk-line);
+        background: #15181c;
+        color: var(--bk-text);
+        border-radius: 9px;
+        padding: 12px;
+        text-align: center;
+        cursor: pointer
+    }
+
+        .time-slot:hover, .available-slot:hover {
+            border-color: var(--bk-gold)
+        }
+
+        .time-slot.selected, .available-slot.selected {
+            background: var(--bk-gold);
+            color: #111;
+            border-color: var(--bk-gold);
+            font-weight: 800
+        }
+
+    .empty-slots, .empty-state {
+        padding: 30px;
+        text-align: center;
+        color: var(--bk-muted);
+        border: 1px dashed var(--bk-line);
+        border-radius: 12px
+    }
+
+    .info-form {
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 18px
+    }
+
+    .field:last-child {
+        grid-column: 1/-1
+    }
+
+    .field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 7px;
+        color: #d7d5d0
+    }
+
+    .field-icon-wrap {
+        position: relative
+    }
+
+    .field-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: .6
+    }
+
+    .input {
+        width: 100%;
+        background: #101215;
+        border: 1px solid var(--bk-line);
+        border-radius: 10px;
+        color: var(--bk-text);
+        padding: 13px 14px 13px 40px;
+        outline: none
+    }
+
+        .input:focus {
+            border-color: var(--bk-gold);
+            box-shadow: 0 0 0 3px rgba(201,162,74,.08)
+        }
+
+    .summary-list {
+        border: 1px solid var(--bk-line);
+        border-radius: 12px;
+        overflow: hidden
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 15px 17px;
+        border-bottom: 1px solid var(--bk-line)
+    }
+
+        .summary-row:last-child {
+            border-bottom: 0
+        }
+
+    .summary-label {
+        color: var(--bk-muted);
+        font-size: 13px
+    }
+
+    .summary-value {
+        font-weight: 700;
+        text-align: right
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 18px;
+        padding: 18px;
+        background: #1b1914;
+        border: 1px solid #5d4b27;
+        border-radius: 12px
+    }
+
+        .summary-total span {
+            display: block;
+            color: var(--bk-gold);
+            font-size: 10px;
+            letter-spacing: .14em
+        }
+
+        .summary-total strong {
+            font-size: 13px
+        }
+
+    .summary-total-value {
+        font-size: 24px;
+        font-weight: 850;
+        color: var(--bk-gold2)
+    }
+
+    .wizard-actions {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 34px;
+        border-top: 1px solid var(--bk-line);
+        background: #111316
+    }
+
+    .btn {
+        border-radius: 9px;
+        padding: 12px 18px;
+        font-weight: 750;
+        cursor: pointer
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--bk-text);
+        border: 1px solid var(--bk-line)
+    }
+
+        .btn-outline:hover {
+            border-color: #666
+        }
+
+    .btn-gold {
+        padding: 12px 22px
+    }
+
+    .btn:disabled {
+        opacity: .4;
+        cursor: not-allowed;
+        transform: none
+    }
+
+    .location-section {
+        width: min(var(--bk-max),calc(100% - 40px));
+        margin: 0 auto 80px
+    }
+
+    .location-header p {
+        color: var(--bk-muted);
+        font-size: 13px;
+        max-width: 650px;
+        line-height: 1.6
+    }
+
+    .live-map-wrapper {
+        position: relative;
+        border: 1px solid var(--bk-line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--bk-panel)
+    }
+
+    #bizLocationMap {
+        height: 400px
+    }
+
+    .map-caption {
+        position: absolute;
+        left: 16px;
+        bottom: 16px;
+        z-index: 500;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: rgba(11,12,14,.9);
+        border: 1px solid var(--bk-line);
+        padding: 11px 13px;
+        border-radius: 10px;
+        backdrop-filter: blur(8px)
+    }
+
+        .map-caption span {
+            color: var(--bk-gold)
+        }
+
+        .map-caption strong {
+            display: block;
+            font-size: 12px
+        }
+
+        .map-caption small {
+            display: block;
+            color: #888;
+            font-size: 10px;
+            margin-top: 2px
+        }
+
+    .location-empty {
+        padding: 50px;
+        border: 1px dashed var(--bk-line);
+        border-radius: 15px;
+        text-align: center
+    }
+
+        .location-empty h2 {
+            margin: 8px 0
+        }
+
+        .location-empty p {
+            color: var(--bk-muted)
+        }
+    @@media(max-width:900px) {
+        .hero-banner-overlay
+
+    {
+        left: 34px;
+        bottom: 34px
+    }
+
+    .wizard {
+        grid-template-columns: 1fr
+    }
+
+    .step-rail {
+        display: none
+    }
+
+    .step-rail-mobile {
+        display: flex;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--bk-line);
+        gap: 7px
+    }
+
+    .step-rail-mobile-item {
+        height: 4px;
+        background: #30343a;
+        border-radius: 10px;
+        flex: 1
+    }
+
+        .step-rail-mobile-item.active {
+            background: var(--bk-gold)
+        }
+
+    }
+    @@media(max-width:700px) {
+        .biz-topbar-inner,.business-hero,.booking-section,.location-section
+
+    {
+        width: min(100% - 24px,var(--bk-max))
+    }
+
+    .biz-topbar-inner {
+        height: 64px
+    }
+
+    .topbar-phone {
+        display: none
+    }
+
+    .topbar-cta {
+        padding: 10px 13px;
+        font-size: 12px
+    }
+
+    .hero-banner, .hero-banner img {
+        min-height: 420px
+    }
+
+    .hero-banner-overlay {
+        left: 22px;
+        right: 22px;
+        bottom: 24px
+    }
+
+        .hero-banner-overlay h1 {
+            font-size: 44px
+        }
+
+        .hero-banner-overlay p {
+            font-size: 14px
+        }
+
+    .hero-info-row {
+        grid-template-columns: 1fr;
+        gap: 9px
+    }
+
+    .hero-info-sep {
+        display: none
+    }
+
+    .hero-features {
+        grid-template-columns: repeat(2,1fr)
+    }
+
+    .feature-item {
+        padding: 15px 12px
+    }
+
+    .hero-location-map, #bizLocationMap {
+        height: 280px
+    }
+
+    .step-bar {
+        align-items: flex-start
+    }
+
+    .step-bar-title {
+        display: none
+    }
+
+    .step-indicators {
+        width: 100%;
+        justify-content: space-between;
+        gap: 5px
+    }
+
+    .step-ind-label {
+        display: none
+    }
+
+    .wizard-panel-head, .wizard-body, .wizard-actions {
+        padding-left: 18px;
+        padding-right: 18px
+    }
+
+        .wizard-panel-head h2 {
+            font-size: 24px
+        }
+
+    .employee-pick-grid {
+        grid-template-columns: 1fr
+    }
+
+    .info-form {
+        grid-template-columns: 1fr
+    }
+
+    .field:last-child {
+        grid-column: auto
+    }
+
+    #timeSlotsContainer {
+        grid-template-columns: repeat(2,1fr)
+    }
+
+    .hero-biz-card {
+        height: 190px
+    }
+
+    }
+</style>
+
+<div class="booking-page">
+
+    <!-- =========================================================
+         TOP NAV BAR
+    ========================================================== -->
+    <nav class="biz-topbar">
+        <div class="biz-topbar-inner">
+            <div class="biz-topbar-brand">
+                @if (!string.IsNullOrWhiteSpace(biz.LogoUrl))
+                {
+                    <img src="@biz.LogoUrl" alt="@biz.Name" class="biz-topbar-logo" />
+                }
+                else
+                {
+                    <div class="biz-topbar-logo">@(string.IsNullOrWhiteSpace(biz.Name) ? "B" : biz.Name.Substring(0, 1).ToUpper())</div>
+                }
+                <div>
+                    <span class="biz-topbar-name">@biz.Name</span>
+                    <span class="biz-topbar-sub">Erkek Bakım Stüdyosu</span>
+                </div>
+            </div>
+            <div class="biz-topbar-actions">
+                @if (!string.IsNullOrWhiteSpace(biz.Phone))
+                {
+                    <a href="tel:@biz.Phone" class="topbar-phone">â˜ @biz.Phone</a>
+                }
+                <button type="button" class="topbar-cta" onclick="document.getElementById('bookingWizard').scrollIntoView({behavior:'smooth'})">
+                    Randevu Al
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- =========================================================
+         HERO SECTION (Screen 1 of mockup)
+    ========================================================== -->
+    <div class="business-hero">
+
+        <!-- Full bleed hero image -->
+        <div class="hero-banner">
+            <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?auto=format&fit=crop&w=800&q=85" alt="@biz.Name" />
+            <div class="hero-banner-overlay">
+                <h1>Tarz<br>seninle baÅŸlar.</h1>
+                <p>Kendine zaman ayır,<br>her zaman daha iyi hisset.</p>
+                <button type="button" class="hero-cta-btn"
+                        onclick="document.getElementById('bookingWizard').scrollIntoView({behavior:'smooth'})">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></svg>
+                    Randevu Al
+                </button>
+            </div>
+        </div>
+
+        <!-- Rating, location, phone row -->
+        <div class="hero-info-row">
+            <div class="hero-rating">
+                <span class="star-icon">★</span>
+                <strong>4.9</strong>
+                <span>(128 yorum)</span>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(shortAddress))
+            {
+                <div class="hero-info-sep"></div>
+                <div class="hero-address">📍 @shortAddress</div>
+            }
+            @if (!string.IsNullOrWhiteSpace(biz.Phone))
+            {
+                <a href="tel:@biz.Phone" class="hero-phone">📞 @biz.Phone</a>
+            }
+        </div>
+
+        <!-- Feature badges -->
+        <div class="hero-features">
+            <div class="feature-item">
+                <div class="feature-icon">✂</div>
+                <div class="feature-label">Profesyonel Hizmet</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🛡</div>
+                <div class="feature-label">Hijyenik Ortam</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">♙</div>
+                <div class="feature-label">Deneyimli Ekip</div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">◇</div>
+                <div class="feature-label">Kaliteli Ürünler</div>
+            </div>
+        </div>
+
+        <!-- Business photo card -->
+        <div class="hero-biz-card">
+            <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=80" alt="@biz.Name" />
+            <div class="hero-biz-card-label">
+                <div class="biz-logo-small">
+                    @(string.IsNullOrWhiteSpace(biz.Name) ? "B" : biz.Name.Substring(0, 1).ToUpper())
+                </div>
+                <strong>@biz.Name</strong>
+                <small>Erkek Bakım Stüdyosu</small>
+            </div>
+        </div>
+
+        <!-- Services preview -->
+        @if (ViewBag.Services != null)
+        {
+            <div class="hero-services">
+                <div class="hero-services-header">
+                    <h3>Hizmetlerimiz</h3>
+                    <a href="#bookingWizard" onclick="document.getElementById('bookingWizard').scrollIntoView({behavior:'smooth'}); return false;">Tümünü Gör ›</a>
+                </div>
+                @foreach (var s in ViewBag.Services)
+                {
+                    <div class="service-preview-row">
+                        <div class="service-preview-img">✂</div>
+                        <div class="service-preview-info">
+                            <div class="service-preview-name">@s.Name</div>
+                            <div class="service-preview-dur">◷ @s.DurationMinutes dakika</div>
+                        </div>
+                        <div class="service-preview-price">@s.Price.ToString("0") ₺</div>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Location -->
+        @if (hasLocation)
+        {
+            <div class="hero-location">
+                <div class="hero-location-map customer-live-map" id="heroMap"></div>
+                <div class="hero-location-footer">
+                    <div>
+                        <div class="hero-location-text">@(string.IsNullOrWhiteSpace(biz.Neighborhood) ? shortAddress : biz.Neighborhood)</div>
+                        <div class="hero-location-sub">@shortAddress</div>
+                    </div>
+                    <a class="directions-button"
+                       href="https://maps.google.com/?q=@biz.Latitude,@biz.Longitude"
+                       target="_blank">📍 Yol Tarifi Al</a>
+                </div>
+            </div>
+        }
+
+        <!-- Quote -->
+        <div class="hero-quote">
+            <blockquote>"İyi bir görünüm, iyi bir ruh halidir."</blockquote>
+            <cite>@biz.Name</cite>
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         BOOKING WIZARD
+    ========================================================== -->
+    <section class="booking-section" id="bookingWizard">
+
+        <!-- Step indicator bar (mockup style) -->
+        <div class="step-bar" id="stepBar">
+            <div class="step-bar-title">RANDEVU OLUÅTUR</div>
+            <div class="step-indicators">
+                <div class="step-ind-item active" data-step-ind="1">
+                    <div class="step-ind-num">1</div>
+                    <div class="step-ind-label">Hizmet</div>
+                </div>
+                <div class="step-ind-item" data-step-ind="2">
+                    <div class="step-ind-num">2</div>
+                    <div class="step-ind-label">Berber</div>
+                </div>
+                <div class="step-ind-item" data-step-ind="3">
+                    <div class="step-ind-num">3</div>
+                    <div class="step-ind-label">Tarih</div>
+                </div>
+                <div class="step-ind-item" data-step-ind="4">
+                    <div class="step-ind-num">4</div>
+                    <div class="step-ind-label">Saat</div>
+                </div>
+                <div class="step-ind-item" data-step-ind="5">
+                    <div class="step-ind-num">5</div>
+                    <div class="step-ind-label">Bilgiler</div>
+                </div>
+                <div class="step-ind-item" data-step-ind="6">
+                    <div class="step-ind-num">6</div>
+                    <div class="step-ind-label">Onay</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard">
+            <nav class="step-rail" id="stepRail">
+
+                <div class="step-rail-item active" data-step="1">
+                    <div class="step-num">1</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Hizmet</div>
+                        <div class="step-sub">Ä°ÅŸlem seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="2">
+                    <div class="step-num">2</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Berber</div>
+                        <div class="step-sub">Uzman seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="3">
+                    <div class="step-num">3</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Tarih</div>
+                        <div class="step-sub">GÃ¼n seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="4">
+                    <div class="step-num">4</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Saat</div>
+                        <div class="step-sub">Saat seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="5">
+                    <div class="step-num">5</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Bilgiler</div>
+                        <div class="step-sub">İletişim bilgileri</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="6">
+                    <div class="step-num">6</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Onay</div>
+                        <div class="step-sub">Randevu Ã¶zeti</div>
+                    </div>
+                </div>
+
+            </nav>
+
+            <!-- =================================================
+                 BOOKING FORM
+            ================================================== -->
+            <form class="wizard-panel"
+                  id="bookingForm"
+                  asp-controller="Booking"
+                  asp-action="Create"
+                  asp-route-slug="@biz.Slug"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="step-rail-mobile" id="stepRailMobile">
+                    <div class="step-rail-mobile-item active" data-step="1"></div>
+                    <div class="step-rail-mobile-item" data-step="2"></div>
+                    <div class="step-rail-mobile-item" data-step="3"></div>
+                    <div class="step-rail-mobile-item" data-step="4"></div>
+                    <div class="step-rail-mobile-item" data-step="5"></div>
+                    <div class="step-rail-mobile-item" data-step="6"></div>
+                </div>
+
+                <input type="hidden" name="ServiceId" id="ServiceId" required />
+                <input type="hidden" name="EmployeeId" id="EmployeeId" />
+                <input type="hidden" name="Date" id="Date" required />
+                <input type="hidden" name="Time" id="Time" required />
+
+
+                <!-- =================================================
+                     STEP 1
+                ================================================== -->
+                <div class="wizard-step" data-step-panel="1">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 01</span>
+                        <h2>Hangi hizmeti istersiniz?</h2>
+                        <p>Size uygun iÅŸlemi seçin.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="pick-grid" id="serviceGrid">
+
+                            @if (ViewBag.Services != null)
+                            {
+                                foreach (var s in ViewBag.Services)
+                                {
+                                    <div class="pick-card"
+                                         data-id="@s.Id"
+                                         data-name="@s.Name"
+                                         data-price="@s.Price.ToString("0", System.Globalization.CultureInfo.InvariantCulture)"
+                                         data-duration="@s.DurationMinutes"
+                                         onclick="selectService(this)">
+
+                                        <div class="service-radio"></div>
+
+                                        <div class="service-img">✂</div>
+
+                                        <div class="service-info">
+                                            <div class="pick-service-name">@s.Name</div>
+                                            <div class="pick-service-row">
+                                                <div class="pick-service-duration">◷ @s.DurationMinutes dakika</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="pick-service-price">@s.Price.ToString("0") ₺</div>
+
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="empty-state">
+                                    <strong>Henüz hizmet eklenmemiş.</strong>
+                                    <span>İşletme yöneticisinin hizmet eklemesi gerekiyor.</span>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+                        <span></span>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                disabled
+                                id="next1"
+                                onclick="goToStep(2)">
+
+                            Devam Et
+                            <span>→</span>
+
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 2
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="2"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 02</span>
+                        <h2>Berberinizi seçin</h2>
+                        <p>Ä°sterseniz berberi işletmeye bÄ±rakabilirsiniz.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="employee-pick-grid" id="employeeGrid">
+
+                            <div class="employee-pick-card employee-pick-any selected"
+                                 data-id=""
+                                 data-name="Fark Etmez"
+                                 onclick="selectEmployee(this)">
+
+                                <div class="employee-pick-avatar employee-any-avatar">
+                                    âœ¦
+                                </div>
+
+                                <div>
+                                    <div class="employee-pick-name">
+                                        Fark Etmez
+                                    </div>
+                                    <small>Uygun olan berber atansÄ±n</small>
+                                </div>
+
+                            </div>
+
+
+                            @if (ViewBag.Employees != null)
+                            {
+                                foreach (var e in ViewBag.Employees)
+                                {
+                                    <div class="employee-pick-card"
+                                         data-id="@e.Id"
+                                         data-name="@e.Name"
+                                         onclick="selectEmployee(this)">
+
+                                        <div class="employee-pick-avatar">
+                                            @(string.IsNullOrWhiteSpace(e.Name)
+                                                                                ? "B"
+                                                                                : e.Name.Substring(0, 1).ToUpper())
+                                </div>
+
+                                        <div>
+                                            <div class="employee-pick-name">
+                                                @e.Name
+                                            </div>
+                                            <small>Berber</small>
+                                        </div>
+
+                                    </div>
+                                                        }
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(1)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                onclick="goToStep(3)">
+                            Devam Et →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 3
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="3"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 03</span>
+                        <h2>Tarih seçin</h2>
+                        <p>Size uygun bir gÃ¼n belirleyin.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="calendar" id="calendar"></div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(2)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                disabled
+                                id="next3"
+                                onclick="goToStep(4)">
+                            Devam Et →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 4
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="4"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 04</span>
+                        <h2>Uygun bir saat seçin</h2>
+                        <p id="timeStepSub">
+                            SeÃ§tiÄŸiniz tarihe gÃ¶re mÃ¼sait saatler listelenir.
+                        </p>
+                    </div>
+
+                    <div class="wizard-body"
+                         id="timeSlotsContainer">
+
+                        <div class="empty-slots">
+                            Önce tarih seÃ§melisiniz.
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(3)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                disabled
+                                id="next4"
+                                onclick="goToStep(5)">
+                            Devam Et →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 5
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="5"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 05</span>
+                        <h2>Bilgilerinizi girin</h2>
+                        <p>Randevunuz için iletiÅŸim bilgilerinizi bÄ±rakÄ±n.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="info-form">
+
+                            <div class="field">
+                                <label for="CustomerName">Ad Soyad</label>
+                                <div class="field-icon-wrap">
+                                    <span class="field-icon">ğŸ‘¤</span>
+                                    <input class="input" type="text" id="CustomerName"
+                                           name="CustomerName" placeholder="Ad Soyad"
+                                           autocomplete="name" required
+                                           oninput="this.value = this.value.replace(/[^a-zA-ZÃ§Ã‡ÄŸÄÄ±Ä°Ã¶Ã–ÅŸÅÃ¼ÃœÃ¢Ã‚ÃªÃŠÃ®ÃÃ»Ã› ]/g, ''); updateSummary();" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="CustomerPhone">Telefon</label>
+                                <div class="field-icon-wrap">
+                                    <span class="field-icon">📞</span>
+                                    <input class="input" type="tel" id="CustomerPhone"
+                                           name="CustomerPhone" placeholder="05XX XXX XX XX"
+                                           autocomplete="tel" required maxlength="11"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSummary();" />
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label for="CustomerEmail">E-posta (Opsiyonel)</label>
+                                <div class="field-icon-wrap">
+                                    <span class="field-icon">âœ‰</span>
+                                    <input class="input" type="email" id="CustomerEmail"
+                                           name="CustomerEmail" placeholder="ornek@email.com"
+                                           autocomplete="email" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(4)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                id="next5"
+                                onclick="goToStep(6)">
+                            Özeti GÃ¶r →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 6
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="6"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 06</span>
+                        <h2>Randevu Özeti</h2>
+                        <p>Bilgilerinizi kontrol edip randevunuzu tamamlayın.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="summary-list" id="summaryList">
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Hizmet
+                                </div>
+                                <div class="summary-value" id="sumService">—</div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Berber
+                                </div>
+                                <div class="summary-value" id="sumEmployee">
+                                    Fark Etmez
+                                </div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Tarih & Saat
+                                </div>
+                                <div class="summary-value" id="sumDateTime">
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Ad Soyad
+                                </div>
+                                <div class="summary-value" id="sumName">
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Telefon
+                                </div>
+                                <div class="summary-value" id="sumPhone">
+                                    —
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-total">
+
+                            <div>
+                                <span>TOPLAM</span>
+                                <strong>Randevu Tutarı</strong>
+                            </div>
+
+                            <div class="summary-total-value"
+                                 id="sumTotal">
+                                ₺0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(5)">
+                            ← Geri
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-gold btn-confirm">
+
+                            ✓
+                            Randevuyu Onayla
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         LOCATION
+    ========================================================== -->
+    @if (hasLocation)
+    {
+        <section class="location-section">
+
+            <div class="location-header">
+
+                <div>
+                    <span class="section-eyebrow">KONUM</span>
+                    <h2>Bizi nerede bulabilirsiniz?</h2>
+
+                    @if (!string.IsNullOrWhiteSpace(biz.Address))
+                    {
+                        <p>@shortAddress — @biz.Address</p>
+                    }
+                </div>
+
+                <a class="directions-button"
+                   href="https://www.google.com/maps/dir/?api=1&destination=@(biz.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture)),@(biz.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                   target="_blank"
+                   rel="noopener noreferrer">
+
+                    Yol Tarifi
+                    <span>â†—</span>
+
+                </a>
+
+            </div>
+
+            <div class="live-map-wrapper">
+
+                <div id="bizLocationMap"
+                     class="customer-live-map"
+                     data-lat="@(biz.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                     data-lng="@(biz.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                     data-name="@biz.Name">
+                </div>
+
+                <div class="map-caption">
+                    <span>âŒ–</span>
+                    <div>
+                        <strong>@biz.Name</strong>
+                        <small>Haritada işletme konumu</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    }
+    else
+    {
+        <section class="location-section location-empty">
+
+            <span class="section-eyebrow">KONUM</span>
+
+            <h2>Konum bilgisi yakÄ±nda burada</h2>
+
+            <p>
+                İşletme yÃ¶neticisi konum bilgisini eklediÄŸinde
+                interaktif harita burada görüntülenecek.
+            </p>
+
+        </section>
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            crossorigin=""></script>
+
+    <script>
+        // Leaflet default icon fix
+        const defaultIcon = L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        window.__bookingConfig = {
+            closedWeekday: 0
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const mapElement =
+                document.getElementById("bizLocationMap");
+
+            if (!mapElement || typeof L === "undefined") {
+                return;
+            }
+
+            let lat =
+                parseFloat(mapElement.dataset.lat);
+
+            let lng =
+                parseFloat(mapElement.dataset.lng);
+
+            if (Number.isFinite(lat) && (lat < -90 || lat > 90)) {
+                lat = NaN;
+            }
+            if (Number.isFinite(lng) && (lng < -180 || lng > 180)) {
+                lng = NaN;
+            }
+
+            const name =
+                mapElement.dataset.name || "İşletme";
+
+            let finalLat = lat;
+            let finalLng = lng;
+            let hasValidLocation = true;
+
+            if (!Number.isFinite(lat) ||
+                !Number.isFinite(lng) ||
+                Math.abs(lat) > 90 ||
+                Math.abs(lng) > 180) {
+                finalLat = 39.9208; // Center of Turkey
+                finalLng = 32.8541;
+                hasValidLocation = false;
+            }
+
+            const map =
+                L.map(mapElement, {
+                    scrollWheelZoom: false
+                }).setView([finalLat, finalLng], hasValidLocation ? 16 : 6);
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    maxZoom: 19,
+                    attribution:
+                        "&copy; OpenStreetMap contributors"
+                }
+            ).addTo(map);
+
+            if (hasValidLocation) {
+                const marker =
+                    L.marker([finalLat, finalLng], {icon: defaultIcon})
+                        .addTo(map);
+
+                marker.bindPopup(
+                    "<strong>" +
+                    name +
+                    "</strong>"
+                );
+            }
+
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 300);
+
+        });
+
+    </script>
+}

@@ -1,0 +1,462 @@
+﻿@model List<RezerveApp.Models.Business>
+
+@{
+    Layout = "_AdminLayout";
+
+    ViewBag.PageEyebrow = "Genel Bakış";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.PageSubtitle = "Tüm işletmelerin ve sistem durumunun özeti";
+    ViewBag.ActiveNav = "Dashboard";
+}
+
+@section TopbarActions {
+    <a asp-controller="Admin"
+       asp-action="Create"
+       class="btn btn-gold">
+
+        <svg class="icon"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+
+        </svg>
+
+        Yeni İşletme
+
+    </a>
+}
+
+
+<!-- İSTATİSTİKLER -->
+
+<div class="stat-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-label">
+                Toplam İşletme
+            </div>
+
+            <div class="stat-icon">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+
+                    <path d="M3 21V8l9-5 9 5v13" />
+                    <path d="M9 21v-6h6v6" />
+
+                </svg>
+
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            @Model.Count
+        </div>
+
+        <div class="stat-delta flat">
+            Sisteme kayıtlı işletmeler
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-label">
+                İşletme Sayısı
+            </div>
+
+            <div class="stat-icon">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+
+                    <circle cx="12"
+                            cy="12"
+                            r="9" />
+
+                    <polyline points="8 12 11 15 16 9" />
+
+                </svg>
+
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            @Model.Count
+        </div>
+
+        <div class="stat-delta flat">
+            Aktif olarak kullanılabilir
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-top">
+
+            <div class="stat-label">
+                Müşteri Sayfaları
+            </div>
+
+            <div class="stat-icon">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+
+                    <path d="M3 12h18" />
+                    <path d="M12 3v18" />
+
+                </svg>
+
+            </div>
+
+        </div>
+
+        <div class="stat-value">
+            @Model.Count
+        </div>
+
+        <div class="stat-delta flat">
+            Yayında olan randevu bağlantıları
+        </div>
+
+    </div>
+
+
+    <div class="stat-card system-status-card">
+
+        <div>
+
+            <div class="stat-label">
+                Sistem Durumu
+            </div>
+
+            <div class="stat-value"
+                 style="font-size:17px; margin-top:8px;">
+
+                Çalışıyor
+
+            </div>
+
+        </div>
+
+        <div class="system-status-pulse">
+            <span class="pulse-dot"></span>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- İŞLETMELER -->
+
+<div class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h3>
+                İşletmeler
+            </h3>
+
+            <div class="card-header-sub">
+                Sisteme kayıtlı tüm berber işletmeleri
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ARAMA -->
+
+    <div class="card-pad"
+         style="padding-bottom:0;">
+
+        <div class="toolbar">
+
+            <div class="input-with-icon">
+
+                <svg class="icon-sm"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor">
+
+                    <circle cx="11"
+                            cy="11"
+                            r="8" />
+
+                    <line x1="21"
+                          y1="21"
+                          x2="16.65"
+                          y2="16.65" />
+
+                </svg>
+
+                <input type="text"
+                       id="businessSearch"
+                       class="input"
+                       placeholder="İşletme adı, telefon veya slug ara..." />
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLO -->
+
+    <div class="table-wrap">
+
+        <table class="data-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        İşletme
+                    </th>
+
+                    <th>
+                        Telefon
+                    </th>
+
+                    <th>
+                        Adres
+                    </th>
+
+                    <th>
+                        Slug
+                    </th>
+
+                    <th>
+                        Durum
+                    </th>
+
+                    <th style="text-align:right;">
+                        İşlem
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="businessTable">
+
+                @foreach (var business in Model)
+                {
+                    <tr class="business-row"
+                        data-search="@($"{business.Name} {business.Phone} {business.Slug} {business.Address}")">
+
+                        <td>
+
+                            <div class="row-avatar">
+
+                                <div class="row-avatar-img">
+
+                                    @(string.IsNullOrWhiteSpace(business.Name)
+                                                                    ? "B"
+                                                                    : business.Name.Substring(0, 1).ToUpper())
+
+                            </div>
+
+                                <div>
+
+                                    <div class="cell-primary">
+                                        @business.Name
+                                    </div>
+
+                                    <div class="business-slug">
+                                        /@business.Slug
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td class="cell-muted">
+                            @business.Phone
+                        </td>
+
+
+                        <td class="cell-muted">
+                            @business.Address
+                        </td>
+
+
+                        <td>
+
+                            <span class="business-slug">
+                                @business.Slug
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            @{
+                                var badgeClass = business.Status switch
+                                {
+                                    RezerveApp.Models.BusinessStatus.Approved => "badge-success",
+                                    RezerveApp.Models.BusinessStatus.Pending => "badge-gold",
+                                    RezerveApp.Models.BusinessStatus.Rejected => "badge-danger",
+                                    RezerveApp.Models.BusinessStatus.Suspended => "badge-neutral",
+                                    _ => "badge-neutral"
+                                };
+
+                                var badgeText = business.Status switch
+                                {
+                                    RezerveApp.Models.BusinessStatus.Approved => "Onaylı",
+                                    RezerveApp.Models.BusinessStatus.Pending => "Beklemede",
+                                    RezerveApp.Models.BusinessStatus.Rejected => "Reddedildi",
+                                    RezerveApp.Models.BusinessStatus.Suspended => "Askıda",
+                                    _ => business.Status.ToString()
+                                };
+                            }
+
+                            <span class="badge @badgeClass">
+                                @badgeText
+                            </span>
+                        </td>
+
+
+                        <td style="text-align:right;">
+
+                            <a asp-controller="Admin"
+                               asp-action="Details"
+                               asp-route-id="@business.Id"
+                               class="btn btn-outline btn-sm">
+
+                                Detay
+
+                            </a>
+
+                            <a href="/Booking/@business.Slug"
+                               target="_blank"
+                               class="btn btn-ghost btn-sm">
+
+                                <svg class="icon-sm"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor">
+
+                                    <path d="M1 12s4-8 11-8
+                     11 8 11 8-4 8-11 8
+                     -11-8-11-8z" />
+
+                                    <circle cx="12"
+                                            cy="12"
+                                            r="3" />
+
+                                </svg>
+
+                                Müşteri Sayfası
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+                                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- SONUÇ BİLGİSİ -->
+
+    <div class="pagination">
+
+        <div class="pagination-info"
+             id="businessCount">
+
+            @Model.Count işletme gösteriliyor
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const searchInput =
+            document.getElementById("businessSearch");
+
+        const rows =
+            document.querySelectorAll(".business-row");
+
+        const countText =
+            document.getElementById("businessCount");
+
+
+        searchInput.addEventListener("input", function () {
+
+            const search =
+                this.value.toLowerCase().trim();
+
+            let visibleCount = 0;
+
+
+            rows.forEach(function (row) {
+
+                const text =
+                    row.dataset.search.toLowerCase();
+
+                if (text.includes(search)) {
+
+                    row.style.display = "";
+                    visibleCount++;
+
+                }
+                else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+
+            countText.textContent =
+                visibleCount + " işletme gösteriliyor";
+
+        });
+
+    </script>
+
+}
+

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>@ViewBag.PageTitle - RezerveApp</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet"
+          href="~/css/shared.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet"
+          href="~/css/admin.css"
+          asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @await RenderSectionAsync("Styles", required: false)
+    <link rel="icon" type="image/png" href="/images/logo.png?v=2" />
+</head>
+
+<body>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="app-shell">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand" style="justify-content: center;">
+                <img src="~/images/logo_dark.jpg" alt="RezerveApp Logo" style="height: 40px; object-fit: contain;" />
+            </div>
+
+
+            <nav class="nav-list">
+
+                <!-- DASHBOARD -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Dashboard" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Index">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <rect x="3"
+                              y="3"
+                              width="7"
+                              height="9"
+                              rx="1.5" />
+
+                        <rect x="14"
+                              y="3"
+                              width="7"
+                              height="5"
+                              rx="1.5" />
+
+                        <rect x="14"
+                              y="12"
+                              width="7"
+                              height="9"
+                              rx="1.5" />
+
+                        <rect x="3"
+                              y="16"
+                              width="7"
+                              height="5"
+                              rx="1.5" />
+
+                    </svg>
+
+                    Dashboard
+
+                </a>
+
+
+                <!-- İŞLETMELER -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Businesses" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Index">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <path d="M3 21V8l9-5 9 5v13" />
+
+                        <path d="M9 21v-6h6v6" />
+
+                        <path d="M9 12h.01" />
+                        <path d="M15 12h.01" />
+                        <path d="M9 16h.01" />
+                        <path d="M15 16h.01" />
+
+                    </svg>
+
+                    İşletmeler
+
+                </a>
+
+
+                <!-- YENİ İŞLETME -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Create" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Create">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <circle cx="12"
+                                cy="12"
+                                r="9" />
+
+                        <line x1="12"
+                              y1="8"
+                              x2="12"
+                              y2="16" />
+
+                        <line x1="8"
+                              y1="12"
+                              x2="16"
+                              y2="12" />
+
+                    </svg>
+
+                    Yeni İşletme
+
+                </a>
+
+                <a class="nav-link @(ViewBag.ActiveNav == "SupportTickets" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="SupportTickets">
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Destek Talepleri
+                </a>
+
+                <!-- FATURA VE ABONELİKLER -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Billing" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Billing">
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+                        <rect x="2" y="5" width="20" height="14" rx="2" />
+                        <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                    Fatura & Abonelikler
+                </a>
+
+                <!-- ABONELİK PAKETLERİ -->
+                <a class="nav-link @(ViewBag.ActiveNav == "SubscriptionPlans" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="SubscriptionPlans">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    Abonelik Paketleri
+                </a>
+
+                <!-- MESAJ ŞABLONLARI -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Templates" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Templates">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                    </svg>
+                    Mesaj Şablonları
+                </a>
+
+                <!-- SİSTEM AYARLARI -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Settings" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Settings">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    Sistem Ayarları
+                </a>
+
+                <a class="nav-link @(ViewBag.ActiveNav == "Users" ? "active" : "")"
+                   asp-controller="Admin"
+                   asp-action="Users">
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Müşteriler
+                </a>
+
+            </nav>
+
+
+            <!-- SIDEBAR FOOTER -->
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div class="avatar">
+                        SA
+                    </div>
+
+                    <div>
+
+                        <div class="sidebar-user-name">
+                            @(ViewBag.CurrentUserName ?? "Süper Admin")
+                        </div>
+
+                        <div class="sidebar-user-role">
+                            Sistem Yöneticisi
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- HESAP AYARLARI -->
+                <a class="nav-link @(ViewBag.ActiveNav == "Settings" ? "active" : "")"
+                   asp-controller="Account"
+                   asp-action="Settings"
+                   style="margin-top: 10px; margin-bottom: 5px;">
+                   <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                       <circle cx="12" cy="7" r="4" />
+                   </svg>
+                   Hesap Ayarları
+                </a>
+
+                <!-- LOGOUT -->
+                <a class="logout-link"
+                   asp-controller="Account"
+                   asp-action="Logout">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+
+                        <polyline points="16 17 21 12 16 7" />
+
+                        <line x1="21"
+                              y1="12"
+                              x2="9"
+                              y2="12" />
+
+                    </svg>
+
+                    Çıkış Yap
+
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <!-- MOBILE TOPBAR -->
+            <div class="mobile-topbar">
+
+                <div class="brand" style="justify-content: center;">
+                    <img src="~/images/logo_dark.jpg" alt="RezerveApp Logo" style="height: 32px; object-fit: contain;" />
+                </div>
+
+
+                <button class="menu-toggle"
+                        id="menuToggle"
+                        aria-label="Menü">
+
+                    <svg class="icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <line x1="3"
+                              y1="6"
+                              x2="21"
+                              y2="6" />
+
+                        <line x1="3"
+                              y1="12"
+                              x2="21"
+                              y2="12" />
+
+                        <line x1="3"
+                              y1="18"
+                              x2="21"
+                              y2="18" />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+
+                <div>
+
+                    @if (ViewBag.PageEyebrow != null)
+                    {
+                        <div class="page-eyebrow">
+                            @ViewBag.PageEyebrow
+                        </div>
+                    }
+
+                    <h1 class="page-title">
+                        @ViewBag.PageTitle
+                    </h1>
+
+                    @if (ViewBag.PageSubtitle != null)
+                    {
+                        <p class="page-subtitle">
+                            @ViewBag.PageSubtitle
+                        </p>
+                    }
+
+                </div>
+
+
+                <div class="topbar-actions">
+
+                    @await RenderSectionAsync(
+                    "TopbarActions",
+                                        required: false)
+
+                </div>
+
+            </header>
+
+
+            <!-- PAGE CONTENT -->
+            <main class="content">
+
+                @RenderBody()
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- ICONS -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        if (typeof lucide !== "undefined") {
+            lucide.createIcons();
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const iconSvg = type === 'success' 
+                ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon" style="width:20px;height:20px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`
+                : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+
+            toast.innerHTML = `
+                ${iconSvg}
+                <div style="flex:1;">${message}</div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Auto remove
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 5000);
+        }
+
+        // Global TempData handling
+        const tempDataSuccess = @Html.Raw(Json.Serialize(TempData["Success"] ?? TempData["SuccessMessage"] ?? ""));
+        const tempDataError = @Html.Raw(Json.Serialize(TempData["Error"] ?? TempData["ErrorMessage"] ?? ""));
+        
+        if (tempDataSuccess && tempDataSuccess !== '') {
+            setTimeout(() => showToast(tempDataSuccess, 'success'), 300);
+        }
+        if (tempDataError && tempDataError !== '') {
+            setTimeout(() => showToast(tempDataError, 'error'), 300);
+        }
+    </script>
+
+    <script src="~/js/admin.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/validation.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="~/js/data/tr-il-ilce.js" asp-append-version="true"></script>
+    <script src="~/js/address-cascade.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
+
+</body>
+</html>

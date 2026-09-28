@@ -1,0 +1,69 @@
+﻿@model RezerveApp.Models.SubscriptionPlan
+@{
+    Layout = "_AdminLayout";
+    bool isEdit = Model.Id > 0;
+    ViewBag.PageTitle = isEdit ? "Paketi Düzenle" : "Yeni Paket Ekle";
+    ViewBag.PageEyebrow = "YÖNETİM";
+    ViewBag.PageSubtitle = isEdit ? $"{Model.Name} paketinin detaylarını güncelleyin" : "Sisteme yeni bir abonelik paketi tanımlayın";
+    ViewBag.ActiveNav = "Plans";
+}
+
+<div class="card card-pad" style="max-width: 600px;">
+    <h2 style="font-size:16px; font-weight:600; margin-bottom:24px;">Paket Bilgileri</h2>
+
+    <form asp-action="@(isEdit ? "EditPlan" : "CreatePlan")" method="post" class="profile-form">
+        @Html.AntiForgeryToken()
+        
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="profile-field profile-field-wide">
+                <label asp-for="Name">Paket Adı</label>
+                <input asp-for="Name" class="profile-input" required placeholder="Örn: Sınırsız Paket" />
+            </div>
+
+            <div class="profile-field profile-field-wide">
+                <label asp-for="Type">Paket Türü</label>
+                <select asp-for="Type" class="profile-input" asp-items="Html.GetEnumSelectList<RezerveApp.Models.SubscriptionPlanType>()" required>
+                </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="profile-field">
+                    <label asp-for="MonthlyPrice">Aylık Fiyat (TL)</label>
+                    <input asp-for="MonthlyPrice" class="profile-input" type="number" step="0.01" min="0" required />
+                </div>
+                <div class="profile-field">
+                    <label asp-for="YearlyPrice">Yıllık Fiyat (TL)</label>
+                    <input asp-for="YearlyPrice" class="profile-input" type="number" step="0.01" min="0" required />
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="profile-field">
+                    <label asp-for="MaxEmployees">Maksimum Çalışan</label>
+                    <input asp-for="MaxEmployees" class="profile-input" type="number" min="1" placeholder="Sınırsız için boş bırakın" />
+                    <small>Sınırsız olması için boş bırakın.</small>
+                </div>
+                <div class="profile-field">
+                    <label asp-for="MaxServices">Maksimum Hizmet</label>
+                    <input asp-for="MaxServices" class="profile-input" type="number" min="1" placeholder="Sınırsız için boş bırakın" />
+                    <small>Sınırsız olması için boş bırakın.</small>
+                </div>
+            </div>
+
+            <div class="profile-field profile-field-wide" style="flex-direction: row; align-items: center; gap: 12px; margin-top: 8px;">
+                <input asp-for="IsActive" type="checkbox" style="width: 18px; height: 18px;" />
+                <label asp-for="IsActive" style="margin: 0; font-size: 14px;">Bu paket aktif olarak kullanılsın</label>
+            </div>
+
+            <div style="margin-top: 16px; display: flex; gap: 12px; justify-content: flex-end;">
+                <a asp-action="Plans" class="btn btn-outline">İptal</a>
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+            </div>
+        </div>
+    </form>
+</div>

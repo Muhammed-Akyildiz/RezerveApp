@@ -1,0 +1,82 @@
+@model RezerveApp.Models.Appointment
+@{
+    Layout = "_BookingLayout";
+    ViewBag.PageTitle = "Değerlendirme";
+    ViewBag.Business = Model.Business;
+    ViewBag.HideHeader = false;
+}
+
+<style>
+    .review-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #1a1a24;
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+        gap: 8px;
+        margin: 24px 0;
+    }
+    .stars input {
+        display: none;
+    }
+    .stars label {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%233f3f46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>');
+        background-size: cover;
+        transition: all 0.2s ease;
+    }
+    .stars input:checked ~ label,
+    .stars label:hover,
+    .stars label:hover ~ label {
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23d4af37" stroke="%23d4af37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>');
+    }
+    
+    .emp-name {
+        color: #d4af37;
+        font-weight: 600;
+    }
+</style>
+
+<div class="review-container">
+    <h2 style="margin-bottom:12px; color:#fff;">Hizmeti Değerlendirin</h2>
+    <p style="color:#999; font-size:15px; line-height:1.6;">
+        Merhaba <strong style="color:#fff;">@Model.CustomerName</strong>,<br />
+        <strong style="color:#fff;">@Model.Business?.Name</strong> işletmesindeki randevunuz nasıldı? <span class="emp-name">@Model.Employee?.Name</span>'e puan verin.
+    </p>
+
+    <form method="post">
+        @Html.AntiForgeryToken()
+        <div class="stars">
+            <input type="radio" id="star5" name="rating" value="5" required />
+            <label for="star5" title="5 Yıldız"></label>
+
+            <input type="radio" id="star4" name="rating" value="4" />
+            <label for="star4" title="4 Yıldız"></label>
+
+            <input type="radio" id="star3" name="rating" value="3" />
+            <label for="star3" title="3 Yıldız"></label>
+
+            <input type="radio" id="star2" name="rating" value="2" />
+            <label for="star2" title="2 Yıldız"></label>
+
+            <input type="radio" id="star1" name="rating" value="1" />
+            <label for="star1" title="1 Yıldız"></label>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <textarea name="comment" class="form-control" style="width:100%; min-height:100px; background:#151515; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; padding:12px;" placeholder="Yorumunuz (İsteğe bağlı)..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; height:48px; font-size:16px; font-weight:600;">Gönder</button>
+    </form>
+</div>

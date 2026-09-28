@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Randevular";
+    ViewBag.PageTitle = "Yeni Randevu Oluştur";
+    ViewBag.PageSubtitle = "Müşteri adına manuel randevu ekleyin";
+    ViewBag.ActiveNav = "Appointments";
+
+    var employees = (List<RezerveApp.Models.Employee>)ViewBag.Employees;
+    var services = (List<RezerveApp.Models.Service>)ViewBag.Services;
+}
+
+<form asp-controller="Business" asp-action="CreateAppointment" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card card-pad">
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="field">
+                <label for="customerName">Müşteri Adı</label>
+                <input class="input" type="text" id="customerName" name="customerName" required />
+            </div>
+            <div class="field">
+                <label for="customerPhone">Müşteri Telefonu</label>
+                <input class="input" type="tel" id="customerPhone" name="customerPhone" maxlength="11" minlength="11" pattern="[0-9]{11}" required />
+                <div class="hint">Aynı telefon numarasıyla önceki müşteri varsa otomatik eşleştirilir.</div>
+            </div>
+        </div>
+
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="field">
+                <label for="employeeId">Çalışan</label>
+                <select class="input" id="employeeId" name="employeeId" required>
+                    @foreach (var e in employees)
+                    {
+                        <option value="@e.Id">@e.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="field">
+                <label for="serviceId">Hizmet</label>
+                <select class="input" id="serviceId" name="serviceId" required>
+                    @foreach (var s in services)
+                    {
+                        <option value="@s.Id">@s.Name (@s.DurationMinutes dk — @s.Price.ToString("N2") ₺)</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="field">
+                <label for="appointmentDate">Tarih</label>
+                <input class="input" type="date" id="appointmentDate" name="appointmentDate" min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+            </div>
+            <div class="field">
+                <label for="startTime">Saat</label>
+                <input class="input" type="time" id="startTime" name="startTime" required />
+            </div>
+        </div>
+
+        <div class="hint" style="margin-bottom:20px;">
+            Geçmiş tarih, çalışma saatleri dışı, izin/tatil ve çakışan randevu kontrolleri kayıt sırasında sunucuda tekrar yapılır.
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <a asp-controller="Business" asp-action="Appointments" class="btn btn-outline">Vazgeç</a>
+            <button type="submit" class="btn btn-gold">Randevuyu Oluştur</button>
+        </div>
+    </div>
+</form>

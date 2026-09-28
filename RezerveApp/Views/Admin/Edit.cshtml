@@ -1,0 +1,185 @@
+﻿@model RezerveApp.Models.Business
+
+@{
+    Layout = "_AdminLayout";
+
+    ViewBag.PageEyebrow = "İşletmeler";
+    ViewBag.PageTitle = "İşletmeyi Düzenle";
+    ViewBag.PageSubtitle = Model.Name;
+    ViewBag.ActiveNav = "Businesses";
+}
+
+<form asp-controller="Admin" asp-action="Edit" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card card-pad">
+
+        <div class="field">
+            <label for="Name">İşletme Adı</label>
+            <input class="input" type="text" id="Name" name="Name" value="@Model.Name" required />
+        </div>
+
+        <div class="form-grid">
+            <div class="field">
+                <label for="Phone">Telefon</label>
+                <input class="input" type="tel" id="Phone" name="Phone" maxlength="11" minlength="11"
+                       pattern="[0-9]{11}" inputmode="numeric" value="@Model.Phone" required />
+                <div class="hint">Telefon numarası 11 haneli olmalıdır.</div>
+            </div>
+
+            <div class="field">
+                <label for="Slug">Slug (URL adresi)</label>
+                <input class="input" type="text" id="Slug" name="Slug" value="@Model.Slug" required />
+                <div class="hint">Müşteri randevu adresi: /Booking/@Model.Slug</div>
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="field">
+                <label for="Email">İşletme E-posta</label>
+                <input class="input" type="email" id="Email" name="Email" value="@Model.Email" />
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="Address">Açık Adres</label>
+            <textarea class="input" id="Address" name="Address" rows="3" required>@Model.Address</textarea>
+        </div>
+
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="field">
+                <label for="City">Şehir</label>
+                <select class="input" id="City" name="City"></select>
+            </div>
+            <div class="field">
+                <label for="District">İlçe</label>
+                <select class="input" id="District" name="District" disabled>
+                    <option value="">Önce şehir seçin</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="Neighborhood">Mahalle</label>
+                <input class="input" type="text" id="Neighborhood" name="Neighborhood" value="@Model.Neighborhood" placeholder="Mahalle adı" />
+                <div class="hint">Mahalle listesi için resmi kaynak yok; serbest metin.</div>
+            </div>
+        </div>
+
+        <!-- LOGO -->
+        <div class="field">
+            <label for="logoFile">İşletme Logosu</label>
+            @if (!string.IsNullOrEmpty(Model.LogoUrl))
+            {
+                <div style="margin-bottom:10px;">
+                    <img src="@Model.LogoUrl" alt="Mevcut logo" style="height:56px; border-radius:8px; border:1px solid var(--border);" />
+                    <span class="hint">Mevcut logo. Yeni bir dosya seçerseniz değiştirilir.</span>
+                </div>
+            }
+            <label class="logo-drop" for="logoFile">
+                <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="17 8 12 3 7 8" />
+                    <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                <div id="logoDropLabel">Yeni logo yüklemek için tıklayın</div>
+                <div class="hint">PNG, JPG, WEBP — maks. 2MB</div>
+            </label>
+            <input type="file" id="logoFile" name="logoFile" accept="image/png,image/jpeg,image/webp" style="display:none;" />
+        </div>
+
+        <!-- KONUM -->
+        <div class="field">
+            <label>Harita Üzerinde Konum</label>
+            <div class="hint" style="margin-bottom:8px;">Haritada işletmenin konumuna tıklayarak pini güncelleyin.</div>
+            <div id="locationPicker" style="height:260px; border-radius:12px; overflow:hidden; border:1px solid var(--border);"></div>
+            <input type="hidden" id="Latitude" name="Latitude" value="@Model.Latitude" />
+            <input type="hidden" id="Longitude" name="Longitude" value="@Model.Longitude" />
+        </div>
+
+        <!-- YÖNETİCİ GİRİŞ BİLGİLERİ -->
+        <div style="margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--border);">
+            <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width: 16px; height: 16px; margin-right: 4px; vertical-align: text-bottom;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Yönetici Giriş Bilgileri
+            </h3>
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">İşletme yöneticisinin sisteme giriş yaptığı e-posta ve şifresini buradan değiştirebilirsiniz.</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="AdminEmail">Yönetici E-posta (Giriş)</label>
+                    <input class="input" type="email" id="AdminEmail" name="AdminEmail"
+                           value="@ViewBag.AdminEmail" />
+                    <div class="hint">Yöneticinin sisteme giriş yaptığı e-posta adresi.</div>
+                </div>
+
+                <div class="field">
+                    <label for="AdminPassword">Yeni Şifre Belirle</label>
+                    <input class="input" type="password" id="AdminPassword" name="AdminPassword"
+                           placeholder="Değiştirmek istemiyorsanız boş bırakın" />
+                    <div class="hint">En az 6 karakter, büyük harf, küçük harf ve rakam içermelidir.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <a asp-controller="Admin" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline">Vazgeç</a>
+            <button type="submit" class="btn btn-gold">Kaydet</button>
+        </div>
+
+    </div>
+
+</form>
+
+@section Scripts {
+    <script>
+        if (window.initAddressCascade) {
+            window.initAddressCascade("City", "District", @Html.Raw(Model.City != null ? $"\"{Model.City}\"" : "null"), @Html.Raw(Model.District != null ? $"\"{Model.District}\"" : "null"));
+        }
+
+        document.getElementById("logoFile")?.addEventListener("change", function (e) {
+            const label = document.getElementById("logoDropLabel");
+            if (label && e.target.files && e.target.files[0]) {
+                label.textContent = e.target.files[0].name;
+            }
+        });
+
+        (function () {
+            const mapEl = document.getElementById("locationPicker");
+            if (!mapEl || typeof L === "undefined") return;
+
+            const existingLat = parseFloat(document.getElementById("Latitude").value);
+            const existingLng = parseFloat(document.getElementById("Longitude").value);
+            const hasExisting = !isNaN(existingLat) && !isNaN(existingLng);
+
+            const startLat = hasExisting ? existingLat : 39.9208;
+            const startLng = hasExisting ? existingLng : 32.8541;
+
+            const map = L.map(mapEl).setView([startLat, startLng], hasExisting ? 15 : 6);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap katkıda bulunanlar',
+                maxZoom: 19
+            }).addTo(map);
+
+            let marker = hasExisting ? L.marker([startLat, startLng]).addTo(map) : null;
+
+            map.on('click', function (e) {
+                const { lat, lng } = e.latlng;
+
+                if (marker) {
+                    marker.setLatLng(e.latlng);
+                } else {
+                    marker = L.marker(e.latlng).addTo(map);
+                }
+
+                document.getElementById("Latitude").value = lat.toFixed(6);
+                document.getElementById("Longitude").value = lng.toFixed(6);
+            });
+        })();
+    </script>
+}

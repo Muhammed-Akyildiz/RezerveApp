@@ -1,0 +1,642 @@
+﻿@model List<RezerveApp.Models.WorkingHour>
+
+@{
+    Layout = "_BusinessLayout";
+
+    var employee = (RezerveApp.Models.Employee)ViewBag.Employee;
+    var breaks = (List<RezerveApp.Models.EmployeeBreak>)ViewBag.Breaks;
+    var timeOffs = (List<RezerveApp.Models.EmployeeTimeOff>)ViewBag.TimeOffs;
+
+    ViewBag.PageEyebrow = "Çalışanlar";
+    ViewBag.PageTitle = "Çalışma Saatleri";
+    ViewBag.PageSubtitle = employee.Name;
+    ViewBag.ActiveNav = "Employees";
+
+    var dayNames = new Dictionary<DayOfWeek, string>
+    {
+        { DayOfWeek.Monday, "Pazartesi" },
+        { DayOfWeek.Tuesday, "Salı" },
+        { DayOfWeek.Wednesday, "Çarşamba" },
+        { DayOfWeek.Thursday, "Perşembe" },
+        { DayOfWeek.Friday, "Cuma" },
+        { DayOfWeek.Saturday, "Cumartesi" },
+        { DayOfWeek.Sunday, "Pazar" }
+    };
+
+    var orderedDays = new[]
+    {
+        DayOfWeek.Monday,
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday,
+        DayOfWeek.Saturday,
+        DayOfWeek.Sunday
+    };
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="hint" style="color:var(--danger); margin-bottom:16px;">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="hint" style="color:var(--success); margin-bottom:16px;">
+        @TempData["Success"]
+    </div>
+}
+
+
+<!-- =========================================================
+     HAFTALIK ÇALIŞMA SAATLERİ
+     ========================================================= -->
+
+<div class="card" style="margin-bottom:22px;">
+
+    <div class="card-header">
+        <div>
+            <h3>Haftalık Program</h3>
+            <div class="card-header-sub">
+                Çalışanın haftalık çalışma düzenini belirleyin
+            </div>
+        </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+
+        <table class="hours-table">
+
+            <thead>
+                <tr>
+                    <th>Gün</th>
+                    <th>Durum</th>
+                    <th>Başlangıç</th>
+                    <th></th>
+                    <th>Bitiş</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var day in orderedDays)
+                {
+                    var existing = Model.FirstOrDefault(w => w.DayOfWeek == day);
+
+                    var isWorking = existing?.IsWorking ?? false;
+
+                    var start = existing?.StartTime
+                    ?? new TimeSpan(9, 0, 0);
+
+                    var end = existing?.EndTime
+                    ?? new TimeSpan(19, 0, 0);
+
+                    <tr class="working-hour-row"
+                        data-day="@((int)day)">
+
+                        <!-- GÜN -->
+                        <td class="hours-day">
+                            @dayNames[day]
+                        </td>
+
+                        <!-- ÇALIŞIYOR -->
+                        <td>
+
+                            <label style="
+                                    display:flex;
+                                    align-items:center;
+                                    gap:8px;
+                                    cursor:pointer;
+                                    white-space:nowrap;
+                                ">
+
+                                <input type="checkbox"
+                                       class="working-checkbox"
+                                       @(isWorking ? "checked" : "") />
+
+                                <span>Çalışıyor</span>
+
+                            </label>
+
+                        </td>
+
+                        <!-- BAŞLANGIÇ -->
+                        <td>
+
+                            <input class="input working-start"
+                                   type="time"
+                                   value="@start.ToString("hh\\:mm")"
+                                   style="max-width:140px;" />
+
+                        </td>
+
+                        <!-- AYRAÇ -->
+                        <td class="cell-muted">
+                            —
+                        </td>
+
+                        <!-- BİTİŞ -->
+                        <td>
+
+                            <input class="input working-end"
+                                   type="time"
+                                   value="@end.ToString("hh\\:mm")"
+                                   style="max-width:140px;" />
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- TEK KAYDET BUTONU -->
+
+    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button type="button"
+                id="saveAllWorkingHours"
+                class="btn btn--primary">
+            <i data-lucide="save" style="width:18px; height:18px; margin-right:6px;"></i>
+            Değişiklikleri Kaydet
+        </button>
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MOLALAR
+     ========================================================= -->
+
+<div class="card card-pad" style="margin-bottom:22px;">
+
+    <h3 style="margin-bottom:14px;">
+        Haftalık Molalar
+    </h3>
+
+
+    <table class="data-table" style="margin-bottom:18px;">
+
+        <thead>
+
+            <tr>
+                <th>Gün</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @if (!breaks.Any())
+            {
+                <tr>
+                    <td colspan="4"
+                        class="cell-muted">
+                        Tanımlı mola yok.
+                    </td>
+                </tr>
+            }
+
+            @foreach (var b in breaks)
+            {
+                <tr>
+
+                    <td>
+                        @dayNames[b.DayOfWeek]
+                    </td>
+
+                    <td>
+                        @b.StartTime.ToString("hh\\:mm")
+                    </td>
+
+                    <td>
+                        @b.EndTime.ToString("hh\\:mm")
+                    </td>
+
+                    <td>
+
+                        <form asp-controller="Business"
+                              asp-action="DeleteEmployeeBreak"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@b.Id" />
+
+                            <input type="hidden"
+                                   name="employeeId"
+                                   value="@employee.Id" />
+
+                            <button type="submit"
+                                    class="btn btn--danger btn-sm">
+
+                                Sil
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- YENİ MOLA -->
+
+    <form asp-controller="Business"
+          asp-action="AddEmployeeBreak"
+          method="post"
+          style="
+              display:flex;
+              gap:12px;
+              flex-wrap:wrap;
+              align-items:flex-end;
+          ">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="employeeId"
+               value="@employee.Id" />
+
+
+        <div class="field" style="margin-bottom:0;">
+
+            <label>Gün</label>
+
+            <select class="input"
+                    name="dayOfWeek">
+
+                @foreach (var day in orderedDays)
+                {
+                    <option value="@((int)day)">
+                        @dayNames[day]
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+
+        <div class="field" style="margin-bottom:0;">
+
+            <label>Başlangıç</label>
+
+            <input class="input"
+                   type="time"
+                   name="startTime"
+                   value="13:00" />
+
+        </div>
+
+
+        <div class="field" style="margin-bottom:0;">
+
+            <label>Bitiş</label>
+
+            <input class="input"
+                   type="time"
+                   name="endTime"
+                   value="14:00" />
+
+        </div>
+
+
+        <button type="submit"
+                class="btn btn--primary">
+            Mola Ekle
+        </button>
+
+    </form>
+
+</div>
+
+
+
+<!-- =========================================================
+     İZİNLER
+     ========================================================= -->
+
+<div class="card card-pad">
+
+    <h3 style="margin-bottom:14px;">
+        İzinler
+    </h3>
+
+
+    <table class="data-table"
+           style="margin-bottom:18px;">
+
+        <thead>
+
+            <tr>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>Sebep</th>
+                <th></th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            @if (!timeOffs.Any())
+            {
+                <tr>
+
+                    <td colspan="4"
+                        class="cell-muted">
+
+                        Tanımlı izin yok.
+
+                    </td>
+
+                </tr>
+            }
+
+
+            @foreach (var t in timeOffs)
+            {
+                <tr>
+
+                    <td>
+                        @t.StartDate.ToString("dd.MM.yyyy")
+                    </td>
+
+                    <td>
+                        @t.EndDate.ToString("dd.MM.yyyy")
+                    </td>
+
+                    <td class="cell-muted">
+                        @t.Reason
+                    </td>
+
+                    <td>
+
+                        <form asp-controller="Business"
+                              asp-action="DeleteEmployeeTimeOff"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@t.Id" />
+
+                            <input type="hidden"
+                                   name="employeeId"
+                                   value="@employee.Id" />
+
+                            <button type="submit"
+                                    class="btn btn--danger btn-sm">
+
+                                Sil
+
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+
+
+    <!-- YENİ İZİN -->
+
+    <form asp-controller="Business"
+          asp-action="AddEmployeeTimeOff"
+          method="post"
+          style="
+              display:flex;
+              gap:12px;
+              flex-wrap:wrap;
+              align-items:flex-end;
+          ">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               name="employeeId"
+               value="@employee.Id" />
+
+
+        <div class="field"
+             style="margin-bottom:0;">
+
+            <label>Başlangıç</label>
+
+            <input class="input"
+                   type="date"
+                   name="startDate"
+                   required />
+
+        </div>
+
+
+        <div class="field"
+             style="margin-bottom:0;">
+
+            <label>Bitiş</label>
+
+            <input class="input"
+                   type="date"
+                   name="endDate"
+                   required />
+
+        </div>
+
+
+        <div class="field"
+             style="margin-bottom:0;">
+
+            <label>Sebep (opsiyonel)</label>
+
+            <input class="input"
+                   type="text"
+                   name="reason"
+                   placeholder="Yıllık izin" />
+
+        </div>
+
+
+        <button type="submit"
+                class="btn btn--primary">
+            İzin Ekle
+        </button>
+
+    </form>
+
+</div>
+
+
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const saveButton =
+                document.getElementById("saveAllWorkingHours");
+
+            if (!saveButton) return;
+
+
+            saveButton.addEventListener("click", async function () {
+
+                const rows =
+                    document.querySelectorAll(".working-hour-row");
+
+                const originalText =
+                    saveButton.innerHTML;
+
+
+                saveButton.disabled = true;
+
+                saveButton.innerHTML = "Kaydediliyor...";
+
+
+                try {
+
+                    const token =
+                        document.querySelector(
+                            'input[name="__RequestVerificationToken"]'
+                        )?.value;
+
+
+                    for (const row of rows) {
+
+                        const dayOfWeek =
+                            row.dataset.day;
+
+                        const checkbox =
+                            row.querySelector(".working-checkbox");
+
+                        const startInput =
+                            row.querySelector(".working-start");
+
+                        const endInput =
+                            row.querySelector(".working-end");
+
+
+                        const formData =
+                            new FormData();
+
+
+                        formData.append(
+                            "employeeId",
+                            "@employee.Id"
+                        );
+
+                        formData.append(
+                            "dayOfWeek",
+                            dayOfWeek
+                        );
+
+                        formData.append(
+                            "startTime",
+                            startInput.value
+                        );
+
+                        formData.append(
+                            "endTime",
+                            endInput.value
+                        );
+
+                        formData.append(
+                            "isWorking",
+                            checkbox.checked ? "true" : "false"
+                        );
+
+                        if (token) {
+
+                            formData.append(
+                                "__RequestVerificationToken",
+                                token
+                            );
+
+                        }
+
+
+                        const response =
+                            await fetch(
+                                "@Url.Action("AddWorkingHour", "Business")",
+                                {
+                                    method: "POST",
+                                    body: formData,
+                                    credentials: "same-origin"
+                                }
+                            );
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "Çalışma saatleri kaydedilemedi."
+                            );
+
+                        }
+
+                    }
+
+
+                    saveButton.innerHTML =
+                        "✓ Kaydedildi";
+
+
+                    setTimeout(function () {
+
+                        window.location.reload();
+
+                    }, 600);
+
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+                    alert(
+                        "Çalışma saatleri kaydedilirken bir hata oluştu."
+                    );
+
+                    saveButton.disabled = false;
+
+                    saveButton.innerHTML =
+                        originalText;
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,90 @@
+@{
+    /* Backend wiring notes:
+       - Model: List<Service> { Id, Name, Price, DurationMinutes }
+       - "Yeni Hizmet" button/modal form fields should be named exactly as your
+         Service model expects: Name, Price, DurationMinutes.
+    */
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Hizmetler";
+    ViewBag.PageSubtitle = "Sunduğunuz hizmetleri ve fiyatlarını yönetin";
+    ViewBag.ActiveNav = "Services";
+}
+
+@section TopbarActions {
+    <button type="button" class="btn btn-gold" onclick="document.getElementById('newServiceForm').classList.toggle('is-open')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+        Yeni Hizmet
+    </button>
+}
+
+<div class="card card-pad" id="newServiceForm" style="margin-bottom:22px; display:none;">
+    <h3 style="margin-bottom:18px;">Yeni Hizmet Ekle</h3>
+    <form asp-controller="Business" asp-action="CreateService" method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr;">
+            <div class="field">
+                <label for="svcName">Hizmet Adı</label>
+                <input class="input" type="text" id="svcName" name="Name" placeholder="Örn. Saç Kesimi" required />
+            </div>
+            <div class="field">
+                <label for="svcPrice">Fiyat (₺)</label>
+                <input class="input" type="number" step="0.01" id="svcPrice" name="Price" placeholder="350" required />
+            </div>
+            <div class="field">
+                <label for="svcDuration">Süre (dk)</label>
+                <input class="input" type="number" id="svcDuration" name="DurationMinutes" placeholder="30" required />
+            </div>
+        </div>
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <button type="button" class="btn btn-outline" onclick="document.getElementById('newServiceForm').style.display='none'">Vazgeç</button>
+            <button type="submit" class="btn btn-gold">Kaydet</button>
+        </div>
+    </form>
+</div>
+
+<div class="service-grid">
+    @{
+        var services = ViewBag.Services ?? new[] {
+        new { Id = 1, Name = "Saç Kesimi", Price = 350m, DurationMinutes = 30 },
+        new { Id = 2, Name = "Sakal Tıraşı", Price = 200m, DurationMinutes = 20 },
+        new { Id = 3, Name = "Saç + Sakal", Price = 500m, DurationMinutes = 45 },
+        new { Id = 4, Name = "Cilt Bakımı", Price = 450m, DurationMinutes = 40 },
+        new { Id = 5, Name = "Çocuk Saç Kesimi", Price = 250m, DurationMinutes = 25 },
+        };
+    }
+    @foreach (var s in services)
+    {
+        <div class="service-card">
+            <div class="service-top">
+                <div class="service-name">@s.Name</div>
+                <div class="service-price">₺@s.Price.ToString("0")</div>
+            </div>
+            <div class="service-duration">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15.5 14" /></svg>
+                @s.DurationMinutes dakika
+            </div>
+            <div class="service-actions">
+                <a asp-controller="Business" asp-action="EditService" asp-route-id="@s.Id" class="btn btn-outline btn-sm btn-block">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                    Düzenle
+                </a>
+                <form asp-controller="Business" asp-action="DeleteService" asp-route-id="@s.Id" method="post" class="btn-block" data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>" data-confirm-title="Hizmeti Sil">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger-outline btn-sm btn-block">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
+                        Sil
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        #newServiceForm.is-open {
+            display: block !important;
+        }</style>
+}
+

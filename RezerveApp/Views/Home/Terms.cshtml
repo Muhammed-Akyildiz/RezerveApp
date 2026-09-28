@@ -1,0 +1,85 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kullanım Şartları - RezerveApp</title>
+    <link rel="icon" type="image/png" href="/images/logo.png?v=2" />
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            color: #111;
+            margin-top: 0;
+            font-size: 28px;
+        }
+        h4 {
+            color: #222;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        p, li {
+            font-size: 15px;
+            color: #555;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .date {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kullanım Şartları</h1>
+        <p class="date">Son güncellenme tarihi: @DateTime.Now.ToString("dd MMMM yyyy")</p>
+
+        <div class="content">
+            <h4>1. Taraflar ve Sözleşmenin Konusu</h4>
+            <p>İşbu Kullanım Şartları, RezerveApp ("Platform") ile Platform'u kullanan işletmeler ve son kullanıcılar (müşteriler) arasındaki hizmet şartlarını düzenler. Platform'u kullanarak bu şartları kabul etmiş sayılırsınız.</p>
+
+            <h4>2. Hizmetin Kapsamı</h4>
+            <p>RezerveApp, işletmeler (berberler/kuaförler) ile randevu almak isteyen müşterileri dijital ortamda buluşturan bir aracılık yazılımıdır. RezerveApp doğrudan berberlik veya kuaförlük hizmeti sunmaz; alınan hizmetin kalitesinden, yaşanabilecek gecikmelerden veya işletme içi anlaşmazlıklardan sorumlu tutulamaz.</p>
+
+            <h4>3. Kullanıcı Yükümlülükleri</h4>
+            <ul>
+                <li>Kullanıcılar randevu alırken doğru ve güncel iletişim bilgileri (gerçek isim ve telefon numarası) girmekle yükümlüdür.</li>
+                <li>Sürekli olarak asılsız randevu alarak sistemi suistimal eden kullanıcılar, Platform veya işletme tarafından kara listeye (blacklist) alınabilir ve bir daha randevu almaları engellenebilir.</li>
+                <li>İşletmeler, hizmet bedellerini ve sürelerini güncel tutmakla sorumludur.</li>
+            </ul>
+
+            <h4>4. İptal ve Değişiklik</h4>
+            <p>Müşteriler, randevu saatinden makul bir süre önce randevularını sistem üzerinden iptal etme hakkına sahiptir. İşletmeler, acil durumlarda randevuları reddedebilir veya iptal edebilir. İşletmelerin kendi özel iptal politikaları ayrıca geçerli olabilir.</p>
+
+            <h4>5. Hizmetin Kesintiye Uğraması</h4>
+            <p>RezerveApp, sistemin 7/24 kesintisiz çalışması için maksimum gayreti gösterir. Ancak bakım, güncelleme veya teknik aksaklıklar sebebiyle oluşabilecek kısa süreli kesintilerden dolayı doğrudan sorumlu tutulamaz.</p>
+
+            <h4>6. Değişiklikler</h4>
+            <p>RezerveApp, bu Kullanım Şartları'nı dilediği zaman güncelleme hakkını saklı tutar. Yapılan değişiklikler sitede yayınlandığı andan itibaren geçerli sayılır.</p>
+        </div>
+    </div>
+</body>
+</html>

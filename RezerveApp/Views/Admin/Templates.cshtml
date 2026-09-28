@@ -1,0 +1,190 @@
+﻿@model IEnumerable<RezerveApp.Models.NotificationTemplate>
+@{
+    ViewData["Title"] = "Mesaj Şablonları";
+    Layout = "_AdminLayout";
+    ViewBag.PageEyebrow = "Şablonlar";
+    ViewBag.PageTitle = "Mesaj Şablonları";
+    ViewBag.PageSubtitle = "Sistem tarafından gönderilecek mesajların içeriklerini yönetin";
+    ViewBag.ActiveNav = "Templates";
+}
+
+<style>
+    .custom-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .custom-modal.active { display: flex; }
+    .modal-backdrop { position: absolute; inset: 0; }
+    .modal-content { position: relative; background: var(--card); border: 1px solid var(--border); padding: 24px; border-radius: var(--radius-md); max-width: 500px; width: 100%; z-index: 1001; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-header h3 { font-size: 18px; margin: 0; }
+    .btn-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+    textarea.input { min-height: 100px; resize: vertical; }
+    select.input { appearance: auto; background-color: var(--bg); color: var(--text); }
+    .checkbox-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 10px; }
+</style>
+
+@section TopbarActions {
+    <button class="btn btn-gold" onclick="openModal('addTemplateModal')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Yeni Şablon Ekle
+    </button>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="background: var(--success-soft); color: var(--success); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--success); margin-bottom: 24px;">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3>Kayıtlı Şablonlar</h3>
+            <div class="card-header-sub">Müşterilere ve işletmelere gidecek metinler</div>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tür</th>
+                    <th>Dil</th>
+                    <th>İçerik</th>
+                    <th>Durum</th>
+                    <th style="width: 150px; text-align: right;">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="font-weight: 600;">@item.Type</td>
+                        <td>@item.Language</td>
+                        <td>
+                            <div style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-muted);">
+                                @item.Content
+                            </div>
+                        </td>
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                <span style="color: var(--success); font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--success); display: inline-block;"></span> Aktif
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: var(--text-muted); font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); display: inline-block;"></span> Pasif
+                                </span>
+                            }
+                        </td>
+                        <td style="text-align: right;">
+                            <button class="btn" style="padding: 4px 10px; font-size: 12px;" onclick="openModal('editTemplateModal-@item.Id')">Düzenle</button>
+                            <form asp-action="DeleteTemplate" asp-route-id="@item.Id" method="post" style="display: inline;" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                                <button type="submit" class="btn" style="padding: 4px 10px; font-size: 12px; color: var(--danger); border-color: var(--danger-soft);">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Modal -->
+                    <div class="custom-modal" id="editTemplateModal-@item.Id">
+                        <div class="modal-backdrop" onclick="closeModal('editTemplateModal-@item.Id')"></div>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Şablon Düzenle</h3>
+                                <button type="button" class="btn-close" onclick="closeModal('editTemplateModal-@item.Id')">×</button>
+                            </div>
+                            <form asp-action="UpdateTemplate" method="post">
+                                <input type="hidden" name="Id" value="@item.Id" />
+                                <div class="form-group">
+                                    <label>Tür</label>
+                                    <select name="Type" class="input">
+                                        <option value="0" selected="@(item.Type == RezerveApp.Models.NotificationType.NewAppointmentBusiness)">İşletmeye Yeni Randevu</option>
+                                        <option value="1" selected="@(item.Type == RezerveApp.Models.NotificationType.AppointmentConfirmationCustomer)">Müşteriye Onay</option>
+                                        <option value="2" selected="@(item.Type == RezerveApp.Models.NotificationType.AppointmentReminderCustomer)">Müşteriye Hatırlatma</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Dil Kodu</label>
+                                    <input type="text" name="Language" class="input" value="@item.Language" required />
+                                </div>
+                                <div class="form-group">
+                                    <label>İçerik</label>
+                                    <textarea name="Content" class="input" required>@item.Content</textarea>
+                                    <div style="font-size: 11px; color: var(--text-faint); margin-top: 6px;">Kullanılabilir değişkenler: {MusteriAdi}, {Tarih}, {Saat}, {IsletmeAdi}</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="checkbox-wrap">
+                                        <input type="checkbox" name="IsActive" value="true" @(item.IsActive ? "checked" : "") />
+                                        <input type="hidden" name="IsActive" value="false" />
+                                        <span>Aktif</span>
+                                    </label>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn" onclick="closeModal('editTemplateModal-@item.Id')">İptal</button>
+                                    <button type="submit" class="btn btn-gold">Kaydet</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="custom-modal" id="addTemplateModal">
+    <div class="modal-backdrop" onclick="closeModal('addTemplateModal')"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Yeni Şablon Ekle</h3>
+            <button type="button" class="btn-close" onclick="closeModal('addTemplateModal')">×</button>
+        </div>
+        <form asp-action="CreateTemplate" method="post">
+            <div class="form-group">
+                <label>Tür</label>
+                <select name="Type" class="input">
+                    <option value="0">İşletmeye Yeni Randevu</option>
+                    <option value="1">Müşteriye Onay</option>
+                    <option value="2">Müşteriye Hatırlatma</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Dil Kodu</label>
+                <input type="text" name="Language" class="input" value="tr" required />
+            </div>
+            <div class="form-group">
+                <label>İçerik</label>
+                <textarea name="Content" class="input" required></textarea>
+                <div style="font-size: 11px; color: var(--text-faint); margin-top: 6px;">Kullanılabilir değişkenler: {MusteriAdi}, {Tarih}, {Saat}, {IsletmeAdi}</div>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-wrap">
+                    <input type="checkbox" name="IsActive" value="true" checked />
+                    <input type="hidden" name="IsActive" value="false" />
+                    <span>Aktif</span>
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn" onclick="closeModal('addTemplateModal')">İptal</button>
+                <button type="submit" class="btn btn-gold">Ekle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+</script>

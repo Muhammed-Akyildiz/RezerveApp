@@ -1,0 +1,165 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Ücretsiz Kayıt Ol";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kayıt Ol — RezerveApp</title>
+    <meta name="description" content="Hesabınızı oluşturun ve işletmenizi yönetmeye başlayın.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/variables.css">
+    <link rel="stylesheet" href="~/css/base.css">
+    <link rel="stylesheet" href="~/css/components.css">
+    <link rel="stylesheet" href="~/css/auth.css">
+
+    <link rel="icon" href="/images/logo.png">
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <!-- SOL TARAF - FORM -->
+        <div class="auth-form-side">
+            <div class="auth-form-container">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="auth-logo" style="justify-content: center; text-decoration: none;">
+                    <img src="~/images/logo.png" alt="RezerveApp Logo" style="height: 60px; object-fit: contain;" />
+                </a>
+
+                <h1 class="auth-title">Hesabınızı oluşturun</h1>
+                <p class="auth-subtitle">
+                    Ücretsiz kayıt olun ve işletmenizin online randevu sistemini dakikalar içinde kurun.
+                </p>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="auth-error">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    </div>
+                }
+
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Telefon Numarası</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="05XX XXX XX XX" autocomplete="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">E-posta</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="ornek@email.com" autocomplete="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Şifre</label>
+                        <div class="form-input-wrapper">
+                            <input type="password" id="password" name="password" class="form-input" placeholder="••••••••" autocomplete="new-password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('password', this)" style="background:none; border:none; color: var(--color-gray-400); cursor: pointer; padding: 0 var(--space-sm);">
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Şifre Tekrar</label>
+                        <div class="form-input-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="••••••••" autocomplete="new-password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)" style="background:none; border:none; color: var(--color-gray-400); cursor: pointer; padding: 0 var(--space-sm);">
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: var(--space-xl);">
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">
+                                <a href="/Home/Terms" target="_blank" class="form-link">Kullanım koşullarını</a> ve <a href="/Home/Privacy" target="_blank" class="form-link">gizlilik politikasını</a> kabul ediyorum.
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--full btn--lg">
+                        Hesap Oluştur
+                    </button>
+                </form>
+
+                <div class="login-action" style="margin-top: var(--space-xl); text-align: center;">
+                    <span style="color: var(--color-gray-500); font-size: var(--fs-sm);">Zaten bir hesabınız var mı?</span>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn--secondary btn--full" style="margin-top: var(--space-md);">Giriş Yap</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SAĞ TARAF - MARKA -->
+        <div class="auth-brand-side">
+            <div class="auth-brand-content">
+                <div class="auth-brand-icon">
+                    <i data-lucide="rocket" style="width: 32px; height: 32px; color: var(--color-gold);"></i>
+                </div>
+                <h2>Dakikalar içinde başlayın</h2>
+                <p>
+                    Kayıt olduktan sonra işletmenizi oluşturun, hizmetlerinizi ekleyin ve hemen randevu almaya başlayın.
+                </p>
+
+                <div class="auth-brand-features">
+                    <div class="auth-brand-feature">
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="check" style="width: 20px; height: 20px; color: var(--color-gold);"></i>
+                        </div>
+                        <span class="auth-brand-feature__text">Kredi kartı gerektirmez</span>
+                    </div>
+
+                    <div class="auth-brand-feature">
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="check" style="width: 20px; height: 20px; color: var(--color-gold);"></i>
+                        </div>
+                        <span class="auth-brand-feature__text">Ücretsiz plan ile başlayın</span>
+                    </div>
+
+                    <div class="auth-brand-feature">
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="check" style="width: 20px; height: 20px; color: var(--color-gold);"></i>
+                        </div>
+                        <span class="auth-brand-feature__text">2 dakikada kurulum</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<i data-lucide="eye-off"></i>';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '<i data-lucide="eye"></i>';
+            }
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

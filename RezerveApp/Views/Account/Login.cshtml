@@ -1,0 +1,217 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Giriş Yap — RezerveApp</title>
+    <meta name="description" content="RezerveApp hesabınıza giriş yapın ve işletmenizi yönetmeye başlayın.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/variables.css">
+    <link rel="stylesheet" href="~/css/base.css">
+    <link rel="stylesheet" href="~/css/components.css">
+    <link rel="stylesheet" href="~/css/auth.css">
+
+    <link rel="icon" href="/images/logo.png">
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <!-- Sol taraf - Form -->
+        <div class="auth-form-side">
+            <div class="auth-form-container">
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="auth-logo" style="justify-content: center; text-decoration: none;">
+                    <img src="~/images/logo.png" alt="RezerveApp Logo" style="height: 60px; object-fit: contain;" />
+                </a>
+
+                <h1 class="auth-title">Tekrar hoş geldiniz</h1>
+
+                <p class="auth-subtitle">
+                    Hesabınıza giriş yaparak işletmenizi yönetmeye devam edin.
+                </p>
+
+                <!-- Hata mesajları -->
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="auth-error">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    </div>
+                }
+
+                <form asp-controller="Account"
+                      asp-action="Login"
+                      method="post">
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">
+                            E-posta veya Telefon
+                        </label>
+
+                        <input type="text"
+                               id="email"
+                               name="email"
+                               class="form-input"
+                               placeholder="ornek@email.com veya 05xxxxxxxxx"
+                               autocomplete="username"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            Şifre
+                        </label>
+
+                        <div class="form-input-wrapper">
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   class="form-input"
+                                   placeholder="••••••••"
+                                   autocomplete="current-password"
+                                   required>
+
+                            <button type="button"
+                                    class="toggle-password"
+                                    onclick="togglePassword('password', this)" style="background:none; border:none; color: var(--color-gray-400); cursor: pointer; padding: 0 var(--space-sm);">
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-footer">
+
+                        <div class="form-checkbox">
+                            <input type="checkbox"
+                                   id="remember"
+                                   name="remember">
+
+                            <label for="remember">
+                                Beni hatırla
+                            </label>
+                        </div>
+
+                        <a asp-controller="Account" asp-action="ForgotPassword" class="form-link">
+                            Şifremi unuttum
+                        </a>
+
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn--primary btn--full btn--lg">
+                        Giriş Yap
+                    </button>
+
+                </form>
+
+                <div class="register-action" style="margin-top: var(--space-xl); text-align: center;">
+                    <span>Henüz hesabınız yok mu?</span>
+
+                    <a asp-controller="Account"
+                       asp-action="Register"
+                       class="btn btn--secondary btn--full">
+                        Üye Ol
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Sağ taraf - Marka -->
+        <div class="auth-brand-side">
+
+            <div class="auth-brand-content">
+
+                <div class="auth-brand-icon">
+                    <i data-lucide="scissors" style="width: 32px; height: 32px; color: var(--color-gold);"></i>
+                </div>
+
+                <h2>
+                    İşletmenizi yönetmeye hazır mısınız?
+                </h2>
+
+                <p>
+                    Randevularınızı, müşterilerinizi ve çalışanlarınızı
+                    tek bir platformdan kolayca yönetin.
+                </p>
+
+                <div class="auth-brand-features">
+
+                    <div class="auth-brand-feature">
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="calendar-check" style="width: 20px; height: 20px; color: var(--color-gold);"></i>
+                        </div>
+
+                        <span class="auth-brand-feature__text">
+                            Online randevu yönetimi
+                        </span>
+                    </div>
+
+                    <div class="auth-brand-feature">
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="bar-chart-2" style="width: 20px; height: 20px; color: var(--color-gold);"></i>
+                        </div>
+
+                        <span class="auth-brand-feature__text">
+                            Detaylı raporlar ve analizler
+                        </span>
+                    </div>
+
+                    <div class="auth-brand-feature">
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="smartphone" style="width: 20px; height: 20px; color: var(--color-gold);"></i>
+                        </div>
+
+                        <span class="auth-brand-feature__text">
+                            Her cihazdan erişim
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<i data-lucide="eye-off"></i>';
+            }
+            else {
+                input.type = 'password';
+                btn.innerHTML = '<i data-lucide="eye"></i>';
+            }
+            lucide.createIcons();
+        }
+    </script>
+
+</body>
+</html>
+

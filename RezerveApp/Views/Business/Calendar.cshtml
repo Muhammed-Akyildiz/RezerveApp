@@ -1,0 +1,79 @@
+﻿@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Takvim";
+    ViewBag.PageSubtitle = "Randevuları sürükleyerek saat veya çalışan değiştirin";
+    ViewBag.ActiveNav = "Calendar";
+
+    var employees = (List<RezerveApp.Models.Employee>)ViewBag.Employees;
+    var initialView = (string)ViewBag.View;
+    var initialDate = ((DateTime)ViewBag.Date).ToString("yyyy-MM-dd");
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/calendar.css" asp-append-version="true" />
+}
+
+@section TopbarActions {
+    <a asp-controller="Business" asp-action="CreateAppointment" class="btn btn-gold">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+        Yeni Randevu
+    </a>
+}
+
+<div id="calendarRoot"
+     data-initial-view="@initialView"
+     data-initial-date="@initialDate"
+     data-employees="@System.Text.Json.JsonSerializer.Serialize(employees.Select(e => new { id = e.Id, name = e.Name }))"
+     data-events-url="@Url.Action("CalendarData", "Business")"
+     data-move-url="@Url.Action("MoveAppointment", "Business")">
+
+    @Html.AntiForgeryToken()
+
+    <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;" id="employeeLegend">
+        <span style="font-size: 14px; color: var(--text-muted); line-height: 24px;">Personel Renkleri:</span>
+        @{
+            var palette = new[] { "#C9A227", "#4F8AE0", "#E06A4F", "#5FBF7A", "#B478DB", "#E0B84F", "#4FC1C6" };
+            int i = 0;
+            foreach (var emp in employees)
+            {
+                var color = palette[i % palette.Length];
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <div style="width: 12px; height: 12px; border-radius: 50%; background-color: @color;"></div>
+                    <span style="font-size: 13px;">@emp.Name</span>
+                </div>
+                i++;
+            }
+        }
+    </div>
+
+    <div class="cal-toolbar">
+        <div class="cal-toolbar-left">
+            <button type="button" class="btn btn-outline btn-sm" id="calPrev">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6" /></svg>
+            </button>
+            <button type="button" class="btn btn-outline btn-sm" id="calToday">Bugün</button>
+            <button type="button" class="btn btn-outline btn-sm" id="calNext">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6" /></svg>
+            </button>
+            <div class="cal-title" id="calTitle"></div>
+        </div>
+        <div class="cal-toolbar-right">
+            <div class="cal-view-switch">
+                <button type="button" class="cal-view-btn" data-view="day">Gün</button>
+                <button type="button" class="cal-view-btn" data-view="week">Hafta</button>
+                <button type="button" class="cal-view-btn" data-view="month">Ay</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="calMessage" class="cal-message" style="display:none;"></div>
+
+    <div id="calBody" class="cal-body">
+        <div class="cal-loading">Takvim yükleniyor...</div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/calendar.js" asp-append-version="true"></script>
+}

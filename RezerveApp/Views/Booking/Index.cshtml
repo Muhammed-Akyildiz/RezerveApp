@@ -1,0 +1,1043 @@
+@{
+    Layout = "_BookingLayout";
+    ViewBag.PageTitle = "Randevu Al";
+    ViewBag.HideHeader = true;
+
+    var biz = (RezerveApp.Models.Business)ViewBag.Business;
+    var services = ViewBag.Services as IEnumerable<dynamic>;
+    var employees = ViewBag.Employees as IEnumerable<dynamic>;
+
+    var hasLocation = biz.Latitude.HasValue && biz.Longitude.HasValue;
+
+    var addressParts = new List<string>();
+
+    if (!string.IsNullOrWhiteSpace(biz.City))
+        addressParts.Add(biz.City);
+
+    if (!string.IsNullOrWhiteSpace(biz.District))
+        addressParts.Add(biz.District);
+
+    if (!string.IsNullOrWhiteSpace(biz.Address))
+        addressParts.Add(biz.Address);
+
+    var shortAddress = string.Join(" / ", addressParts);
+}
+
+<div class="booking-page">
+
+    <!-- =========================================================
+         BUSINESS HERO
+    ========================================================== -->
+    <section class="business-hero-banner" style="background-image: url('@(string.IsNullOrEmpty(biz.GalleryImage1) ? "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=1920&q=80" : biz.GalleryImage1)');">
+        <div class="hero-overlay"></div>
+        <div class="hero-content-wrapper">
+            
+            <!-- Column 1: Logo -->
+            <div class="hero-col hero-brand">
+                @if (!string.IsNullOrWhiteSpace(biz.LogoUrl))
+                {
+                    <img src="@biz.LogoUrl"
+                         alt="@biz.Name"
+                         class="hero-logo" />
+                }
+                else
+                {
+                    <div class="hero-logo hero-logo-fallback">
+                        @(string.IsNullOrWhiteSpace(biz.Name) ? "B" : biz.Name.Substring(0, 1).ToUpper())
+                    </div>
+                }
+            </div>
+
+            <div class="hero-divider"></div>
+
+            <!-- Column 2: Title and Info -->
+            <div class="hero-col hero-main-info">
+                <div class="hero-eyebrow">ERKEK BAKIM STÜDYOSU</div>
+                <h1 class="hero-title">@biz.Name</h1>
+                
+                <div class="hero-meta-row">
+                    <span class="hero-rating">
+                        @if (ViewBag.ReviewCount > 0)
+                        {
+                            <span class="stars">★</span>
+                            <strong>@(((double)ViewBag.AvgRating).ToString("0.0"))</strong>
+                            <span class="muted-text">| @ViewBag.ReviewCount Değerlendirme</span>
+                        }
+                        else
+                        {
+                            <span class="muted-text">Henüz değerlendirme yok</span>
+                        }
+                    </span>
+                </div>
+                
+                @if (!string.IsNullOrWhiteSpace(shortAddress))
+                {
+                    <div class="hero-location">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-icon-sm"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        @shortAddress
+                    </div>
+                }
+            </div>
+
+            <!-- Middle Spacer for Background Image visibility -->
+            <div class="hero-spacer"></div>
+
+            <!-- Column 3: Contact Info -->
+            <div class="hero-col hero-contact-info">
+                @if (!string.IsNullOrWhiteSpace(biz.Phone))
+                {
+                    <div class="hero-contact-item">
+                        <div class="icon-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-icon-sm"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                        <div class="contact-text">
+                            <span class="label">Telefon</span>
+                            <span class="value">@biz.Phone</span>
+                        </div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(biz.Instagram))
+                {
+                    var instaHandle = biz.Instagram.StartsWith("@") ? biz.Instagram : "@" + biz.Instagram;
+                    var instaLink = "https://instagram.com/" + instaHandle.TrimStart('@');
+                    <div class="hero-contact-item">
+                        <div class="icon-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-icon-sm"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                        </div>
+                        <div class="contact-text">
+                            <span class="label">Instagram</span>
+                            <a href="@instaLink" target="_blank" rel="noopener noreferrer" class="value" style="color: inherit; text-decoration: none;">@instaHandle</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="hero-divider"></div>
+
+            <!-- Column 4: CTA -->
+            <div class="hero-col hero-cta-section">
+                <button class="hero-cta-btn" onclick="document.getElementById('bookingWizard').scrollIntoView({behavior: 'smooth'})">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-icon-sm"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    Randevu Al
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-icon-sm arrow"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+                <div class="hero-cta-subtitle">KENDİNE ZAMAN AYIR</div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================================
+         PHOTO GALLERY
+    ========================================================== -->
+    <section class="barber-gallery">
+
+        <div class="gallery-main">
+            <img src="@(string.IsNullOrEmpty(biz.GalleryImage1) ? "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&w=1200&q=85" : biz.GalleryImage1)"
+                 alt="Berber salonu" />
+            <div class="gallery-overlay">
+                <span>PREMIUM BARBER</span>
+                <strong>Tarzınızı birlikte oluşturalım.</strong>
+            </div>
+        </div>
+
+        <div class="gallery-side">
+            <img src="@(string.IsNullOrEmpty(biz.GalleryImage2) ? "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=700&q=85" : biz.GalleryImage2)"
+                 alt="Berber" />
+
+            <img src="@(string.IsNullOrEmpty(biz.GalleryImage3) ? "https://images.unsplash.com/photo-1512690459411-b9245aed614b?auto=format&fit=crop&w=700&q=85" : biz.GalleryImage3)"
+                 alt="Saç kesimi" />
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         MAIN BOOKING AREA
+    ========================================================== -->
+    <section class="booking-section">
+
+        <div class="booking-intro">
+
+            <div>
+                <span class="section-eyebrow">RANDEVU</span>
+                <h2>Randevunuzu oluşturun</h2>
+                <p>
+                    Hizmetinizi, berberinizi, tarih ve saatinizi seçin.
+                    İşlem yalnızca birkaç dakika sürer.
+                </p>
+            </div>
+
+            <div class="booking-security">
+                <span>✓</span>
+                <div>
+                    <strong>Güvenli randevu</strong>
+                    <small>Bilgileriniz korunur.</small>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="wizard" id="bookingWizard">
+
+            <!-- =================================================
+                 STEP RAIL
+            ================================================== -->
+            <nav class="step-rail" id="stepRail">
+
+                <div class="step-rail-item active" data-step="1">
+                    <div class="step-num">1</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Hizmet</div>
+                        <div class="step-sub">İşlem seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="2">
+                    <div class="step-num">2</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Berber</div>
+                        <div class="step-sub">Uzman seçin</div>
+                    </div>
+                </div>
+
+                <style>
+                    .calendar {
+                        max-width: 380px;
+                    }
+
+                    .calendar-head {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 14px;
+                    }
+
+                        .calendar-head strong {
+                            font-size: 18px;
+                        }
+
+                    .calendar-grid {
+                        display: grid;
+                        grid-template-columns: repeat(7, 1fr);
+                        gap: 8px;
+                    }
+
+                    .cal-dow {
+                        text-align: center;
+                        font-size: 12px;
+                        color: #888;
+                        padding-bottom: 5px;
+                    }
+
+                    .cal-day {
+                        aspect-ratio: 1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 9px;
+                        font-size: 14px;
+                        color: #ddd;
+                        cursor: pointer;
+                        border: 1px solid #292929;
+                        background: #171717;
+                    }
+
+                        .cal-day:hover:not(.disabled) {
+                            border-color: #c9a24d;
+                        }
+
+                        .cal-day.disabled {
+                            color: #555;
+                            opacity: .4;
+                            cursor: not-allowed;
+                        }
+
+                        .cal-day.today {
+                            color: #c9a24d;
+                            font-weight: 700;
+                        }
+
+                        .cal-day.selected {
+                            background: #c9a24d;
+                            color: #14150f;
+                            font-weight: 700;
+                        }
+
+                        .cal-day.empty {
+                            visibility: hidden;
+                        }
+
+                    .cal-nav-btn {
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 8px;
+                        border: 1px solid #333;
+                        background: #171717;
+                        color: #ddd;
+                        cursor: pointer;
+                    }
+
+                    .slot-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                        gap: 10px;
+                    }
+
+                    .slot-pill {
+                        padding: 12px 8px;
+                        text-align: center;
+                        border-radius: 9px;
+                        border: 1px solid #292929;
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #ddd;
+                        cursor: pointer;
+                        background: #171717;
+                    }
+
+                        .slot-pill:hover:not(.disabled) {
+                            border-color: #c9a24d;
+                            color: #c9a24d;
+                        }
+
+                        .slot-pill.selected {
+                            background: #c9a24d;
+                            border-color: #c9a24d;
+                            color: #14150f;
+                        }
+
+                        .slot-pill.disabled {
+                            opacity: .3;
+                            text-decoration: line-through;
+                            cursor: not-allowed;
+                        }
+
+                    .slot-section-title {
+                        font-size: 12px;
+                        font-weight: 700;
+                        color: #888;
+                        margin: 18px 0 10px;
+                    }
+
+                </style>
+
+                <div class="step-rail-item" data-step="3">
+                    <div class="step-num">3</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Tarih</div>
+                        <div class="step-sub">Gün seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="4">
+                    <div class="step-num">4</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Saat</div>
+                        <div class="step-sub">Saat seçin</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="5">
+                    <div class="step-num">5</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Bilgiler</div>
+                        <div class="step-sub">İletişim bilgileri</div>
+                    </div>
+                </div>
+
+                <div class="step-rail-item" data-step="6">
+                    <div class="step-num">6</div>
+                    <div class="step-label-group">
+                        <div class="step-title">Onay</div>
+                        <div class="step-sub">Randevu özeti</div>
+                    </div>
+                </div>
+
+            </nav>
+
+
+            <!-- =================================================
+                 BOOKING FORM
+            ================================================== -->
+            <form class="wizard-panel"
+                  id="bookingForm"
+                  asp-controller="Booking"
+                  asp-action="Create"
+                  asp-route-slug="@biz.Slug"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div class="step-rail-mobile" id="stepRailMobile">
+                    <div class="step-rail-mobile-item active" data-step="1"></div>
+                    <div class="step-rail-mobile-item" data-step="2"></div>
+                    <div class="step-rail-mobile-item" data-step="3"></div>
+                    <div class="step-rail-mobile-item" data-step="4"></div>
+                    <div class="step-rail-mobile-item" data-step="5"></div>
+                    <div class="step-rail-mobile-item" data-step="6"></div>
+                </div>
+
+                <input type="hidden" name="serviceIds" id="ServiceId" required />
+                <input type="hidden" name="EmployeeId" id="EmployeeId" />
+                <input type="hidden" name="Date" id="Date" required />
+                <input type="hidden" name="Time" id="Time" required />
+
+
+                <!-- =================================================
+                     STEP 1
+                ================================================== -->
+                <div class="wizard-step" data-step-panel="1">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 01</span>
+                        <h2>Hangi hizmeti istersiniz?</h2>
+                        <p>Size uygun işlemi seçin.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="pick-grid" id="serviceGrid">
+
+                            @if (ViewBag.Services != null)
+                            {
+                                foreach (var s in ViewBag.Services)
+                                {
+                                    <div class="pick-card"
+                                         data-id="@s.Id"
+                                         data-name="@s.Name"
+                                         data-price="@s.Price.ToString("0", System.Globalization.CultureInfo.InvariantCulture)"
+                                         data-duration="@s.DurationMinutes"
+                                         onclick="selectService(this)">
+
+                                        <div class="service-card-top">
+                                            <div class="service-icon">✦</div>
+
+                                            <div class="service-check">
+                                                ✓
+                                            </div>
+                                        </div>
+
+                                        <div class="pick-service-name">
+                                            @s.Name
+                                        </div>
+
+                                        <div class="pick-service-row">
+
+                                            <div class="pick-service-price">
+                                                ₺@s.Price.ToString("0")
+                                            </div>
+
+                                            <div class="pick-service-duration">
+                                                <span>◷</span>
+                                                @s.DurationMinutes dk
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="empty-state">
+                                    <strong>Henüz hizmet eklenmemiş.</strong>
+                                    <span>İşletme yöneticisinin hizmet eklemesi gerekiyor.</span>
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+                        <span></span>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                disabled
+                                id="next1"
+                                onclick="goToStep(2)">
+
+                            Devam Et
+                            <span>→</span>
+
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 2
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="2"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 02</span>
+                        <h2>Berberinizi seçin</h2>
+                        <p>İsterseniz berberi işletmeye bırakabilirsiniz.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="employee-pick-grid" id="employeeGrid">
+
+                            <div class="employee-pick-card employee-pick-any selected"
+                                 data-id=""
+                                 data-name="Fark Etmez"
+                                 onclick="selectEmployee(this)">
+
+                                <div class="employee-pick-avatar employee-any-avatar">
+                                    ✦
+                                </div>
+
+                                <div>
+                                    <div class="employee-pick-name">
+                                        Fark Etmez
+                                    </div>
+                                    <small>Uygun olan berber atansın</small>
+                                </div>
+
+                            </div>
+
+
+                            @if (ViewBag.Employees != null)
+                            {
+                                foreach (var e in ViewBag.Employees)
+                                {
+                                    <div class="employee-pick-card"
+                                         data-id="@e.Id"
+                                         data-name="@e.Name"
+                                         onclick="selectEmployee(this)">
+
+                                        <div class="employee-pick-avatar">
+                                            @(string.IsNullOrWhiteSpace(e.Name)
+                                                                                ? "B"
+                                                                                : e.Name.Substring(0, 1).ToUpper())
+                                </div>
+
+                                        <div>
+                                            <div class="employee-pick-name">
+                                                @e.Name
+                                            </div>
+                                            <small>Berber</small>
+                                        </div>
+
+                                    </div>
+                                                        }
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(1)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                onclick="goToStep(3)">
+                            Devam Et →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 3
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="3"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 03</span>
+                        <h2>Tarih seçin</h2>
+                        <p>Size uygun bir gün belirleyin.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div style="margin-bottom: 20px; text-align: center;">
+                            <button type="button" class="btn btn-outline" id="btnFindNext" onclick="findNextAvailable(this)" style="width: 100%; max-width: 380px; border-color: var(--gold); color: var(--gold);">
+                                ⚡ En Yakın Müsait Saati Bul
+                            </button>
+                        </div>
+
+                        <div class="calendar" id="calendar"></div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(2)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                disabled
+                                id="next3"
+                                onclick="goToStep(4)">
+                            Devam Et →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 4
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="4"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 04</span>
+                        <h2>Uygun bir saat seçin</h2>
+                        <p id="timeStepSub">
+                            Seçtiğiniz tarihe göre müsait saatler listelenir.
+                        </p>
+                    </div>
+
+                    <div class="wizard-body"
+                         id="timeSlotsContainer">
+
+                        <div class="empty-slots">
+                            Önce tarih seçmelisiniz.
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(3)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                disabled
+                                id="next4"
+                                onclick="goToStep(5)">
+                            Devam Et →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 5
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="5"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 05</span>
+                        <h2>Bilgilerinizi girin</h2>
+                        <p>Randevunuz için iletişim bilgilerinizi bırakın.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="info-form">
+
+                            <div class="field">
+
+                                <label for="CustomerName">
+                                    Ad Soyad
+                                </label>
+
+                                <input class="input"
+                                       type="text"
+                                       id="CustomerName"
+                                       name="CustomerName"
+                                       placeholder="Adınız Soyadınız"
+                                       autocomplete="name"
+                                       required
+                                       oninput="updateSummary()" />
+
+                            </div>
+
+
+                            <div class="field">
+
+                                <label for="CustomerPhone">
+                                    Telefon
+                                </label>
+
+                                <input class="input"
+                                       type="tel"
+                                       id="CustomerPhone"
+                                       name="CustomerPhone"
+                                       placeholder="0532 000 00 00"
+                                       autocomplete="tel"
+                                       required
+                                       maxlength="11"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSummary();" />
+                            </div>
+
+                            <div class="field" style="display: flex; align-items: center; gap: 8px; margin-top: 15px;">
+                                <input type="checkbox" id="RememberMe" checked style="width: 18px; height: 18px; accent-color: var(--gold); flex-shrink: 0;" />
+                                <label for="RememberMe" style="font-size: 14px; margin: 0; cursor: pointer;">
+                                    Sonraki randevularım için bilgilerimi hatırla
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(4)">
+                            ← Geri
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-gold"
+                                id="next5"
+                                onclick="goToStep(6)">
+                            Özeti Gör →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STEP 6
+                ================================================== -->
+                <div class="wizard-step"
+                     data-step-panel="6"
+                     style="display:none;">
+
+                    <div class="wizard-panel-head">
+                        <span class="step-kicker">ADIM 06</span>
+                        <h2>Randevu Özeti</h2>
+                        <p>Bilgilerinizi kontrol edip randevunuzu tamamlayın.</p>
+                    </div>
+
+                    <div class="wizard-body">
+
+                        <div class="summary-list" id="summaryList">
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Hizmet
+                                </div>
+                                <div class="summary-value" id="sumService">—</div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Berber
+                                </div>
+                                <div class="summary-value" id="sumEmployee">
+                                    Fark Etmez
+                                </div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Tarih & Saat
+                                </div>
+                                <div class="summary-value" id="sumDateTime">
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Ad Soyad
+                                </div>
+                                <div class="summary-value" id="sumName">
+                                    —
+                                </div>
+                            </div>
+
+                            <div class="summary-row">
+                                <div class="summary-label">
+                                    Telefon
+                                </div>
+                                <div class="summary-value" id="sumPhone">
+                                    —
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-total">
+
+                            <div>
+                                <span>TOPLAM</span>
+                                <strong>Randevu Tutarı</strong>
+                            </div>
+
+                            <div class="summary-total-value"
+                                 id="sumTotal">
+                                ₺0
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="wizard-actions">
+
+                        <button type="button"
+                                class="btn btn-outline"
+                                onclick="goToStep(5)">
+                            ← Geri
+                        </button>
+
+                        <button type="submit"
+                                class="btn btn-gold btn-confirm">
+
+                            ✓
+                            Randevuyu Onayla
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         LOCATION
+    ========================================================== -->
+    @if (hasLocation)
+    {
+        <section class="location-section">
+
+            <div class="location-header">
+
+                <div>
+                    <span class="section-eyebrow">KONUM</span>
+                    <h2>Bizi nerede bulabilirsiniz?</h2>
+
+                    @if (!string.IsNullOrWhiteSpace(biz.Address))
+                    {
+                        <p>@shortAddress — @biz.Address</p>
+                    }
+                </div>
+
+                <a class="directions-button"
+                   href="https://www.google.com/maps/dir/?api=1&destination=@(biz.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture)),@(biz.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                   target="_blank"
+                   rel="noopener noreferrer">
+
+                    Yol Tarifi
+                    <span>↗</span>
+
+                </a>
+
+            </div>
+
+            <div class="live-map-wrapper">
+
+                <div id="bizLocationMap"
+                     class="customer-live-map"
+                     data-lat="@(biz.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                     data-lng="@(biz.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture))"
+                     data-name="@biz.Name">
+                </div>
+
+                <div class="map-caption">
+                    <span>⌖</span>
+                    <div>
+                        <strong>@biz.Name</strong>
+                        <small>Haritada işletme konumu</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    }
+    else
+    {
+        <section class="location-section location-empty">
+
+            <span class="section-eyebrow">KONUM</span>
+
+            <h2>Konum bilgisi yakında burada</h2>
+
+            <p>
+                İşletme yöneticisi konum bilgisini eklediğinde
+                interaktif harita burada görüntülenecek.
+            </p>
+
+        </section>
+    }
+
+    <footer style="margin-top: 60px; background: rgba(255, 255, 255, 0.02); border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 25px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; color: var(--text-muted); font-size: 14px;">
+        <!-- Left: Branding -->
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+            <h3 style="color: var(--text); margin: 0; font-size: 18px; font-weight: 600;">@biz.Name</h3>
+            <span style="font-size: 13px; opacity: 0.6;">Powered by <strong>RezerveApp</strong></span>
+        </div>
+
+        <!-- Center: Contact Info -->
+        <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: center;">
+            @if (!string.IsNullOrWhiteSpace(biz.Phone))
+            {
+                <a href="tel:@biz.Phone" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    @biz.Phone
+                </a>
+            }
+            @if (!string.IsNullOrWhiteSpace(biz.Instagram))
+            {
+                var instaHandle = biz.Instagram.StartsWith("@") ? biz.Instagram : "@" + biz.Instagram;
+                var instaLink = "https://instagram.com/" + instaHandle.TrimStart('@');
+                <a href="@instaLink" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    @instaHandle
+                </a>
+            }
+            @if (!string.IsNullOrWhiteSpace(shortAddress))
+            {
+                <span style="display: flex; align-items: center; gap: 8px;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    @shortAddress @(!string.IsNullOrWhiteSpace(biz.Address) ? " - " + biz.Address : "")
+                </span>
+            }
+        </div>
+    </footer>
+</div>
+
+
+@section Scripts {
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            crossorigin=""></script>
+
+    <script>
+        // Leaflet default icon fix
+        const defaultIcon = L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        window.__bookingConfig = {
+            businessClosedDays: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.BusinessClosedDays ?? new List<int>())),
+            businessHolidays: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.BusinessHolidays ?? new List<string>())),
+            employeeClosedDays: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.EmployeeClosedDays ?? new List<dynamic>())),
+            employeeServiceMap: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.EmployeeServiceMap ?? new List<dynamic>()))
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const mapElement =
+                document.getElementById("bizLocationMap");
+
+            if (!mapElement || typeof L === "undefined") {
+                return;
+            }
+
+            let lat =
+                parseFloat(mapElement.dataset.lat);
+
+            let lng =
+                parseFloat(mapElement.dataset.lng);
+
+            if (Number.isFinite(lat) && (lat < -90 || lat > 90)) {
+                lat = NaN;
+            }
+            if (Number.isFinite(lng) && (lng < -180 || lng > 180)) {
+                lng = NaN;
+            }
+
+            const name =
+                mapElement.dataset.name || "İşletme";
+
+            let finalLat = lat;
+            let finalLng = lng;
+            let hasValidLocation = true;
+
+            if (!Number.isFinite(lat) ||
+                !Number.isFinite(lng) ||
+                Math.abs(lat) > 90 ||
+                Math.abs(lng) > 180) {
+                finalLat = 39.9208; // Center of Turkey
+                finalLng = 32.8541;
+                hasValidLocation = false;
+            }
+
+            const map =
+                L.map(mapElement, {
+                    scrollWheelZoom: false
+                }).setView([finalLat, finalLng], hasValidLocation ? 16 : 6);
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    maxZoom: 19,
+                    attribution:
+                        "&copy; OpenStreetMap contributors"
+                }
+            ).addTo(map);
+
+            if (hasValidLocation) {
+                const marker =
+                    L.marker([finalLat, finalLng], {icon: defaultIcon})
+                        .addTo(map);
+
+                marker.bindPopup(
+                    "<strong>" +
+                    name +
+                    "</strong>"
+                );
+            }
+
+            setTimeout(function () {
+                map.invalidateSize();
+            }, 300);
+
+        });
+
+    </script>
+}

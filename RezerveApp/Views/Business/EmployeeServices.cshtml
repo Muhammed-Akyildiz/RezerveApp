@@ -1,0 +1,46 @@
+﻿@model List<RezerveApp.Models.Service>
+
+@{
+    Layout = "_BusinessLayout";
+    var employee = (RezerveApp.Models.Employee)ViewBag.Employee;
+    var assignedIds = (List<int>)ViewBag.AssignedServiceIds;
+
+    ViewBag.PageEyebrow = "Çalışanlar";
+    ViewBag.PageTitle = "Verebildiği Hizmetler";
+    ViewBag.PageSubtitle = employee.Name;
+    ViewBag.ActiveNav = "Employees";
+}
+
+<form asp-controller="Business" asp-action="SaveEmployeeServices" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="employeeId" value="@employee.Id" />
+
+    <div class="card card-pad">
+        <h3 style="margin-bottom:6px;">@employee.Name hangi hizmetleri verebiliyor?</h3>
+        <p class="hint" style="margin-bottom:18px;">
+            Hiçbir hizmet işaretlenmezse bu çalışan tüm hizmetler için müsait kabull edilir.
+        </p>
+
+        @if (!Model.Any())
+        {
+            <p class="cell-muted">Henüz hizmet tanımlanmamış. Önce Hizmetler sayfasından hizmet ekleyin.</p>
+        }
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            @foreach (var service in Model)
+            {
+                <label style="display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" name="serviceIds" value="@service.Id"
+                           checked="@assignedIds.Contains(service.Id)" />
+                    <span>@service.Name</span>
+                    <span class="cell-muted">— @service.Price.ToString("N2") ₺ / @service.DurationMinutes dk</span>
+                </label>
+            }
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:20px;">
+            <a asp-controller="Business" asp-action="Employees" class="btn btn-outline">Vazgeç</a>
+            <button type="submit" class="btn btn-gold">Kaydet</button>
+        </div>
+    </div>
+</form>

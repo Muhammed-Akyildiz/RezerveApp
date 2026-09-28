@@ -1,0 +1,443 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "İşletmenizi Oluşturun";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>İşletmenizi Oluşturun — RezerveApp</title>
+    <meta name="description"
+          content="RezerveApp'da işletmenizin bilgilerini girerek online randevu sayfanızı oluşturun.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/variables.css">
+    <link rel="stylesheet" href="~/css/base.css">
+    <link rel="stylesheet" href="~/css/components.css">
+    <link rel="stylesheet" href="~/css/auth.css">
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          crossorigin="" />
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <!-- SOL TARAF -->
+        <div class="auth-form-side">
+
+            <div class="auth-form-container" style="max-width: 480px;">
+
+                <!-- LOGO -->
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="auth-logo">
+
+                    <img src="/images/logo.png" alt="RezerveApp Logo" style="height: 32px; object-fit: contain; margin-right: 8px;" />
+                    Rezerve<span style="color:var(--color-gold);">App</span>
+
+                </a>
+
+
+                <!-- PROGRESS -->
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: var(--space-2xl);">
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+
+                        <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-gold-muted); border: 2px solid var(--color-gold); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--color-gold);">
+                            ✓
+                        </div>
+
+                        <span style="font-size: var(--fs-xs); color: var(--color-gold); font-weight: 500;">
+                            Hesap
+                        </span>
+
+                    </div>
+
+                    <div style="flex: 1; height: 1px; background: var(--color-gold);"></div>
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+
+                        <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-gold); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--color-black);">
+                            2
+                        </div>
+
+                        <span style="font-size: var(--fs-xs); color: var(--color-white); font-weight: 600;">
+                            İşletme
+                        </span>
+
+                    </div>
+
+                    <div style="flex: 1; height: 1px; background: var(--color-dark-border);"></div>
+
+                    <div style="display: flex; align-items: center; gap: 8px;">
+
+                        <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-dark-secondary); border: 1px solid var(--color-dark-border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--color-gray-600);">
+                            3
+                        </div>
+
+                        <span style="font-size: var(--fs-xs); color: var(--color-gray-600); font-weight: 500;">
+                            Tamamla
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BAŞLIK -->
+                <h1 class="auth-title">
+                    İşletmenizi oluşturun
+                </h1>
+
+                <p class="auth-subtitle">
+                    İşletme bilgilerinizi girin.
+                    Bu bilgiler randevu sayfanızda görüntülenecektir.
+                </p>
+
+
+                <!-- FORM -->
+                <form asp-controller="Business"
+                      asp-action="Create"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    @Html.AntiForgeryToken()
+
+                    <!-- HATALAR -->
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="auth-error">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+
+                    <!-- İŞLETME ADI -->
+                    <div class="form-group">
+
+                        <label class="form-label"
+                               for="business-name">
+                            İşletme Adı
+                        </label>
+
+                        <input type="text"
+                               id="business-name"
+                               name="name"
+                               class="form-input"
+                               placeholder="Örn: Kuaför Mert"
+                               required>
+
+                    </div>
+
+
+                    <!-- TELEFON + EMAIL -->
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="business-phone">
+                                Telefon
+                            </label>
+
+                            <input type="tel"
+                                   id="business-phone"
+                                   name="phone"
+                                   class="form-input"
+                                   placeholder="0532 123 45 67"
+                                   maxlength="11"
+                                   value="@(ViewBag.RegisteredPhone ?? "")"
+                                   @(ViewBag.RegisteredPhone != null ? "readonly style=\"opacity:0.7; cursor:not-allowed;\"" : "")
+                                   required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="business-email">
+                                E-posta
+                            </label>
+
+                            <input type="email"
+                                   id="business-email"
+                                   name="email"
+                                   class="form-input"
+                                   placeholder="info@isletme.com"
+                                   value="@(ViewBag.RegisteredEmail ?? "")"
+                                   @(ViewBag.RegisteredEmail != null ? "readonly style=\"opacity:0.7; cursor:not-allowed;\"" : "")>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- İL + İLÇE -->
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="business-city">
+                                İl
+                            </label>
+
+                            <select id="business-city"
+                                    name="city"
+                                    class="form-select"
+                                    required>
+
+                                <option value="" disabled selected>
+                                    İl seçin
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label class="form-label"
+                                   for="business-district">
+                                İlçe
+                            </label>
+
+                            <select id="business-district"
+                                    name="district"
+                                    class="form-select"
+                                    disabled>
+
+                                <option value="" disabled selected>
+                                    Önce il seçin
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ADRES -->
+                    <div class="form-group">
+
+                        <label class="form-label"
+                               for="business-address">
+                            Adres
+                        </label>
+
+                        <input type="text"
+                               id="business-address"
+                               name="address"
+                               class="form-input"
+                               placeholder="Mahalle, Cadde/Sokak, No"
+                               required>
+
+                    </div>
+
+
+                    <!-- LOGO -->
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            İşletme Logosu
+                        </label>
+
+                        <div class="form-upload"
+                             id="logoUpload">
+
+                            <div class="form-upload__icon">
+                                <i data-lucide="image" style="width:28px;height:28px;color:var(--color-gray-500);"></i>
+                            </div>
+
+                            <p class="form-upload__text">
+                                <strong>Tıklayın</strong>
+                                veya sürükleyip bırakın
+                            </p>
+
+                            <p class="form-upload__hint">
+                                PNG, JPG veya WEBP — Max 5MB
+                            </p>
+
+                            <input type="file"
+                                   name="logo"
+                                   id="logo"
+                                   accept=".png,.jpg,.jpeg,.webp"
+                                   style="display: none;">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HARİTA -->
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Harita Konumu <span style="color:var(--color-danger);">*</span>
+                        </label>
+
+                        <div id="businessMap"
+                             style="width:100%; height:280px; border-radius:var(--radius-md); border:1px solid var(--color-dark-border); overflow:hidden; z-index:0;">
+                        </div>
+
+                        <p id="mapCoords"
+                           style="font-size:var(--fs-xs); color:var(--color-gray-500); margin-top:8px;">
+                            <i data-lucide="map-pin" style="width:14px;height:14px;display:inline-block;vertical-align:text-bottom;"></i> Harita üzerinde konumunuzu seçmek için tıklayın
+                        </p>
+                        <p id="mapError" style="font-size:var(--fs-xs); color:var(--color-danger); margin-top:4px; display:none;">
+                            <i data-lucide="alert-triangle" style="width:14px;height:14px;display:inline-block;vertical-align:text-bottom;"></i> Lütfen harita üzerinden konumunuzu seçin.
+                        </p>
+
+                        <input type="hidden"
+                               name="latitude"
+                               id="latitude">
+
+                        <input type="hidden"
+                               name="longitude"
+                               id="longitude">
+
+                    </div>
+
+
+                    <!-- BUTON -->
+                    <div style="margin-top: var(--space-xl);">
+
+                        <button type="submit"
+                                id="submitBtn"
+                                class="btn btn--primary btn--full btn--lg"
+                                onclick="return validateForm()">
+
+                            İşletmeyi Oluştur
+
+                        </button>
+
+                    </div>
+
+                    <script>
+                    function validateForm() {
+                        var lat = document.getElementById('latitude').value;
+                        var lng = document.getElementById('longitude').value;
+
+                        if (!lat || !lng) {
+                            document.getElementById('mapError').style.display = 'block';
+                            document.getElementById('businessMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            return false;
+                        } else {
+                            document.getElementById('mapError').style.display = 'none';
+                        }
+
+                        return true;
+                    }
+                    </script>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAĞ TARAF -->
+        <div class="auth-brand-side">
+
+            <div class="auth-brand-content">
+
+                <div class="auth-brand-icon">
+                    <i data-lucide="building-2" style="width:32px;height:32px;color:var(--color-gold);"></i>
+                </div>
+
+                <h2>
+                    İşletmeniz hazır olacak
+                </h2>
+
+                <p>
+                    İşletme bilgilerinizi girdikten sonra size özel
+                    randevu sayfanız otomatik olarak oluşturulacak.
+                </p>
+
+                <div class="auth-brand-features">
+
+                    <div class="auth-brand-feature">
+
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="link" style="width:18px;height:18px;color:var(--color-gold);"></i>
+                        </div>
+
+                        <span class="auth-brand-feature__text">
+                            Size özel randevu linki
+                        </span>
+
+                    </div>
+
+
+                    <div class="auth-brand-feature">
+
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="smartphone" style="width:18px;height:18px;color:var(--color-gold);"></i>
+                        </div>
+
+                        <span class="auth-brand-feature__text">
+                            Mobil uyumlu sayfa
+                        </span>
+
+                    </div>
+
+
+                    <div class="auth-brand-feature">
+
+                        <div class="auth-brand-feature__icon">
+                            <i data-lucide="zap" style="width:18px;height:18px;color:var(--color-gold);"></i>
+                        </div>
+
+                        <span class="auth-brand-feature__text">
+                            Anında yayında
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            crossorigin=""></script>
+
+
+    <!-- Adres -->
+    <script src="~/js/data/tr-il-ilce.js"></script>
+    <script src="~/js/address-cascade.js"></script>
+
+
+    <!-- Business -->
+    <script src="~/js/business.js"></script>
+    <script src="~/js/create-business.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script>lucide.createIcons();</script>
+
+</body>
+</html>

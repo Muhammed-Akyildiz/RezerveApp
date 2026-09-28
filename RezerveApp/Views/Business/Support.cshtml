@@ -1,0 +1,114 @@
+@{
+    Layout = "~/Views/Shared/_BusinessLayout.cshtml";
+    ViewData["Title"] = "Destek — RezerveApp";
+}
+
+<div class="page-header">
+    <div>
+        <div class="page-eyebrow">YÖNETİM</div>
+        <h1 class="page-title">Destek</h1>
+        <p class="page-subtitle">Sorunlarınızı ve taleplerinizi bize iletin</p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="background:rgba(90,138,94,0.15); border:1px solid #5a8a5e; color:#8fd493; padding:16px; border-radius:10px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+        <i data-lucide="check-circle" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span>@TempData["SuccessMessage"]</span>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div style="background:rgba(200,60,60,0.12); border:1px solid rgba(200,60,60,0.4); color:#f87171; padding:16px; border-radius:10px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+        <i data-lucide="alert-circle" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span>@TempData["ErrorMessage"]</span>
+    </div>
+}
+
+<div style="display:grid; grid-template-columns: 1fr 340px; gap:24px; align-items:start;">
+
+    <!-- FORM -->
+    <form asp-action="Support" method="post" class="profile-form">
+        @Html.AntiForgeryToken()
+
+        <div class="profile-card">
+            <div class="profile-card-head">
+                <div>
+                    <h2>Destek Talebi Oluştur</h2>
+                    <p>Karşılaştığınız sorunu veya talebinizi detaylı olarak açıklayın.</p>
+                </div>
+            </div>
+
+            <div class="profile-grid">
+                <div class="profile-field profile-field-wide">
+                    <label for="subject">Konu</label>
+                    <select id="subject" name="subject" class="profile-input" required>
+                        <option value="" disabled selected>Konu seçin</option>
+                        <option value="Teknik Sorun">Teknik Sorun</option>
+                        <option value="Paket / Ödeme">Paket / Ödeme</option>
+                        <option value="Hesap İşlemleri">Hesap İşlemleri</option>
+                        <option value="Özellik Talebi">Özellik Talebi</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+
+                <div class="profile-field profile-field-wide">
+                    <label for="message">Mesajınız</label>
+                    <textarea id="message"
+                              name="message"
+                              class="profile-input"
+                              rows="6"
+                              placeholder="Sorununuzu veya talebinizi detaylı şekilde yazın..."
+                              style="resize:vertical;"
+                              required></textarea>
+                </div>
+            </div>
+
+            <div style="padding: 24px; border-top: 1px solid var(--color-dark-border);">
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="send" style="width:16px;height:16px;margin-right:8px;"></i>
+                    Gönder
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- BİLGİ PANELI -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+        <div class="card card-pad" style="background:var(--color-gold-muted); border:1px solid rgba(201,169,110,0.3);">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <i data-lucide="clock" style="width:18px;height:18px;color:var(--color-gold);"></i>
+                <span style="font-weight:600; font-size:14px;">Yanıt Süresi</span>
+            </div>
+            <p style="font-size:13px; color:var(--color-gray-400); line-height:1.6; margin:0;">
+                Destek taleplerinize genellikle <strong style="color:var(--color-white);">24 saat içinde</strong> yanıt veriyoruz.
+            </p>
+        </div>
+
+        <div class="card card-pad">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <i data-lucide="phone" style="width:18px;height:18px;color:var(--color-gold);"></i>
+                <span style="font-weight:600; font-size:14px;">Acil Destek</span>
+            </div>
+            <p style="font-size:13px; color:var(--color-gray-400); line-height:1.6; margin:0;">
+                Acil durumlarda WhatsApp üzerinden ulaşabilirsiniz:<br>
+                <a href="https://wa.me/905000000000" target="_blank" style="color:var(--color-gold); text-decoration:none; font-weight:600;">+90 500 000 00 00</a>
+            </p>
+        </div>
+
+        <div class="card card-pad">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <i data-lucide="mail" style="width:18px;height:18px;color:var(--color-gold);"></i>
+                <span style="font-weight:600; font-size:14px;">E-posta</span>
+            </div>
+            <p style="font-size:13px; color:var(--color-gray-400); line-height:1.6; margin:0;">
+                <a href="mailto:destek@rezerveapp.com" style="color:var(--color-gold); text-decoration:none; font-weight:600;">destek@rezerveapp.com</a>
+            </p>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,78 @@
+﻿@model RezerveApp.Models.Appointment
+@{
+    Layout = "_BookingLayout";
+    ViewData["Title"] = "Randevu İptali";
+    ViewBag.Business = Model.Business;
+}
+
+<div class="booking-container" style="max-width: 600px; margin: 40px auto; padding: var(--space-xl);">
+    
+    <div class="card" style="padding: var(--space-2xl); text-align: center;">
+        
+        <div style="margin-bottom: var(--space-xl); color: var(--color-danger);">
+            <i data-lucide="calendar-x" style="width: 64px; height: 64px; margin: 0 auto;"></i>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-md);">Randevu İptali</h2>
+
+        <div style="background: var(--color-dark); border-radius: var(--radius-md); padding: var(--space-xl); margin-bottom: var(--space-xl); text-align: left;">
+            <div style="margin-bottom: var(--space-sm);"><strong>İşletme:</strong> @Model.Business.Name</div>
+            <div style="margin-bottom: var(--space-sm);"><strong>Hizmet:</strong> @Model.Service?.Name</div>
+            <div style="margin-bottom: var(--space-sm);"><strong>Tarih:</strong> @Model.AppointmentDate.ToString("dd.MM.yyyy")</div>
+            <div style="margin-bottom: var(--space-sm);"><strong>Saat:</strong> @Model.StartTime.ToString("hh\\:mm")</div>
+            <div><strong>Durum:</strong> 
+                @if (Model.Status == "Cancelled")
+                {
+                    <span style="color: var(--color-danger);">İptal Edildi</span>
+                }
+                else
+                {
+                    <span>@Model.Status</span>
+                }
+            </div>
+        </div>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="hint" style="color: var(--color-danger); margin-bottom: var(--space-md); padding: var(--space-md); border: 1px solid var(--color-danger); border-radius: var(--radius-md);">
+                @TempData["Error"]
+            </div>
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="hint" style="color: var(--color-success); margin-bottom: var(--space-md); padding: var(--space-md); border: 1px solid var(--color-success); border-radius: var(--radius-md);">
+                @TempData["Success"]
+            </div>
+        }
+        else if (ViewBag.CanCancel == false)
+        {
+            <div class="hint" style="color: var(--color-warning); margin-bottom: var(--space-md); padding: var(--space-md); border: 1px solid var(--color-warning); border-radius: var(--radius-md);">
+                @ViewBag.Message
+            </div>
+        }
+
+        @if (ViewBag.CanCancel == true && TempData["Success"] == null)
+        {
+            <p style="margin-bottom: var(--space-xl); color: var(--color-gray-400);">
+                Randevunuzu iptal etmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+            </p>
+
+            <form asp-controller="Booking" asp-action="ConfirmCancel" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="phone" value="@Model.CustomerPhone" />
+                
+                <button type="submit" class="btn btn--primary" style="background: var(--color-danger); border-color: var(--color-danger); width: 100%;">
+                    Evet, Randevumu İptal Et
+                </button>
+            </form>
+        }
+        else
+        {
+            <a href="/Booking/@Model.Business.Slug" class="btn btn--primary" style="width: 100%; margin-top: var(--space-md);">
+                Yeni Randevu Al
+            </a>
+        }
+    </div>
+</div>

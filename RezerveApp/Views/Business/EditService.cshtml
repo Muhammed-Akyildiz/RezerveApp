@@ -1,0 +1,37 @@
+﻿@model RezerveApp.Models.Service
+
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Hizmetler";
+    ViewBag.PageTitle = "Hizmeti Düzenle";
+    ViewBag.PageSubtitle = Model.Name;
+    ViewBag.ActiveNav = "Services";
+}
+
+<form asp-controller="Business" asp-action="EditService" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card card-pad">
+        <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr;">
+            <div class="field">
+                <label for="name">Hizmet Adı</label>
+                <input class="input" type="text" id="name" name="name" value="@Model.Name" required />
+            </div>
+            <div class="field">
+                <label for="price">Fiyat (₺)</label>
+                <input class="input" type="number" step="0.01" id="price" name="price" value="@Model.Price" required />
+            </div>
+            <div class="field">
+                <label for="durationMinutes">Süre (dk)</label>
+                <input class="input" type="number" id="durationMinutes" name="durationMinutes" value="@Model.DurationMinutes" required />
+            </div>
+        </div>
+
+        <div style="display:flex; gap:12px; justify-content:flex-end;">
+            <a asp-controller="Business" asp-action="Services" class="btn btn-outline">Vazgeç</a>
+            <button type="submit" class="btn btn-gold">Kaydet</button>
+        </div>
+    </div>
+</form>

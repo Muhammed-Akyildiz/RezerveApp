@@ -1,0 +1,461 @@
+﻿@model RezerveApp.Models.BusinessDetailsViewModel
+
+@{
+    Layout = "_AdminLayout";
+
+    ViewBag.PageEyebrow = "İşletme Yönetimi";
+    ViewBag.PageTitle = Model.Business.Name;
+    ViewBag.PageSubtitle = "İşletme detayları, abonelik durumu, çalışanlar ve diğer veriler";
+    ViewBag.ActiveNav = "Businesses";
+
+    var badgeClass = Model.Business.Status switch
+    {
+        RezerveApp.Models.BusinessStatus.Approved => "badge-success",
+        RezerveApp.Models.BusinessStatus.Pending => "badge-gold",
+        RezerveApp.Models.BusinessStatus.Rejected => "badge-danger",
+        RezerveApp.Models.BusinessStatus.Suspended => "badge-neutral",
+        _ => "badge-neutral"
+    };
+
+    var badgeText = Model.Business.Status switch
+    {
+        RezerveApp.Models.BusinessStatus.Approved => "Onaylı",
+        RezerveApp.Models.BusinessStatus.Pending => "Beklemede",
+        RezerveApp.Models.BusinessStatus.Rejected => "Reddedildi",
+        RezerveApp.Models.BusinessStatus.Suspended => "Askıya Alındı",
+        _ => Model.Business.Status.ToString()
+    };
+}
+
+@section TopbarActions
+{
+    <a asp-controller="Admin"
+       asp-action="Edit"
+       asp-route-id="@Model.Business.Id"
+       class="btn btn-outline">
+        <i data-lucide="edit-2" class="icon-sm"></i>
+        Düzenle
+    </a>
+
+    <a asp-controller="Admin"
+       asp-action="Index"
+       class="btn btn-ghost">
+        <i data-lucide="arrow-left" class="icon-sm"></i>
+        Geri
+    </a>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="hint" style="color:var(--danger); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i data-lucide="alert-circle" class="icon-sm"></i>
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="hint" style="color:var(--success); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i data-lucide="check-circle" class="icon-sm"></i>
+        @TempData["Success"]
+    </div>
+}
+
+
+<!-- =========================================================
+     İŞLETME BİLGİLERİ (HEADER)
+     ========================================================= -->
+
+<div class="card" style="margin-bottom:24px; padding:32px;">
+    
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:24px;">
+        
+        <div style="display:flex; gap:24px; align-items:center;">
+            
+            <div style="width:80px; height:80px; border-radius:50%; background:var(--color-dark-border); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; color:var(--color-gold);">
+                @(string.IsNullOrWhiteSpace(Model.Business.Name) ? "B" : Model.Business.Name.Substring(0, 1).ToUpper())
+            </div>
+
+            <div>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+                    <h2 style="margin:0; font-size:24px;">@Model.Business.Name</h2>
+                    <span class="tag tag--dark" style="border: 1px solid var(--color-gold); color:var(--color-gold);">
+                        /@Model.Business.Slug
+                    </span>
+                    <span class="badge @badgeClass" style="padding:4px 10px; font-size:12px;">
+                        @badgeText
+                    </span>
+                    @if (!Model.Business.IsActive)
+                    {
+                        <span class="badge badge-neutral" style="padding:4px 10px; font-size:12px;">Pasif</span>
+                    }
+                </div>
+
+                <div style="display:flex; flex-wrap:wrap; gap:20px; color:var(--color-gray-400); font-size:14px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="phone" class="icon-sm" style="color:var(--color-gold);"></i>
+                        @Model.Business.Phone
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.Business.Email))
+                    {
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="mail" class="icon-sm" style="color:var(--color-gold);"></i>
+                            @Model.Business.Email
+                        </div>
+                    }
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="map-pin" class="icon-sm" style="color:var(--color-gold);"></i>
+                        @Model.Business.Address
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="calendar" class="icon-sm" style="color:var(--color-gold);"></i>
+                        Kayıt: @(Model.Business.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy"))
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DURUM BUTONLARI -->
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            @if (Model.Business.Status != RezerveApp.Models.BusinessStatus.Approved)
+            {
+                <form asp-controller="Admin" asp-action="Approve" asp-route-id="@Model.Business.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-gold btn-sm" style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="check" class="icon-sm"></i> Onayla
+                    </button>
+                </form>
+            }
+
+            @if (Model.Business.Status != RezerveApp.Models.BusinessStatus.Rejected)
+            {
+                <form asp-controller="Admin" asp-action="Reject" asp-route-id="@Model.Business.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline btn-sm" style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="x" class="icon-sm"></i> Reddet
+                    </button>
+                </form>
+            }
+
+            @if (Model.Business.Status != RezerveApp.Models.BusinessStatus.Suspended)
+            {
+                <form asp-controller="Admin" asp-action="Suspend" asp-route-id="@Model.Business.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline btn-sm" style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="pause" class="icon-sm"></i> Askıya Al
+                    </button>
+                </form>
+            }
+
+            @if (!Model.Business.IsActive)
+            {
+                <form asp-controller="Admin" asp-action="Activate" asp-route-id="@Model.Business.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-gold btn-sm" style="display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="play" class="icon-sm"></i> Aktifleştir
+                    </button>
+                </form>
+            }
+
+            <form asp-controller="Admin" asp-action="Delete" asp-route-id="@Model.Business.Id" method="post" onsubmit="event.preventDefault(); Swal.fire({ title: 'Emin misiniz?', text: 'Bu işletmeyi kalıcı olarak silmek istediğinize emin misiniz?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Evet, Sil!', cancelButtonText: 'İptal' }).then((result) => { if (result.isConfirmed) { this.submit(); } });">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline btn-sm" style="color:var(--color-danger); border-color:var(--color-danger); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="trash-2" class="icon-sm"></i> Sil
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- =========================================================
+     ABONELİK / PAKET YÖNETİMİ
+     ========================================================= -->
+
+<div class="card" style="margin-bottom:24px;">
+    
+    <div class="card-header" style="border-bottom:1px solid var(--color-dark-border);">
+        <div>
+            <h3><i data-lucide="credit-card" class="icon-sm" style="vertical-align:middle; margin-right:8px; color:var(--color-gold);"></i>Abonelik Bilgileri</h3>
+            <div class="card-header-sub">İşletmenin güncel abonelik paketi ve fatura durumu</div>
+        </div>
+    </div>
+
+    <div class="card-pad">
+        
+        @if (Model.ActiveSubscription != null)
+        {
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:24px; margin-bottom:32px;">
+                
+                <div>
+                    <div style="font-size:12px; color:var(--color-gray-500); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Paket</div>
+                    <div style="font-size:16px; font-weight:600;">@Model.ActiveSubscription.SubscriptionPlan?.Name</div>
+                </div>
+
+                <div>
+                    <div style="font-size:12px; color:var(--color-gray-500); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Faturalama</div>
+                    <div style="font-size:16px; font-weight:600;">@(Model.ActiveSubscription.BillingPeriod == RezerveApp.Models.BillingPeriod.Monthly ? "Aylık" : "Yıllık")</div>
+                </div>
+
+                <div>
+                    <div style="font-size:12px; color:var(--color-gray-500); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Geçerlilik</div>
+                    <div style="font-size:16px; font-weight:600;">
+                        @(Model.ActiveSubscription.StartDate.ToLocalTime().ToString("dd.MM.yyyy")) - 
+                        @(Model.ActiveSubscription.EndDate.HasValue ? Model.ActiveSubscription.EndDate.Value.ToLocalTime().ToString("dd.MM.yyyy") : "Süresiz")
+                    </div>
+                </div>
+
+                <div>
+                    <div style="font-size:12px; color:var(--color-gray-500); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Çalışan Limiti</div>
+                    <div style="font-size:16px; font-weight:600;">@(Model.ActiveSubscription.SubscriptionPlan?.MaxEmployees?.ToString() ?? "Sınırsız")</div>
+                </div>
+
+                <div>
+                    <div style="font-size:12px; color:var(--color-gray-500); margin-bottom:4px; text-transform:uppercase; letter-spacing:1px;">Ödeme Durumu</div>
+                    <div style="font-size:16px; font-weight:600;">
+                        @if (Model.ActiveSubscription.PaymentStatus == RezerveApp.Models.PaymentStatus.Paid)
+                        {
+                            <span class="tag tag--success" style="display:inline-flex; align-items:center; gap:4px;"><i data-lucide="check-circle" class="icon-sm"></i> Ödendi</span>
+                        }
+                        else
+                        {
+                            <span class="tag tag--warning" style="display:inline-flex; align-items:center; gap:4px;"><i data-lucide="clock" class="icon-sm"></i> Ödeme Bekleniyor</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- ÖDEME ONAY BUTONU (EĞER BEKLİYORSA) -->
+            @if (Model.ActiveSubscription.PaymentStatus != RezerveApp.Models.PaymentStatus.Paid)
+            {
+                <form asp-controller="Admin" asp-action="MarkPaymentReceived" method="post" style="margin-bottom:24px; padding:16px; background:rgba(200,162,78,0.1); border-radius:8px; border:1px dashed var(--color-gold);">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="businessId" value="@Model.Business.Id" />
+                    
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div style="display:flex; align-items:center; gap:12px; color:var(--color-gold);">
+                            <i data-lucide="info" class="icon-sm"></i> 
+                            <span>İşletme ödemeyi gerçekleştirdiyse onaylayın ve yeni bitiş tarihini belirleyin.</span>
+                        </div>
+                        
+                        <div style="display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;">
+                            <div class="form-group" style="margin:0; width:200px;">
+                                <label for="newEndDate" class="form-label" style="color:var(--color-gold);">Yeni Bitiş Tarihi</label>
+                                <input type="date" id="newEndDate" name="newEndDate" class="input" 
+                                       value="@(Model.ActiveSubscription.EndDate.HasValue ? Model.ActiveSubscription.EndDate.Value.ToString("yyyy-MM-dd") : DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd"))" required />
+                            </div>
+                            
+                            <button type="submit" class="btn btn-gold">Ödemeyi Aldım ve Süreyi Uzat</button>
+                        </div>
+                    </div>
+                </form>
+            }
+
+            <!-- ÖDEME ALINDI AMA İŞLETME ONAYLANMADI -->
+            @if (Model.ActiveSubscription.PaymentStatus == RezerveApp.Models.PaymentStatus.Paid && Model.Business.Status != RezerveApp.Models.BusinessStatus.Approved)
+            {
+                <form asp-controller="Admin" asp-action="Approve" asp-route-id="@Model.Business.Id" method="post" style="margin-bottom:24px; padding:16px; background:rgba(34,197,94,0.1); border-radius:8px; border:1px dashed var(--color-success);">
+                    @Html.AntiForgeryToken()
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <div style="display:flex; align-items:center; gap:12px; color:var(--color-success);">
+                            <i data-lucide="check-circle-2" class="icon-sm"></i> 
+                            <span>Ödeme alındı! İşletmeyi yayına alabilirsiniz.</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm" style="background:var(--color-success); border-color:var(--color-success);">İşletmeyi Onayla</button>
+                    </div>
+                </form>
+            }
+        }
+        else
+        {
+            <div style="text-align:center; padding:40px 20px; background:var(--color-dark); border-radius:8px; margin-bottom:24px;">
+                <i data-lucide="box" style="width:48px; height:48px; color:var(--color-gray-500); margin-bottom:16px;"></i>
+                <h4 style="margin-bottom:8px;">Paket Atanmamış</h4>
+                <p class="cell-muted" style="max-width:400px; margin:0 auto;">Bu işletmeye henüz bir abonelik paketi atanmadı. Aşağıdaki formdan bir paket seçerek işletmeyi aktifleştirebilirsiniz.</p>
+            </div>
+        }
+
+        <hr style="border:0; border-top:1px solid var(--color-dark-border); margin:32px 0;" />
+
+        <!-- PAKET ATAMA FORMU -->
+        <h4 style="margin-bottom:16px; font-size:16px;">Yeniden Paket Ata</h4>
+        
+        <form asp-controller="Admin" asp-action="AssignSubscription" method="post" style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="businessId" value="@Model.Business.Id" />
+
+            <div class="form-group" style="margin:0; flex:1; min-width:250px;">
+                <label for="subscriptionPlanId" class="form-label">Paket Seçimi</label>
+                <select class="input" id="subscriptionPlanId" name="subscriptionPlanId" required>
+                    @foreach (var plan in Model.AvailablePlans)
+                    {
+                        if (Model.ActiveSubscription?.SubscriptionPlanId == plan.Id)
+                        {
+                            <option value="@plan.Id" selected>@plan.Name (@(plan.MaxEmployees?.ToString() ?? "Sınırsız") çalışan)</option>
+                        }
+                        else
+                        {
+                            <option value="@plan.Id">@plan.Name (@(plan.MaxEmployees?.ToString() ?? "Sınırsız") çalışan)</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group" style="margin:0; width:150px;">
+                <label for="billingPeriod" class="form-label">Faturalama</label>
+                <select class="input" id="billingPeriod" name="billingPeriod" required>
+                    <option value="Monthly">Aylık</option>
+                    <option value="Yearly">Yıllık</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-outline" style="border-color:var(--color-gold); color:var(--color-gold);">
+                <i data-lucide="save" class="icon-sm"></i>
+                Uygula
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(400px, 1fr)); gap:24px;">
+
+    <!-- =========================================================
+         ÇALIŞANLAR
+         ========================================================= -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3><i data-lucide="users" class="icon-sm" style="vertical-align:middle; margin-right:8px; color:var(--color-gold);"></i>Çalışanlar</h3>
+                <div class="card-header-sub">@Model.Employees.Count kayıtlı çalışan</div>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Çalışan Adı</th>
+                        <th style="text-align:right;">Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Employees.Any())
+                    {
+                        <tr><td colspan="2" class="text-center py-5 text-muted">Kayıtlı çalışan yok.</td></tr>
+                    }
+                    @foreach (var emp in Model.Employees)
+                    {
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <div style="width:32px; height:32px; border-radius:50%; background:var(--color-dark-border); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; color:var(--color-gold);">
+                                        @(string.IsNullOrWhiteSpace(emp.Name) ? "E" : emp.Name.Substring(0, 1).ToUpper())
+                                    </div>
+                                    <span style="font-weight:500;">@emp.Name</span>
+                                </div>
+                            </td>
+                            <td style="text-align:right;">
+                                @if (emp.IsActive)
+                                {
+                                    <span class="tag tag--success">Aktif</span>
+                                }
+                                else
+                                {
+                                    <span class="tag tag--dark">Pasif</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         HİZMETLER
+         ========================================================= -->
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3><i data-lucide="scissors" class="icon-sm" style="vertical-align:middle; margin-right:8px; color:var(--color-gold);"></i>Hizmetler</h3>
+                <div class="card-header-sub">@Model.Services.Count hizmet tanımlı</div>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Hizmet</th>
+                        <th>Süre</th>
+                        <th style="text-align:right;">Fiyat</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Services.Any())
+                    {
+                        <tr><td colspan="3" class="text-center py-5 text-muted">Kayıtlı hizmet yok.</td></tr>
+                    }
+                    @foreach (var svc in Model.Services)
+                    {
+                        <tr>
+                            <td style="font-weight:500;">@svc.Name</td>
+                            <td class="cell-muted">@svc.DurationMinutes dk</td>
+                            <td style="text-align:right; font-weight:600; color:var(--color-gold);">@svc.Price.ToString("N2") ₺</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- =========================================================
+     SON RANDEVULAR
+     ========================================================= -->
+<div class="card" style="margin-top:24px;">
+    <div class="card-header">
+        <div>
+            <h3><i data-lucide="calendar-check" class="icon-sm" style="vertical-align:middle; margin-right:8px; color:var(--color-gold);"></i>Son Randevular</h3>
+            <div class="card-header-sub">En güncel randevular</div>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Müşteri</th>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                    <th style="text-align:right;">Durum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Appointments.Any())
+                {
+                    <tr><td colspan="4" class="text-center py-5 text-muted">Henüz randevu yok.</td></tr>
+                }
+                @foreach (var apt in Model.Appointments)
+                {
+                    <tr>
+                        <td style="font-weight:500;">@apt.CustomerName</td>
+                        <td>@apt.AppointmentDate.ToString("dd.MM.yyyy")</td>
+                        <td>@apt.StartTime.ToString("hh\\:mm")</td>
+                        <td style="text-align:right;">
+                            <span class="tag tag--dark">@apt.Status</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+}

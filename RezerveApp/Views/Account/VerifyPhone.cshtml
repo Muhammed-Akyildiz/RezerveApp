@@ -1,0 +1,89 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Telefon Doğrulama";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Telefon Doğrulama — RezerveApp</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/variables.css">
+    <link rel="stylesheet" href="~/css/base.css">
+    <link rel="stylesheet" href="~/css/components.css">
+    <link rel="stylesheet" href="~/css/auth.css">
+
+    <link rel="icon" href="/images/logo.png">
+</head>
+
+<body>
+    <div class="auth-page">
+        <div class="auth-form-side" style="margin: 0 auto; max-width: 480px; width: 100%; justify-content: center;">
+            <div class="auth-form-container">
+                <div style="text-align: center; margin-bottom: var(--space-xl);">
+                    <img src="/images/logo.png" alt="RezerveApp Logo" style="height: 60px; object-fit: contain;" />
+                </div>
+
+                <h1 class="auth-title" style="text-align: center;">Telefon Doğrulama</h1>
+                <p class="auth-subtitle" style="text-align: center;">
+                    Güvenliğiniz için <b>@ViewData["Phone"]</b> numarasına gönderdiğimiz 6 haneli doğrulama kodunu girin.
+                </p>
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="auth-error">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    </div>
+                }
+
+                <form asp-controller="Account" asp-action="VerifyPhone" method="post">
+                    <input type="hidden" name="phone" value="@ViewData["Phone"]" />
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="code" style="text-align: center; width: 100%;">Doğrulama Kodu</label>
+                        <input type="text" id="code" name="code" class="form-input" placeholder="000000" maxlength="6" style="text-align: center; font-size: 24px; letter-spacing: 4px; padding: var(--space-md);" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required autocomplete="off">
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--full btn--lg" style="margin-top: var(--space-lg);">
+                        Doğrula ve Devam Et
+                    </button>
+                </form>
+
+                <div class="login-action" style="margin-top: var(--space-xl); text-align: center;">
+                    <p style="color: var(--color-gray-500); font-size: var(--fs-sm); margin-bottom: var(--space-sm);">
+                        Kalan Süre: <span id="countdown" style="font-weight: 600; color: var(--color-gold);">03:00</span>
+                    </p>
+                    <a asp-controller="Account" asp-action="Login" class="form-link">Farklı bir hesapla giriş yap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var time = 180;
+        var countdownElement = document.getElementById('countdown');
+        var timer = setInterval(function() {
+            time--;
+            var minutes = Math.floor(time / 60);
+            var seconds = time % 60;
+            countdownElement.textContent = '0' + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+            
+            if (time <= 0) {
+                clearInterval(timer);
+                countdownElement.textContent = "Süre doludu!";
+                countdownElement.style.color = "var(--color-danger)";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

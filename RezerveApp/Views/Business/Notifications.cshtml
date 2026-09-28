@@ -1,0 +1,85 @@
+﻿@model List<RezerveApp.Models.NotificationLog>
+
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Bildirimler";
+    ViewBag.PageSubtitle = "Gönderilen WhatsApp bildirimlerinin geçmişi";
+    ViewBag.ActiveNav = "Notifications";
+
+    bool whatsAppEnabled = ViewBag.WhatsAppEnabled;
+}
+
+@if (!whatsAppEnabled)
+{
+    <div class="hint" style="color:var(--gold); margin-bottom:16px;">
+        WhatsApp entegrasyonu henüz yapılandırılmadı. Mesajlar gerçekten gönderilmiyor, ancak
+        deneme kayıtları aşağıda görünür. Gönderimi etkinleştirmek için appsettings.json içindeki
+        <code>WhatsApp:PhoneNumberId</code> ve <code>WhatsApp:AccessToken</code> değerlerini girip
+        <code>WhatsApp:Enabled</code> alanını <code>true</code> yapın.
+    </div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3>Son Bildirimler</h3>
+            <div class="card-header-sub">Son 100 kayıt</div>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Tür</th>
+                    <th>Alıcı</th>
+                    <th>Mesaj</th>
+                    <th>Durum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="cell-muted">Henüz bildirim gönderilmedi.</td></tr>
+                }
+                @foreach (var log in Model)
+                {
+                    var typeLabel = log.Type switch
+                    {
+                        RezerveApp.Models.NotificationType.NewAppointmentBusiness => "Yeni Randevu (İşletme)",
+                        RezerveApp.Models.NotificationType.AppointmentConfirmationCustomer => "Onay (Müşteri)",
+                        RezerveApp.Models.NotificationType.AppointmentReminderCustomer => "Hatırlatma (Müşteri)",
+                        _ => log.Type.ToString()
+                    };
+
+                    <tr>
+                        <td class="cell-muted">@log.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td class="cell-primary">@typeLabel</td>
+                        <td class="cell-muted">@log.RecipientPhone</td>
+                        <td class="cell-muted" style="max-width:320px; white-space:pre-wrap;">@log.Message</td>
+                        <td>
+                            @if (log.IsSuccess)
+                            {
+                                <span class="badge badge-success">Gönderildi</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-danger" title="@log.ErrorMessage">Başarısız</span>
+                            }
+                        </td>
+                        <td>
+                            <form asp-controller="Business" asp-action="DeleteNotification" asp-route-id="@log.Id" method="post" style="display:inline;" data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>" data-confirm-title="Bildirimi Sil">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-ghost btn-sm" style="color:var(--text-faint);" title="Kalıcı Olarak Sil">
+                                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,293 @@
+﻿/* ============================================
+   RezerveApp — Reusable Components
+   Buttons, badges, cards, form elements
+   ============================================ */
+
+/* --- Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: 12px 28px;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-base);
+    cursor: pointer;
+    white-space: nowrap;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn--primary {
+    background: var(--color-gold);
+    color: var(--color-black);
+}
+
+    .btn--primary:hover {
+        background: var(--color-gold-light);
+        box-shadow: var(--shadow-gold);
+        transform: translateY(-1px);
+    }
+
+    .btn--primary:active {
+        transform: translateY(0);
+    }
+
+.btn--outline {
+    background: transparent;
+    color: var(--color-white);
+    border: 1px solid var(--color-dark-border);
+}
+
+    .btn--outline:hover {
+        border-color: var(--color-gold);
+        color: var(--color-gold);
+    }
+
+.btn--ghost {
+    background: transparent;
+    color: var(--color-gray-400);
+    padding: 12px 16px;
+}
+
+    .btn--ghost:hover {
+        color: var(--color-white);
+    }
+
+.btn--lg {
+    padding: 16px 36px;
+    font-size: var(--fs-sm);
+}
+
+.btn--sm {
+    padding: 8px 18px;
+    font-size: var(--fs-xs);
+}
+
+.btn--full {
+    width: 100%;
+}
+
+.btn--icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: var(--radius-md);
+}
+
+/* --- Badge --- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-wide);
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+}
+
+.badge--gold {
+    background: var(--color-gold-muted);
+    color: var(--color-gold);
+    border: 1px solid rgba(200, 162, 78, 0.2);
+}
+
+.badge--dark {
+    background: var(--color-dark-secondary);
+    color: var(--color-gray-400);
+    border: 1px solid var(--color-dark-border);
+}
+
+/* --- Card --- */
+.card {
+    background: var(--color-dark-card);
+    border: 1px solid var(--color-dark-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    transition: all var(--transition-base);
+}
+
+    .card:hover {
+        border-color: rgba(200, 162, 78, 0.2);
+    }
+
+.card--elevated {
+    box-shadow: var(--shadow-md);
+}
+
+.card--highlight {
+    border-color: var(--color-gold);
+    position: relative;
+}
+
+    .card--highlight::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: var(--radius-lg);
+        background: linear-gradient(135deg, rgba(200, 162, 78, 0.1), transparent 60%);
+        pointer-events: none;
+    }
+
+/* --- Stat Card --- */
+.stat-card {
+    background: var(--color-dark-card);
+    border: 1px solid var(--color-dark-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+}
+
+.stat-card__icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    font-size: 18px;
+}
+
+.stat-card__icon--gold {
+    background: var(--color-gold-muted);
+    color: var(--color-gold);
+}
+
+.stat-card__value {
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-bold);
+    color: var(--color-white);
+    margin-bottom: 4px;
+}
+
+.stat-card__label {
+    font-size: var(--fs-xs);
+    color: var(--color-gray-500);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+}
+
+/* --- Divider --- */
+.divider {
+    height: 1px;
+    background: var(--color-dark-border);
+    border: none;
+    margin: var(--space-xl) 0;
+}
+
+/* --- Avatar --- */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--color-dark-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-gold);
+    border: 1px solid var(--color-dark-border);
+    flex-shrink: 0;
+}
+
+.avatar--lg {
+    width: 56px;
+    height: 56px;
+    font-size: var(--fs-lg);
+}
+
+/* --- Tag --- */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    border-radius: var(--radius-sm);
+    background: var(--color-dark-secondary);
+    color: var(--color-gray-400);
+    border: 1px solid var(--color-dark-border);
+}
+
+.tag--success {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--color-success);
+    border-color: rgba(76, 175, 80, 0.2);
+}
+
+.tag--gold {
+    background: var(--color-gold-muted);
+    color: var(--color-gold);
+    border-color: rgba(200, 162, 78, 0.2);
+}
+
+/* --- Stars --- */
+.stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--color-gold);
+    font-size: var(--fs-sm);
+}
+
+/* --- Price --- */
+.price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.price__currency {
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+    color: var(--color-gold);
+}
+
+.price__amount {
+    font-size: var(--fs-5xl);
+    font-weight: var(--fw-bold);
+    color: var(--color-white);
+    line-height: 1;
+}
+
+.price__period {
+    font-size: var(--fs-sm);
+    color: var(--color-gray-500);
+}
+
+/* --- Check List --- */
+.check-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.check-list__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    font-size: var(--fs-sm);
+    color: var(--color-gray-300);
+}
+
+.check-list__icon {
+    color: var(--color-gold);
+    font-size: var(--fs-md);
+    line-height: 1.4;
+    flex-shrink: 0;
+}
+
+.check-list__item--disabled {
+    color: var(--color-gray-600);
+}
+
+    .check-list__item--disabled .check-list__icon {
+        color: var(--color-gray-600);
+    }
+

@@ -1,0 +1,66 @@
+@{
+    Layout = ViewBag.Layout ?? "_BusinessLayout";
+    ViewBag.PageTitle = "Hesap Ayarları";
+    ViewBag.PageEyebrow = "Hesap";
+    ViewBag.PageSubtitle = "Kullanıcı hesabınızı güncelleyin";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3" style="margin: 0 auto; max-width: 600px; padding: 20px; border: 1px solid rgba(255,255,255,.08); border-radius: 18px; background: #121212;">
+        <h2 style="margin-bottom: 20px;">Hesap Ayarları</h2>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background: rgba(34,197,94,.12); color: #4ade80; border: 1px solid rgba(34,197,94,.3); padding: 12px 16px; border-radius: 10px; margin-bottom: 20px;">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div style="background: rgba(239,68,68,.12); color: #f87171; border: 1px solid rgba(239,68,68,.3); padding: 12px 16px; border-radius: 10px; margin-bottom: 20px;">
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Settings" method="post">
+            @Html.AntiForgeryToken()
+            
+            <h4 style="margin-top: 20px; margin-bottom: 10px; color: #fff;">İletişim Bilgileri</h4>
+            
+            <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px;">
+                <label for="email" style="font-size: 13px; font-weight: 600;">E-posta Adresi</label>
+                <input type="email" id="email" name="email" value="@ViewBag.Email" required style="padding: 12px 13px; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; background: #0b0b0b; color: #fff;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px;">
+                <label for="phone" style="font-size: 13px; font-weight: 600;">Telefon Numarası</label>
+                <input type="text" id="phone" name="phone" value="@ViewBag.Phone" style="padding: 12px 13px; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; background: #0b0b0b; color: #fff;">
+            </div>
+
+            <hr style="border-top: 1px solid rgba(255,255,255,.08); margin: 30px 0;">
+
+            <h4 style="margin-bottom: 5px; color: #fff;">Şifre Değiştir</h4>
+            <p style="color: #8f8f8f; margin-bottom: 20px; font-size: 13px;">Şifrenizi değiştirmek istemiyorsanız bu alanları boş bırakın.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px;">
+                <label for="currentPassword" style="font-size: 13px; font-weight: 600;">Mevcut Şifre</label>
+                <input type="password" id="currentPassword" name="currentPassword" style="padding: 12px 13px; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; background: #0b0b0b; color: #fff;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px;">
+                <label for="newPassword" style="font-size: 13px; font-weight: 600;">Yeni Şifre</label>
+                <input type="password" id="newPassword" name="newPassword" style="padding: 12px 13px; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; background: #0b0b0b; color: #fff;">
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 7px; margin-bottom: 25px;">
+                <label for="confirmNewPassword" style="font-size: 13px; font-weight: 600;">Yeni Şifre (Tekrar)</label>
+                <input type="password" id="confirmNewPassword" name="confirmNewPassword" style="padding: 12px 13px; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; background: #0b0b0b; color: #fff;">
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="submit" style="background: #c19a4b; color: #111; border: 0; border-radius: 9px; padding: 11px 16px; font-weight: 700; cursor: pointer;">Değişiklikleri Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>

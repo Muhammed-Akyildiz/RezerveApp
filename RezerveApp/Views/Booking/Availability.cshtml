@@ -1,0 +1,57 @@
+﻿@{
+    Layout = null;
+
+    var slots = ViewBag.AvailableSlots as List<RezerveApp.Models.BookingSlot>
+                ?? new List<RezerveApp.Models.BookingSlot>();
+
+    string? closedMessage = ViewBag.ClosedMessage;
+}
+
+@if (closedMessage != null)
+{
+    <div class="slot-section-title">
+        Uygun Saatler
+    </div>
+
+    <div class="empty-state">
+        @closedMessage
+    </div>
+}
+else if (!slots.Any())
+{
+    <div class="slot-section-title">
+        Uygun Saatler
+    </div>
+
+    <div class="empty-state">
+        Seçtiğiniz tarih için uygun saat bulunamadı.
+    </div>
+}
+else
+{
+    <div class="slot-section-title">
+        Uygun Saatler
+    </div>
+
+    <div class="slot-grid">
+        @foreach (var slot in slots)
+        {
+            if (slot.IsAvailable)
+            {
+                <div class="slot-pill"
+                     data-time="@slot.Time.ToString("hh\\:mm")"
+                     data-employee-id="@slot.EmployeeId"
+                     data-employee-name="@slot.EmployeeName">
+                    @slot.Time.ToString("hh\\:mm")
+                </div>
+            }
+            else
+            {
+                <div class="slot-pill disabled"
+                     style="text-decoration: line-through; opacity: 0.4; cursor: not-allowed; background-color: #333; color: #888;">
+                    @slot.Time.ToString("hh\\:mm")
+                </div>
+            }
+        }
+    </div>
+}

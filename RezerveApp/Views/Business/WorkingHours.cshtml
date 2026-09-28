@@ -1,0 +1,110 @@
+﻿@model List<RezerveApp.Models.BusinessWorkingHour>
+
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Çalışma Saatleri";
+    ViewBag.PageSubtitle = "İşletmenizin haftalık açılış/kapanış saatlerini belirleyin";
+    ViewBag.ActiveNav = "WorkingHours";
+
+    var days = new[] { "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar" };
+
+    // .NET DayOfWeek: Pazar=0 ... Cumartesi=6. Form Pazartesi ile başlıyor.
+    var rows = new RezerveApp.Models.BusinessWorkingHour?[7];
+    foreach (var h in Model)
+    {
+        var idx = ((int)h.DayOfWeek + 6) % 7; // Pazartesi -> 0 ... Pazar -> 6
+        rows[idx] = h;
+    }
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="hint" style="color:var(--success); margin-bottom:16px;">@TempData["Success"]</div>
+}
+
+@section TopbarActions {
+    <a asp-controller="Business" asp-action="Holidays" class="btn btn--outline">
+        <i data-lucide="calendar-off" style="width:18px; height:18px; margin-right:6px;"></i>
+        Tatil Günleri
+    </a>
+}
+
+<form asp-controller="Business" asp-action="SaveWorkingHours" method="post">
+    @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h3>Haftalık Program</h3>
+                <div class="card-header-sub">Kapalı olan günlerde müşteriler randevu alamaz</div>
+            </div>
+        </div>
+        <table class="hours-table">
+            <tbody>
+                @for (int i = 0; i < days.Length; i++)
+                {
+                    var existing = rows[i];
+                    bool isOpen = existing?.IsOpen ?? true;
+                    var openTime = existing?.OpenTime ?? new TimeSpan(9, 0, 0);
+                    var closeTime = existing?.CloseTime ?? new TimeSpan(19, 0, 0);
+
+                    <tr>
+                        <td class="hours-day">@days[i]</td>
+                        <td>
+                            <label class="hours-toggle">
+                                <input type="hidden" name="workingHours[@i].IsOpen" id="isOpen_@i" value="@(isOpen ? "true" : "false")" />
+                                <span class="switch @(isOpen ? "on" : "")" onclick="toggleDay(this, @i)"></span>
+                                <span id="isOpenLabel_@i">@(isOpen ? "Açık" : "Kapalı")</span>
+                            </label>
+                        </td>
+                        <td id="timeCell_@i">
+                            @if (isOpen)
+                            {
+                                <div class="hours-time-range">
+                                    <input class="input profile-input" type="time" name="workingHours[@i].OpenTime" value="@openTime.ToString("hh\\:mm")" />
+                                    <span class="cell-muted">—</span>
+                                    <input class="input profile-input" type="time" name="workingHours[@i].CloseTime" value="@closeTime.ToString("hh\\:mm")" />
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="hours-closed-label">Bu gün kapalı</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+        <button type="submit" class="btn btn--primary">
+            <i data-lucide="save" style="width:18px; height:18px; margin-right:6px;"></i>
+            Değişiklikleri Kaydet
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function toggleDay(el, index) {
+            el.classList.toggle('on');
+            const isOn = el.classList.contains('on');
+
+            document.getElementById('isOpen_' + index).value = isOn ? 'true' : 'false';
+            document.getElementById('isOpenLabel_' + index).textContent = isOn ? 'Açık' : 'Kapalı';
+
+            const timeCell = document.getElementById('timeCell_' + index);
+            if (isOn) {
+                timeCell.innerHTML = `
+                    <div class="hours-time-range">
+                        <input class="input profile-input" type="time" name="workingHours[${index}].OpenTime" value="09:00" />
+                        <span class="cell-muted">—</span>
+                        <input class="input profile-input" type="time" name="workingHours[${index}].CloseTime" value="19:00" />
+                    </div>`;
+            } else {
+                timeCell.innerHTML = `<span class="hours-closed-label">Bu gün kapalı</span>`;
+            }
+        }
+    </script>
+}

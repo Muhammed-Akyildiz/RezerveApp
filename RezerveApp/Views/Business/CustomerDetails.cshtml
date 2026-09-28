@@ -1,0 +1,124 @@
+﻿@model List<RezerveApp.Models.Appointment>
+
+@{
+    Layout = "_BusinessLayout";
+    var customer = (RezerveApp.Models.Customer)ViewBag.Customer;
+
+    ViewBag.PageEyebrow = "Müşteriler";
+    ViewBag.PageTitle = customer.Name;
+    ViewBag.PageSubtitle = customer.Phone;
+    ViewBag.ActiveNav = "Customers";
+}
+
+@section TopbarActions {
+    <a asp-controller="Business" asp-action="Customers" class="btn btn-outline">Geri</a>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="hint" style="color:var(--danger); margin-bottom:16px;">@TempData["Error"]</div>
+}
+
+<div class="stat-grid" style="margin-bottom:22px;">
+    <div class="stat-card">
+        <div class="stat-label">Toplam Randevu</div>
+        <div class="stat-value">@ViewBag.TotalAppointments</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Favori Hizmet</div>
+        <div class="stat-value" style="font-size:20px;">@(ViewBag.FavoriteService ?? "—")</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Gelmeme (No-show)</div>
+        <div class="stat-value">@ViewBag.NoShowCount</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Toplam Harcama</div>
+        <div class="stat-value">@(((decimal)ViewBag.TotalSpent).ToString("N2")) ₺</div>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:22px; margin-bottom:22px;">
+
+    <!-- MÜŞTERİ BİLGİLERİNİ DÜZENLE -->
+    <div class="card card-pad">
+        <h3 style="margin-bottom:14px;">Müşteri Bilgileri</h3>
+        <form asp-controller="Business" asp-action="EditCustomer" asp-route-id="@customer.Id" method="post" style="margin-bottom:20px;">
+            @Html.AntiForgeryToken()
+            <div class="field">
+                <label for="name">Ad Soyad</label>
+                <input class="input" type="text" id="name" name="name" value="@customer.Name" required />
+            </div>
+            <div class="field">
+                <label for="phone">Telefon</label>
+                <input class="input" type="tel" id="phone" name="phone" maxlength="11" minlength="11" pattern="[0-9]{11}" value="@customer.Phone" required />
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-gold">Kaydet</button>
+            </div>
+        </form>
+
+        @if(customer.IsBlacklisted)
+        {
+            <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
+                <p style="color:var(--danger); font-size:13px; margin-bottom:12px;">Bu müşteri Kara Liste'de. Çevrimiçi randevu alması engellenmiştir.</p>
+                <form asp-controller="Business" asp-action="ResetBlacklist" asp-route-id="@customer.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline" style="color:var(--danger); border-color:var(--danger);">Kara Listeyi Sıfırla (İzin Ver)</button>
+                </form>
+            </div>
+        }
+    </div>
+
+    <!-- ALDIĞI HİZMETLER -->
+    <div class="card card-pad">
+        <h3 style="margin-bottom:14px;">Aldığı Hizmetler</h3>
+        @{
+            var services = ViewBag.ReceivedServices as System.Collections.IEnumerable;
+            var servicesList = services?.Cast<dynamic>().ToList() ?? new List<dynamic>();
+        }
+        @if (!servicesList.Any())
+        {
+            <p class="cell-muted">Henüz tamamlanmış/onaylanmış bir hizmet yok.</p>
+        }
+        else
+        {
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                @foreach (var s in servicesList)
+                {
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>@s.ServiceName</span>
+                        <span class="cell-muted">@s.Count kez</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div><h3>Randevu Geçmişi</h3></div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>Tarih</th><th>Saat</th><th>Hizmet</th><th>Çalışan</th><th>Durum</th></tr></thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="5" class="cell-muted">Randevu bulunmuyor.</td></tr>
+                }
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td class="cell-primary">@a.AppointmentDate.ToString("dd.MM.yyyy")</td>
+                        <td class="cell-muted">@a.StartTime.ToString("hh\\:mm")</td>
+                        <td class="cell-muted">@a.Service?.Name</td>
+                        <td class="cell-muted">@a.Employee?.Name</td>
+                        <td>@a.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

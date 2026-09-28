@@ -1,0 +1,488 @@
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Çalışanlar";
+    ViewBag.PageSubtitle = "Ekibinizdeki berberleri yönetin";
+    ViewBag.ActiveNav = "Employees";
+}
+
+@section TopbarActions {
+
+    <button type="button"
+            class="btn btn-gold"
+            onclick="document.getElementById('newEmployeeForm').classList.toggle('is-open')"
+            @(ViewBag.CanAddEmployee == false ? "disabled" : "")>
+
+        <svg class="icon"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor">
+
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+
+        </svg>
+
+        Yeni Çalışan
+
+    </button>
+}
+
+
+@if (TempData["Error"] != null)
+{
+    <div class="hint"
+         style="
+                color:var(--danger);
+                margin-bottom:16px;
+             ">
+
+        @TempData["Error"]
+
+    </div>
+}
+
+
+@if (ViewBag.MaxEmployees != null)
+{
+    <div class="hint"
+         style="margin-bottom:16px;">
+
+        Paket limiti:
+
+        @ViewBag.CurrentEmployeeCount /
+        @ViewBag.MaxEmployees
+
+        aktif çalışan kullanılıyor.
+
+    </div>
+}
+else
+{
+    <div class="hint"
+         style="
+                margin-bottom:16px;
+                color:var(--gold);
+             ">
+
+        Sınırsız paket —
+        @ViewBag.CurrentEmployeeCount aktif çalışan kullanılıyor.
+
+    </div>
+}
+
+
+<!-- =========================================================
+     YENİ ÇALIŞAN
+     ========================================================= -->
+
+<div class="card card-pad"
+     id="newEmployeeForm"
+     style="
+        margin-bottom:22px;
+        display:none;
+     ">
+
+    <h3 style="margin-bottom:18px;">
+        Yeni Çalışan Ekle
+    </h3>
+
+
+    <form asp-controller="Business"
+          asp-action="CreateEmployee"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+
+        <div class="form-grid"
+             style="
+                grid-template-columns:2fr 1fr;
+             ">
+
+
+            <!-- AD SOYAD -->
+
+            <div class="field">
+
+                <label for="empName">
+                    Ad Soyad
+                </label>
+
+                <input class="input"
+                       type="text"
+                       id="empName"
+                       name="Name"
+                       placeholder="Örn. Mert Aksoy"
+                       required />
+
+            </div>
+
+
+            <!-- DURUM -->
+            <div class="field">
+                <label for="empActive">Durum</label>
+                <select class="select" id="empActive" name="IsActive">
+                    <option value="true">Aktif</option>
+                    <option value="false">Pasif</option>
+                </select>
+            </div>
+        </div>
+
+        <h4 style="margin-top:20px; margin-bottom:12px; font-size:14px; color:var(--text-muted);">Çalışan Giriş Bilgileri (İsteğe Bağlı)</h4>
+        <div class="form-grid" style="grid-template-columns:1fr;">
+            <!-- TELEFON -->
+            <div class="field">
+                <label for="empPhone">Telefon (Şifre SMS ile gönderilecektir)</label>
+                <input class="input" type="tel" id="empPhone" name="phone" placeholder="Örn. 05xxxxxxxxx" maxlength="11" />
+            </div>
+        </div>
+
+
+        <!-- BUTONLAR -->
+
+        <div style="
+            display:flex;
+            gap:12px;
+            justify-content:flex-end;
+        ">
+
+            <button type="button"
+                    class="btn btn-outline"
+                    onclick="
+                        document.getElementById('newEmployeeForm')
+                            .style.display='none';
+                    ">
+
+                Vazgeç
+
+            </button>
+
+
+            <button type="submit"
+                    class="btn btn-gold">
+
+                Kaydet
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =========================================================
+     ÇALIŞANLAR
+     ========================================================= -->
+
+<div class="employee-grid">
+
+    @{
+        var employees = ViewBag.Employees ?? new[] {
+        new { Id = 1, Name = "Mert Aksoy", IsActive = true },
+        new { Id = 2, Name = "Can Yıldız", IsActive = true },
+        new { Id = 3, Name = "Deniz Kurt", IsActive = true },
+        new { Id = 4, Name = "Serkan Er", IsActive = false }
+        };
+    }
+
+
+    @foreach (var e in employees)
+    {
+        <div class="employee-card">
+
+
+            <!-- AVATAR -->
+
+            <div class="employee-avatar">
+
+                @e.Name.Substring(0, 1)
+
+            </div>
+
+
+            <!-- İSİM -->
+
+            <div class="employee-name">
+
+                @e.Name
+
+            </div>
+
+
+            <!-- DURUM -->
+
+            <div class="employee-status">
+
+                @if (e.IsActive)
+                {
+                    <span class="badge badge-success">
+
+                        <span style="
+                                    width:6px;
+                                    height:6px;
+                                    border-radius:50%;
+                                    background:currentColor;
+                                    display:inline-block;
+                                    margin-right:5px;
+                                "></span>
+
+                        Aktif
+
+                    </span>
+                }
+                else
+                {
+                    <span class="badge badge-neutral">
+
+                        Pasif
+
+                    </span>
+                }
+
+            </div>
+
+
+            <!-- BUTONLAR -->
+
+            <div class="employee-actions">
+
+
+                <!-- DÜZENLE -->
+
+                <a asp-controller="Business"
+                   asp-action="EditEmployee"
+                   asp-route-id="@e.Id"
+                   class="btn btn-outline btn-sm">
+
+                    <svg class="icon-sm"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor">
+
+                        <path d="
+                                M11 4H4a2 2 0 0 0-2 2v14
+                                a2 2 0 0 0 2 2h14
+                                a2 2 0 0 0 2-2v-7
+                            " />
+
+                        <path d="
+                                M18.5 2.5
+                                a2.121 2.121 0 0 1 3 3
+                                L12 15l-4 1 1-4
+                                9.5-9.5z
+                            " />
+
+                    </svg>
+
+                    Düzenle
+
+                </a>
+
+
+                <!-- HİZMETLER -->
+
+                <a asp-controller="Business"
+                   asp-action="EmployeeServices"
+                   asp-route-employeeId="@e.Id"
+                   class="btn btn-outline btn-sm">
+
+                    Hizmetler
+
+                </a>
+
+
+                <!-- SAATLER -->
+
+                <a asp-controller="Business"
+                   asp-action="EmployeeWorkingHours"
+                   asp-route-employeeId="@e.Id"
+                   class="btn btn-outline btn-sm">
+
+                    Saatler
+
+                </a>
+
+
+                <!-- ŞİFRE SIFIRLA -->
+                <button type="button" class="btn btn-outline btn-sm" onclick="resetPassword(@e.Id)">
+                    Şifre Sıfırla
+                </button>
+
+                <!-- SİL -->
+
+                <form asp-controller="Business"
+                      asp-action="DeleteEmployee"
+                      asp-route-id="@e.Id"
+                      method="post"
+                      data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>"
+                      data-confirm-title="Çalışanı Sil">
+
+                    @Html.AntiForgeryToken()
+
+
+                    <button type="submit"
+                            class="btn btn-danger-outline btn-sm">
+
+                        <svg class="icon-sm"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor">
+
+                            <polyline points="
+                                    3 6 5 6 21 6
+                                " />
+
+                            <path d="
+                                    M19 6l-1 14
+                                    a2 2 0 0 1-2 2H8
+                                    a2 2 0 0 1-2-2L5 6
+                                " />
+
+                        </svg>
+
+                        Sil
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
+@section Scripts {
+
+    <style>
+
+        #newEmployeeForm.is-open {
+            display: block !important;
+        }
+
+
+        /* =====================================================
+                   ÇALIŞAN KARTLARI
+                   ===================================================== */
+
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+
+        .employee-card {
+            min-width: 0;
+            padding: 26px 22px 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: var(--card, #15181f);
+            border: 1px solid var(--border, #282d36);
+            border-radius: 16px;
+            box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+                   AVATAR
+                   ===================================================== */
+
+        .employee-avatar {
+            width: 68px;
+            height: 68px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #303640;
+            background: #11141a;
+            color: var(--gold, #d0a63d);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+                   İSİM
+                   ===================================================== */
+
+        .employee-name {
+            width: 100%;
+            margin-bottom: 10px;
+            color: #f5f5f5;
+            font-size: 17px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+
+        /* =====================================================
+                   DURUM
+                   ===================================================== */
+
+        .employee-status {
+            margin-bottom: 18px;
+        }
+
+
+        /* =====================================================
+                   BUTONLAR
+                   ===================================================== */
+
+        .employee-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+            margin-top: auto;
+        }
+
+
+            .employee-actions > a,
+            .employee-actions > form,
+            .employee-actions > form > button {
+                min-width: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+
+                .employee-actions > a,
+                .employee-actions > form > button {
+                    min-height: 40px;
+                    justify-content: center;
+                    white-space: nowrap;
+                }
+
+
+            .employee-actions form {
+                margin: 0;
+            }
+
+
+        /* =====================================================
+                   MOBİL
+                   ===================================================== */
+
+        @@media (max-width: 600px) {
+
+            .employee-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+    </style>
+}

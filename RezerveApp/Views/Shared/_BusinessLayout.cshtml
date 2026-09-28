@@ -1,0 +1,240 @@
+@* ==========================================================================
+   _BusinessLayout.cshtml — Business Admin (berber) shell
+   Placeholders to wire up to your backend:
+     - asp-controller="Account" asp-action="Logout"
+     - ViewBag.PageTitle / PageSubtitle / PageEyebrow / ActiveNav
+     - ViewBag.BusinessName -> current logged-in business's Name
+   ========================================================================== *@
+@using Microsoft.AspNetCore.Identity
+@using RezerveApp.Models
+@using RezerveApp.Data
+@inject UserManager<ApplicationUser> UserManager
+@inject ApplicationDbContext DbContext
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    Business currentBusiness = null;
+    if (user != null && user.BusinessId != null)
+    {
+        currentBusiness = await DbContext.Businesses.FindAsync(user.BusinessId);
+    }
+    
+    string brandName = currentBusiness?.Name ?? "RezerveApp";
+    string logoUrl = currentBusiness?.LogoUrl;
+    string brandInitial = brandName.Substring(0, 1).ToUpper();
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.PageTitle - @brandName - RezerveApp</title>
+    @if (!string.IsNullOrEmpty(logoUrl))
+    {
+        <link rel="icon" type="image/png" href="@logoUrl" />
+    }
+    else
+    {
+        <link rel="icon" type="image/png" href="/images/logo.png?v=2" />
+    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="~/css/shared.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/business.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                @if (!string.IsNullOrEmpty(logoUrl))
+                {
+                    <img src="@logoUrl" alt="@brandName Logo" class="brand-logo-img" style="width:36px; height:36px; border-radius:8px; object-fit:cover;" />
+                }
+                else
+                {
+                    <div class="brand-mark">@brandInitial</div>
+                }
+                <div>
+                    <div class="brand-name" style="font-size:15px; font-weight:700;">@brandName</div>
+                    <span class="brand-tag">İşletme Paneli</span>
+                </div>
+            </div>
+
+            <nav class="nav-list">
+                @if (User.IsInRole("BusinessAdmin"))
+                {
+                    <a class="nav-link @(ViewBag.ActiveNav == "Dashboard" ? "active" : "")" asp-controller="Business" asp-action="Index">
+                        <i data-lucide="layout-dashboard" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Dashboard
+                    </a>
+                }
+                <a class="nav-link @(ViewBag.ActiveNav == "Appointments" ? "active" : "")" asp-controller="Business" asp-action="Appointments">
+                    <i data-lucide="calendar-check" style="width:20px; height:20px; margin-right:12px;"></i>
+                    Randevular
+                </a>
+                <a class="nav-link @(ViewBag.ActiveNav == "Calendar" ? "active" : "")" asp-controller="Business" asp-action="Calendar">
+                    <i data-lucide="calendar-days" style="width:20px; height:20px; margin-right:12px;"></i>
+                    Takvim
+                </a>
+                @if (User.IsInRole("BusinessAdmin"))
+                {
+                    <a class="nav-link @(ViewBag.ActiveNav == "Services" ? "active" : "")" asp-controller="Business" asp-action="Services">
+                        <i data-lucide="scissors" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Hizmetler
+                    </a>
+                    <a class="nav-link @(ViewBag.ActiveNav == "Employees" ? "active" : "")" asp-controller="Business" asp-action="Employees">
+                        <i data-lucide="users" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Çalışanlar
+                    </a>
+                    <a class="nav-link @(ViewBag.ActiveNav == "Customers" ? "active" : "")" asp-controller="Business" asp-action="Customers">
+                        <i data-lucide="contact" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Müşteriler
+                    </a>
+                    <a class="nav-link @(ViewBag.ActiveNav == "Notifications" ? "active" : "")" asp-controller="Business" asp-action="Notifications">
+                        <i data-lucide="bell" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Bildirimler
+                    </a>
+                    <a class="nav-link @(ViewBag.ActiveNav == "WorkingHours" ? "active" : "")" asp-controller="Business" asp-action="WorkingHours">
+                        <i data-lucide="clock" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Çalışma Saatleri
+                    </a>
+                    <a class="nav-link @(ViewBag.ActiveNav == "Support" ? "active" : "")" asp-controller="Business" asp-action="Support">
+                        <i data-lucide="headphones" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Destek
+                    </a>
+                }
+            </nav>
+
+            <div class="sidebar-footer">
+                @if (User.IsInRole("BusinessAdmin"))
+                {
+                    <a class="nav-link @(ViewBag.ActiveNav == "Profile" ? "active" : "")" asp-controller="Business" asp-action="Profile" style="margin-bottom:6px;">
+                        <i data-lucide="store" style="width:20px; height:20px; margin-right:12px;"></i>
+                        İşletmem
+                    </a>
+
+                }
+                
+                <div class="sidebar-user" style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                    @if (!string.IsNullOrEmpty(logoUrl))
+                    {
+                        <img src="@logoUrl" alt="Avatar" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div class="avatar">@brandInitial</div>
+                    }
+                    <div>
+                        <div class="sidebar-user-name" style="font-weight:600; font-size:14px;">@brandName</div>
+                        <div class="sidebar-user-role" style="font-size:12px; color:#aaa;">Yönetici</div>
+                    </div>
+                </div>
+                <form class="logout-form" asp-controller="Account" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="logout-link">
+                        <i data-lucide="log-out" style="width:18px; height:18px; margin-right:8px;"></i>
+                        Çıkış Yap
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="main">
+            <div class="mobile-topbar">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <button type="button" onclick="history.back()" style="background:none; border:none; color:var(--text); padding:4px; display:flex; align-items:center; justify-content:center; cursor:pointer;" aria-label="Geri Dön">
+                        <i data-lucide="chevron-left" style="width:24px; height:24px;"></i>
+                    </button>
+                    <div class="brand" style="margin: 0; padding: 0;">
+                        @if (!string.IsNullOrEmpty(logoUrl))
+                        {
+                            <img src="@logoUrl" alt="@brandName" style="width:30px; height:30px; border-radius:6px; object-fit:cover;" />
+                        }
+                        else
+                        {
+                            <div class="brand-mark">@brandInitial</div>
+                        }
+                        <div class="brand-name">@brandName</div>
+                    </div>
+                </div>
+                <button class="menu-toggle" id="menuToggle" aria-label="Menü">
+                    <i data-lucide="menu" style="width:24px; height:24px;"></i>
+                </button>
+            </div>
+
+            <header class="topbar">
+                <div>
+                    @if (ViewBag.PageEyebrow != null)
+                    {
+                        <div class="page-eyebrow">@ViewBag.PageEyebrow</div>
+                    }
+                    <h1 class="page-title">@ViewBag.PageTitle</h1>
+                    @if (ViewBag.PageSubtitle != null)
+                    {
+                        <p class="page-subtitle">@ViewBag.PageSubtitle</p>
+                    }
+                </div>
+                <div class="topbar-actions">
+                    @await RenderSectionAsync("TopbarActions", required: false)
+                </div>
+            </header>
+
+            <main class="content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="~/js/business.js" asp-append-version="true"></script>
+    <script>
+        lucide.createIcons();
+        
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const iconSvg = type === 'success' 
+                ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon" style="width:20px;height:20px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`
+                : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="toast-icon" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+
+            toast.innerHTML = `
+                ${iconSvg}
+                <div style="flex:1;">${message}</div>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Auto remove
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 5000);
+        }
+
+        // Global TempData handling
+        const tempDataSuccess = @Html.Raw(Json.Serialize(TempData["Success"] ?? TempData["SuccessMessage"] ?? ""));
+        const tempDataError = @Html.Raw(Json.Serialize(TempData["Error"] ?? TempData["ErrorMessage"] ?? ""));
+        
+        if (tempDataSuccess && tempDataSuccess !== '') {
+            setTimeout(() => showToast(tempDataSuccess, 'success'), 300);
+        }
+        if (tempDataError && tempDataError !== '') {
+            setTimeout(() => showToast(tempDataError, 'error'), 300);
+        }
+    </script>
+    <script src="~/js/validation.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

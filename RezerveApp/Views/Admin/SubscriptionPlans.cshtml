@@ -1,0 +1,241 @@
+@model IEnumerable<RezerveApp.Models.SubscriptionPlan>
+@{
+    ViewData["Title"] = "Abonelik Paketleri";
+    Layout = "_AdminLayout";
+    ViewBag.PageEyebrow = "Paketler";
+    ViewBag.PageTitle = "Abonelik Paketleri";
+    ViewBag.PageSubtitle = "Sistemdeki tüm işletme paketlerini ve sınırlarını yönetin";
+    ViewBag.ActiveNav = "SubscriptionPlans";
+}
+
+<style>
+    .custom-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .custom-modal.active { display: flex; }
+    .modal-backdrop { position: absolute; inset: 0; }
+    .modal-content { position: relative; background: var(--card); border: 1px solid var(--border); padding: 24px; border-radius: var(--radius-md); max-width: 500px; width: 100%; z-index: 1001; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-header h3 { font-size: 18px; margin: 0; }
+    .btn-close { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: var(--text-muted); }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+    select.input { appearance: auto; background-color: var(--bg); color: var(--text); }
+    .checkbox-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+</style>
+
+@section TopbarActions {
+    <button class="btn btn-gold" onclick="openModal('addPlanModal')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Yeni Paket Ekle
+    </button>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="background: var(--success-soft); color: var(--success); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--success); margin-bottom: 24px;">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div style="background: var(--danger-soft); color: var(--danger); padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--danger); margin-bottom: 24px;">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3>Mevcut Paketler</h3>
+            <div class="card-header-sub">Sisteme kayıtlı paketler ve fiyatları</div>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Adı</th>
+                    <th>Türü</th>
+                    <th>Max Çalışan</th>
+                    <th>Max Hizmet</th>
+                    <th>Aylık Fiyat</th>
+                    <th>Yıllık Fiyat</th>
+                    <th>Durum</th>
+                    <th style="width: 150px; text-align: right;">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var plan in Model)
+                {
+                    <tr>
+                        <td style="font-weight: 600;">@plan.Name</td>
+                        <td><span class="plan-tag">@plan.Type</span></td>
+                        <td>@(plan.MaxEmployees.HasValue ? plan.MaxEmployees.Value.ToString() : "Sınırsız")</td>
+                        <td>@(plan.MaxServices.HasValue ? plan.MaxServices.Value.ToString() : "Sınırsız")</td>
+                        <td>₺@plan.MonthlyPrice.ToString("N2")</td>
+                        <td>₺@plan.YearlyPrice.ToString("N2")</td>
+                        <td>
+                            @if (plan.IsActive)
+                            {
+                                <span style="color: var(--success); font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--success); display: inline-block;"></span> Aktif
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: var(--text-muted); font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); display: inline-block;"></span> Pasif
+                                </span>
+                            }
+                        </td>
+                        <td style="text-align: right;">
+                            <button class="btn" style="padding: 4px 10px; font-size: 12px;" onclick="openModal('editPlanModal-@plan.Id')">Düzenle</button>
+                            <form asp-action="DeletePlan" asp-route-id="@plan.Id" method="post" style="display: inline;" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+                                <button type="submit" class="btn" style="padding: 4px 10px; font-size: 12px; color: var(--danger); border-color: var(--danger-soft);">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Modal -->
+                    <div class="custom-modal" id="editPlanModal-@plan.Id">
+                        <div class="modal-backdrop" onclick="closeModal('editPlanModal-@plan.Id')"></div>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Paket Düzenle</h3>
+                                <button type="button" class="btn-close" onclick="closeModal('editPlanModal-@plan.Id')">×</button>
+                            </div>
+                            <form asp-action="UpdatePlan" method="post">
+                                <input type="hidden" name="Id" value="@plan.Id" />
+                                
+                                <div class="grid-2">
+                                    <div class="form-group">
+                                        <label>Paket Adı</label>
+                                        <input type="text" name="Name" class="input" value="@plan.Name" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tür</label>
+                                        <select name="Type" class="input">
+                                            <option value="2" selected="@(plan.Type == RezerveApp.Models.SubscriptionPlanType.Starter)">Starter</option>
+                                            <option value="0" selected="@(plan.Type == RezerveApp.Models.SubscriptionPlanType.Basic)">Basic</option>
+                                            <option value="1" selected="@(plan.Type == RezerveApp.Models.SubscriptionPlanType.Premium)">Premium</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid-2">
+                                    <div class="form-group">
+                                        <label>Max Çalışan (Boş=Sınırsız)</label>
+                                        <input type="number" name="MaxEmployees" class="input" value="@plan.MaxEmployees" min="1" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Max Hizmet (Boş=Sınırsız)</label>
+                                        <input type="number" name="MaxServices" class="input" value="@plan.MaxServices" min="1" />
+                                    </div>
+                                </div>
+
+                                <div class="grid-2">
+                                    <div class="form-group">
+                                        <label>Aylık Fiyat</label>
+                                        <input type="text" name="MonthlyPrice" class="input" value="@plan.MonthlyPrice.ToString("F2")" required />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Yıllık Fiyat</label>
+                                        <input type="text" name="YearlyPrice" class="input" value="@plan.YearlyPrice.ToString("F2")" required />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="checkbox-wrap">
+                                        <input type="checkbox" name="IsActive" value="true" @(plan.IsActive ? "checked" : "") />
+                                        <input type="hidden" name="IsActive" value="false" />
+                                        <span>Aktif</span>
+                                    </label>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn" onclick="closeModal('editPlanModal-@plan.Id')">İptal</button>
+                                    <button type="submit" class="btn btn-gold">Kaydet</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Modal -->
+<div class="custom-modal" id="addPlanModal">
+    <div class="modal-backdrop" onclick="closeModal('addPlanModal')"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Yeni Paket Ekle</h3>
+            <button type="button" class="btn-close" onclick="closeModal('addPlanModal')">×</button>
+        </div>
+        <form asp-action="CreatePlan" method="post">
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Paket Adı</label>
+                    <input type="text" name="Name" class="input" required />
+                </div>
+                <div class="form-group">
+                    <label>Tür</label>
+                    <select name="Type" class="input">
+                        <option value="2">Starter</option>
+                        <option value="0">Basic</option>
+                        <option value="1">Premium</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Max Çalışan (Boş=Sınırsız)</label>
+                    <input type="number" name="MaxEmployees" class="input" min="1" />
+                </div>
+                <div class="form-group">
+                    <label>Max Hizmet (Boş=Sınırsız)</label>
+                    <input type="number" name="MaxServices" class="input" min="1" />
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Aylık Fiyat</label>
+                    <input type="text" name="MonthlyPrice" class="input" value="0.00" required />
+                </div>
+                <div class="form-group">
+                    <label>Yıllık Fiyat</label>
+                    <input type="text" name="YearlyPrice" class="input" value="0.00" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-wrap">
+                    <input type="checkbox" name="IsActive" value="true" checked />
+                    <input type="hidden" name="IsActive" value="false" />
+                    <span>Aktif</span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn" onclick="closeModal('addPlanModal')">İptal</button>
+                <button type="submit" class="btn btn-gold">Ekle</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+</script>

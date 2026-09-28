@@ -1,0 +1,56 @@
+﻿@model List<RezerveApp.Models.BusinessHoliday>
+
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Tatil Günleri";
+    ViewBag.PageSubtitle = "İşletmenizin tamamen kapalı olduğu günleri tanımlayın";
+    ViewBag.ActiveNav = "WorkingHours";
+}
+
+<div class="card card-pad" style="margin-bottom:22px;">
+    <h3 style="margin-bottom:14px;">Yeni Tatil Günü Ekle</h3>
+    <form asp-controller="Business" asp-action="AddHoliday" method="post" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+        @Html.AntiForgeryToken()
+        <div class="field" style="margin-bottom:0;">
+            <label>Tarih</label>
+            <input class="input" type="date" name="date" required />
+        </div>
+        <div class="field" style="margin-bottom:0;">
+            <label>Sebep (opsiyonel)</label>
+            <input class="input" type="text" name="reason" placeholder="Resmi tatil" />
+        </div>
+        <button type="submit" class="btn btn-gold">Ekle</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div><h3>Tanımlı Tatiller</h3></div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>Tarih</th><th>Sebep</th><th></th></tr></thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="3" class="cell-muted">Henüz tatil günü tanımlanmadı.</td></tr>
+                }
+                @foreach (var h in Model)
+                {
+                    <tr>
+                        <td class="cell-primary">@h.Date.ToString("dd.MM.yyyy")</td>
+                        <td class="cell-muted">@h.Reason</td>
+                        <td>
+                            <form asp-controller="Business" asp-action="DeleteHoliday" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@h.Id" />
+                                <button type="submit" class="btn btn-danger-outline btn-sm">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

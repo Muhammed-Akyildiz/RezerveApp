@@ -1,0 +1,89 @@
+﻿@model IEnumerable<RezerveApp.Models.NotificationLog>
+@{
+    Layout = "_AdminLayout";
+    ViewBag.PageTitle = "Destek Talepleri";
+    ViewBag.PageEyebrow = "YÖNETİM";
+    ViewBag.PageSubtitle = "İşletmelerden gelen destek taleplerini görüntüleyin ve yönetin";
+    ViewBag.ActiveNav = "SupportTickets";
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="background:rgba(90,138,94,0.15); border:1px solid #5a8a5e; color:#8fd493; padding:16px; border-radius:10px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+        <i data-lucide="check-circle" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span>@TempData["SuccessMessage"]</span>
+    </div>
+}
+
+<div class="card card-pad">
+    @if (!Model.Any())
+    {
+        <div style="text-align: center; padding: 40px 0;">
+            <i data-lucide="inbox" style="width: 48px; height: 48px; color: var(--color-gray-600); margin-bottom: 16px;"></i>
+            <h3 style="margin-bottom: 8px;">Gelen Kutusu Boş</h3>
+            <p style="color: var(--color-gray-400);">Şu anda bekleyen herhangi bir destek talebi bulunmuyor.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tarih</th>
+                        <th>İşletme</th>
+                        <th>Mesaj</th>
+                        <th style="width: 100px; text-align: right;">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ticket in Model)
+                    {
+                        // "[DESTEK] Konu \n\n İşletme: Ad \n\n Mesaj" formatından konuyu ve mesajı ayıralım
+                        var fullMessage = ticket.Message ?? "";
+                        var subject = "Destek Talebi";
+                        var body = fullMessage;
+                        
+                        if (fullMessage.StartsWith("[DESTEK]"))
+                        {
+                            var parts = fullMessage.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                            if (parts.Length > 0)
+                            {
+                                subject = parts[0].Replace("[DESTEK]", "").Trim();
+                            }
+                            if (parts.Length > 2)
+                            {
+                                body = string.Join("\n", parts.Skip(2)).Trim();
+                            }
+                        }
+
+                        <tr>
+                            <td>
+                                <div style="font-weight: 500;">@ticket.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</div>
+                                <div style="font-size: 12px; color: var(--color-gray-400);">@ticket.CreatedAt.ToLocalTime().ToString("HH:mm")</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 600; color: var(--color-gold);">@(ticket.Business?.Name ?? "Silinmiş İşletme")</div>
+                                <div style="font-size: 12px; color: var(--color-gray-400);">ID: @ticket.BusinessId</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 600; margin-bottom: 4px;">@subject</div>
+                                <div style="font-size: 13px; color: var(--color-gray-300); white-space: pre-wrap;">@body</div>
+                            </td>
+                            <td style="text-align: right; vertical-align: middle;">
+                                <form asp-action="ResolveTicket" asp-route-id="@ticket.Id" method="post" style="display:inline;"
+                                      onsubmit="event.preventDefault(); Swal.fire({ title: 'Kapatılsın mı?', text: 'Bu talebi çözüldü olarak işaretleyip silmek istediğinize emin misiniz?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#5a8a5e', cancelButtonColor: '#3085d6', confirmButtonText: 'Evet, Kapat!', cancelButtonText: 'İptal' }).then((result) => { if (result.isConfirmed) { this.submit(); } });">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline btn-sm" style="color: #8fd493; border-color: rgba(143, 212, 147, 0.3);">
+                                        <i data-lucide="check" style="width:16px;height:16px;"></i>
+                                        Çözüldü
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

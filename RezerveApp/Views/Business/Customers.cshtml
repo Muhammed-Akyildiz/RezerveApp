@@ -1,0 +1,75 @@
+﻿@model List<RezerveApp.Models.Customer>
+
+@{
+    Layout = "_BusinessLayout";
+    ViewBag.PageEyebrow = "Yönetim";
+    ViewBag.PageTitle = "Müşteriler";
+    ViewBag.PageSubtitle = "İşletmenize gelen müşteriler";
+    ViewBag.ActiveNav = "Customers";
+}
+
+<div class="card">
+    <div class="card-pad" style="padding-bottom:0;">
+        <form method="get" asp-controller="Business" asp-action="Customers" class="toolbar">
+            <div class="input-with-icon">
+                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                <input type="text" class="input" name="q" value="@ViewBag.SearchQuery" placeholder="Ad veya telefon ara..." />
+            </div>
+            <button type="submit" class="btn btn-outline btn-sm">Ara</button>
+            <a asp-controller="Business" asp-action="Customers" class="btn btn-ghost btn-sm">Temizle</a>
+        </form>
+    </div>
+
+    <div class="card-header">
+        <div>
+            <h3>Müşteri Listesi</h3>
+            <div class="card-header-sub">@Model.Count kayıtlı müşteri</div>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead><tr><th>Ad</th><th>Telefon</th><th>Kayıt Tarihi</th><th>Devamsızlık (No-Show)</th><th>Durum</th><th></th></tr></thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="cell-muted">Kriterlere uyan müşteri bulunamadı.</td></tr>
+                }
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td class="cell-primary">@c.Name</td>
+                        <td class="cell-muted">@c.Phone</td>
+                        <td class="cell-muted">@c.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td class="cell-muted" style="text-align: center;">
+                            @if(c.NoShowCount > 0)
+                            {
+                                <span style="color:var(--danger); font-weight:bold;">@c.NoShowCount</span>
+                            }
+                            else
+                            {
+                                <span>0</span>
+                            }
+                        </td>
+                        <td>
+                            @if(c.IsBlacklisted)
+                            {
+                                <span class="badge badge-danger">Kara Liste</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-success">Aktif</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="Business" asp-action="CustomerDetails" asp-route-id="@c.Id" class="btn btn-outline btn-sm">Detay</a>
+                            <form asp-controller="Business" asp-action="DeleteCustomer" asp-route-id="@c.Id" method="post" style="display:inline;" data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>" data-confirm-title="Müşteriyi Sil">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger-outline btn-sm">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
