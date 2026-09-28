@@ -2044,24 +2044,44 @@ namespace RezerveApp.Controllers
 
                 try
                 {
-                    business.LogoUrl = await _imageService.UploadImageAsync(logo);
+                    var uploadedUrl = await _imageService.UploadImageAsync(logo);
+                    if (!string.IsNullOrEmpty(uploadedUrl))
+                    {
+                        business.LogoUrl = uploadedUrl;
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Logo yüklenemedi. Sunucu ayarlarınızı (Cloudinary) kontrol edin.";
+                    }
                 }
-                catch { }
+                catch (Exception ex) 
+                { 
+                    TempData["ErrorMessage"] = "Logo yüklenirken hata: " + ex.Message;
+                }
             }
 
             if (gallery1 != null && gallery1.Length > 0)
             {
-                try { business.GalleryImage1 = await _imageService.UploadImageAsync(gallery1); } catch { }
+                try { 
+                    var g1 = await _imageService.UploadImageAsync(gallery1); 
+                    if (!string.IsNullOrEmpty(g1)) business.GalleryImage1 = g1;
+                } catch { }
             }
             
             if (gallery2 != null && gallery2.Length > 0)
             {
-                try { business.GalleryImage2 = await _imageService.UploadImageAsync(gallery2); } catch { }
+                try { 
+                    var g2 = await _imageService.UploadImageAsync(gallery2); 
+                    if (!string.IsNullOrEmpty(g2)) business.GalleryImage2 = g2;
+                } catch { }
             }
             
             if (gallery3 != null && gallery3.Length > 0)
             {
-                try { business.GalleryImage3 = await _imageService.UploadImageAsync(gallery3); } catch { }
+                try { 
+                    var g3 = await _imageService.UploadImageAsync(gallery3); 
+                    if (!string.IsNullOrEmpty(g3)) business.GalleryImage3 = g3;
+                } catch { }
             }
 
             // Password Change Logic
