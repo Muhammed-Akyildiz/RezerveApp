@@ -1,4 +1,4 @@
-﻿/* ============================================
+/* ============================================
    RezerveApp — Navigation & Footer
    ============================================ */
 
@@ -190,9 +190,13 @@
 
 @media (max-width: 768px) {
 
-    .nav__links,
-    .nav__actions {
+    .nav__inner .nav__links,
+    .nav__inner .nav__actions {
         display: none;
+    }
+
+    .nav__mobile-menu .nav__actions {
+        display: flex;
     }
 
     .nav__hamburger {
