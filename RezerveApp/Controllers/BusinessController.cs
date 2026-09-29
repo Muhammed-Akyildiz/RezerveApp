@@ -18,6 +18,7 @@ namespace RezerveApp.Controllers
         private readonly NotificationService _notificationService;
         private readonly IConfiguration _configuration;
         private readonly RezerveApp.Services.IImageService _imageService;
+        private readonly RezerveApp.Services.Sms.ISmsProvider _smsProvider;
 
         public BusinessController(
             ApplicationDbContext context,
@@ -26,7 +27,8 @@ namespace RezerveApp.Controllers
             AvailabilityService availabilityService,
             NotificationService notificationService,
             IConfiguration configuration,
-            RezerveApp.Services.IImageService imageService)
+            RezerveApp.Services.IImageService imageService,
+            RezerveApp.Services.Sms.ISmsProvider smsProvider)
         {
             _context = context;
             _userManager = userManager;
@@ -35,6 +37,7 @@ namespace RezerveApp.Controllers
             _notificationService = notificationService;
             _configuration = configuration;
             _imageService = imageService;
+            _smsProvider = smsProvider;
         }
 
         // Yardımcı: geçerli kullanıcının işletme id'sini döndürür, yoksa null.
@@ -800,7 +803,8 @@ namespace RezerveApp.Controllers
                             if (createResult.Succeeded)
                             {
                                 await _userManager.AddToRoleAsync(user, "Employee");
-                                TempData["Success"] = $"Çalışan güncellendi ve giriş hesabı açıldı. Şifre: {generatedPassword}";
+                                await _smsProvider.SendSmsAsync(normalizedPhone, $"RezerveApp giriş hesabınız açıldı. Şifreniz: {generatedPassword}");
+                                TempData["Success"] = $"Çalışan güncellendi ve şifresi SMS olarak gönderildi.";
                             }
                         }
                         else if (user.PhoneNumber != normalizedPhone)
@@ -862,7 +866,8 @@ namespace RezerveApp.Controllers
 
             if (result.Succeeded)
             {
-                TempData["Success"] = "Çalışanın şifresi başarıyla sıfırlandı.";
+                await _smsProvider.SendSmsAsync(user.PhoneNumber, $"RezerveApp şifreniz sıfırlandı. Yeni şifreniz: {newPassword}");
+                TempData["Success"] = "Çalışanın şifresi başarıyla sıfırlandı ve SMS ile gönderildi.";
             }
             else
             {

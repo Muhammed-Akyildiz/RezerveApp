@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using RezerveApp.Data;
 using RezerveApp.Models;
 using Microsoft.EntityFrameworkCore;
@@ -49,15 +49,21 @@ namespace RezerveApp.Services
             string recipientPhone,
             string message)
         {
-            WhatsAppSendResult result;
+            bool success = false;
+            string? errorMessage = null;
 
             try
             {
-                result = await _whatsApp.SendMessageAsync(NormalizePhone(recipientPhone), message);
+                success = await _smsProvider.SendSmsAsync(recipientPhone, message);
+                if (!success)
+                {
+                    errorMessage = "SMS Provider returned false";
+                }
             }
             catch (Exception ex)
             {
-                result = new WhatsAppSendResult { Success = false, ErrorMessage = ex.Message };
+                success = false;
+                errorMessage = ex.Message;
             }
 
             _context.NotificationLogs.Add(new NotificationLog
@@ -67,8 +73,8 @@ namespace RezerveApp.Services
                 AppointmentId = appointmentId,
                 RecipientPhone = recipientPhone,
                 Message = message,
-                IsSuccess = result.Success,
-                ErrorMessage = result.ErrorMessage
+                IsSuccess = success,
+                ErrorMessage = errorMessage
             });
 
             await _context.SaveChangesAsync();
