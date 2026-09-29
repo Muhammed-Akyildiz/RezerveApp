@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="~/css/auth.css">
 
     <link rel="icon" href="/images/logo.png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -107,7 +108,7 @@
                             </label>
                         </div>
 
-                        <a asp-controller="Account" asp-action="ForgotPassword" class="form-link">
+                        <a href="#" onclick="openResetPhoneModal(event)" class="form-link">
                             Şifremi unuttum
                         </a>
 
@@ -210,8 +211,135 @@
             }
             lucide.createIcons();
         }
+
+        // --- PASSWORD RESET OTP FLOW ---
+        let resetPhone = "";
+        let resetToken = "";
+
+        function openResetPhoneModal(e) {
+            e.preventDefault();
+            document.getElementById('resetPhoneModal').style.display = 'flex';
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
+        }
+
+        async function sendResetOtp() {
+            const phone = document.getElementById('resetPhoneInput').value;
+            if (!phone) {
+                Swal.fire('Hata', 'Lütfen telefon numaranızı girin.', 'error');
+                return;
+            }
+            resetPhone = phone;
+
+            Swal.fire({ title: 'Kod gönderiliyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const response = await fetch('/Account/SendPasswordResetOtp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `phone=${encodeURIComponent(phone)}&__RequestVerificationToken=${encodeURIComponent(token)}`
+                });
+                const data = await response.json();
+                if (data.success) {
+                    Swal.close();
+                    closeModals();
+                    document.getElementById('resetOtpModal').style.display = 'flex';
+                } else {
+                    Swal.fire('Hata', data.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Hata', 'Sunucu hatası', 'error');
+            }
+        }
+
+        async function verifyResetOtp() {
+            const code = document.getElementById('resetOtpInput').value;
+            if (code.length !== 6) {
+                Swal.fire('Hata', 'Lütfen 6 haneli kodu eksiksiz girin.', 'error');
+                return;
+            }
+
+            Swal.fire({ title: 'Doğrulanıyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const response = await fetch('/Account/VerifyPasswordResetOtp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `phone=${encodeURIComponent(resetPhone)}&code=${encodeURIComponent(code)}&__RequestVerificationToken=${encodeURIComponent(token)}`
+                });
+                const data = await response.json();
+                if (data.success) {
+                    resetToken = data.token; // Identity token from backend
+                    Swal.close();
+                    closeModals();
+                    document.getElementById('newPasswordModal').style.display = 'flex';
+                } else {
+                    Swal.fire('Hata', data.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Hata', 'Sunucu hatası', 'error');
+            }
+        }
+
+        async function setNewPassword() {
+            const newPassword = document.getElementById('newPasswordInput').value;
+            if (newPassword.length < 6) {
+                Swal.fire('Hata', 'Şifre en az 6 karakter olmalıdır.', 'error');
+                return;
+            }
+
+            Swal.fire({ title: 'Şifre güncelleniyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            try {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                const response = await fetch('/Account/ResetPasswordWithToken', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `phone=${encodeURIComponent(resetPhone)}&token=${encodeURIComponent(resetToken)}&newPassword=${encodeURIComponent(newPassword)}&__RequestVerificationToken=${encodeURIComponent(token)}`
+                });
+                const data = await response.json();
+                if (data.success) {
+                    closeModals();
+                    Swal.fire('Başarılı', 'Şifreniz güncellendi. Yeni şifrenizle giriş yapabilirsiniz.', 'success');
+                } else {
+                    Swal.fire('Hata', data.message, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Hata', 'Sunucu hatası', 'error');
+            }
+        }
     </script>
 
+    <!-- Modals -->
+    <div id="resetPhoneModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div class="modal-content" style="background:#fff; padding:30px; border-radius:12px; max-width:400px; width:90%; text-align:center;">
+            <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Şifremi Unuttum</h3>
+            <p style="margin-bottom:20px; color:#666; font-size:14px;">Kayıtlı telefon numaranızı girin. Size bir doğrulama kodu göndereceğiz.</p>
+            <input type="tel" id="resetPhoneInput" class="form-input" style="text-align:center; font-size:18px; margin-bottom:20px;" placeholder="05XX XXX XX XX" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            <button type="button" class="btn btn--primary btn--full" onclick="sendResetOtp()">Kodu Gönder</button>
+            <button type="button" class="btn btn--secondary btn--full" style="margin-top:10px;" onclick="closeModals()">İptal</button>
+        </div>
+    </div>
+
+    <div id="resetOtpModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div class="modal-content" style="background:#fff; padding:30px; border-radius:12px; max-width:400px; width:90%; text-align:center;">
+            <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Doğrulama Kodu</h3>
+            <p style="margin-bottom:20px; color:#666; font-size:14px;">Telefonunuza gönderilen 6 haneli doğrulama kodunu giriniz.</p>
+            <input type="text" id="resetOtpInput" class="form-input" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:bold; margin-bottom:20px;" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            <button type="button" class="btn btn--primary btn--full" onclick="verifyResetOtp()">Doğrula</button>
+            <button type="button" class="btn btn--secondary btn--full" style="margin-top:10px;" onclick="closeModals()">İptal</button>
+        </div>
+    </div>
+
+    <div id="newPasswordModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+        <div class="modal-content" style="background:#fff; padding:30px; border-radius:12px; max-width:400px; width:90%; text-align:center;">
+            <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Yeni Şifre Belirleyin</h3>
+            <p style="margin-bottom:20px; color:#666; font-size:14px;">Yeni şifrenizi aşağıya giriniz.</p>
+            <input type="password" id="newPasswordInput" class="form-input" style="text-align:center; font-size:18px; margin-bottom:20px;" placeholder="Yeni Şifre" />
+            <button type="button" class="btn btn--primary btn--full" onclick="setNewPassword()">Şifreyi Güncelle</button>
+        </div>
+    </div>
 </body>
 </html>
 

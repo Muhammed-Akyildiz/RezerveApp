@@ -11,15 +11,18 @@ namespace RezerveApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RezerveApp.Services.IEmailSender _emailSender;
+        private readonly RezerveApp.Services.IOtpService _otpService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RezerveApp.Services.IEmailSender emailSender)
+            RezerveApp.Services.IEmailSender emailSender,
+            RezerveApp.Services.IOtpService otpService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _otpService = otpService;
         }
 
         // =========================
@@ -124,12 +127,40 @@ namespace RezerveApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(
-    string email,
-    string phone,
-    string password,
-    string confirmPassword)
+        public async Task<IActionResult> SendRegistrationOtp(string phone)
         {
+            if (string.IsNullOrWhiteSpace(phone))
+                return Json(new { success = false, message = "Telefon numarası gereklidir." });
+
+            var success = await _otpService.GenerateAndSendOtpAsync(phone, "Register");
+            if (success)
+            {
+                return Json(new { success = true, message = "Doğrulama kodu gönderildi." });
+            }
+            return Json(new { success = false, message = "Kod gönderilirken bir hata oluştu." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(
+            string email,
+            string phone,
+            string password,
+            string confirmPassword,
+            string otpCode)
+        {
+            if (string.IsNullOrWhiteSpace(otpCode))
+            {
+                ModelState.AddModelError("", "Doğrulama kodu zorunludur.");
+                return View();
+            }
+
+            var isOtpValid = await _otpService.VerifyOtpAsync(phone, otpCode, "Register");
+            if (!isOtpValid)
+            {
+                ModelState.AddModelError("", "Doğrulama kodu hatalı veya süresi dolmuş.");
+                return View();
+            }
             // E-posta kontrolü
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -510,6 +541,75 @@ namespace RezerveApp.Controllers
             }
 
             return View(new { Code = code });
+        }
+
+        // =========================
+        // OTP PASSWORD RESET
+        // =========================
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendPasswordResetOtp(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+                return Json(new { success = false, message = "Telefon numarası gereklidir." });
+
+            var normalizedPhone = phone.Replace(" ", "");
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            if (user == null)
+            {
+                // Güvenlik için kullanıcı yoksa da "gönderildi" diyebiliriz veya hata dönebiliriz.
+                return Json(new { success = false, message = "Bu telefon numarasıyla kayıtlı bir hesap bulunamadı." });
+            }
+
+            var success = await _otpService.GenerateAndSendOtpAsync(phone, "PasswordReset");
+            if (success)
+            {
+                return Json(new { success = true, message = "Doğrulama kodu gönderildi." });
+            }
+            return Json(new { success = false, message = "Kod gönderilirken bir hata oluştu." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyPasswordResetOtp(string phone, string code)
+        {
+            if (string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(code))
+                return Json(new { success = false, message = "Eksik bilgi." });
+
+            var isOtpValid = await _otpService.VerifyOtpAsync(phone, code, "PasswordReset");
+            if (!isOtpValid)
+            {
+                return Json(new { success = false, message = "Doğrulama kodu hatalı veya süresi dolmuş." });
+            }
+
+            var normalizedPhone = phone.Replace(" ", "");
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            if (user == null) return Json(new { success = false, message = "Kullanıcı bulunamadı." });
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return Json(new { success = true, token = resetToken });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPasswordWithToken(string phone, string token, string newPassword)
+        {
+            if (string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(newPassword))
+                return Json(new { success = false, message = "Eksik bilgi." });
+
+            var normalizedPhone = phone.Replace(" ", "");
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            if (user == null) return Json(new { success = false, message = "Kullanıcı bulunamadı." });
+
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            if (result.Succeeded)
+            {
+                return Json(new { success = true });
+            }
+
+            return Json(new { success = false, message = "Şifre sıfırlanamadı: " + string.Join(", ", result.Errors.Select(e => e.Description)) });
         }
     }
 }

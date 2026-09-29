@@ -71,6 +71,7 @@ builder.Services.AddHostedService<AppointmentReminderHostedService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IImageService, CloudinaryImageService>();
+builder.Services.AddScoped<IOtpService, OtpService>();
 
 
 var app = builder.Build();

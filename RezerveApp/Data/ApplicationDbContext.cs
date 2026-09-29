@@ -29,6 +29,7 @@ namespace RezerveApp.Data
         public DbSet<Review> Reviews { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<NotificationTemplate> NotificationTemplates { get; set; }
+        public DbSet<OtpCode> OtpCodes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

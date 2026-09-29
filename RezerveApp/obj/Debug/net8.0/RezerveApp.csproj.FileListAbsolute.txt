@@ -143,3 +143,4 @@ C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\bin\Debug\net8.0\Cloudinary
 C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\bin\Debug\net8.0\Npgsql.dll
 C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\obj\Debug\net8.0\RezerveApp.sourcelink.json
