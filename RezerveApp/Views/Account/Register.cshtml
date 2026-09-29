@@ -163,7 +163,7 @@
             lucide.createIcons();
         }
 
-        function startRegistration() {
+        async function startRegistration() {
             const form = document.getElementById('registerForm');
             
             if (!form.checkValidity()) {
@@ -224,6 +224,8 @@
             document.getElementById('otpCode').value = code;
             closeOtpModal();
             Swal.fire({ title: 'Kayıt işlemi tamamlanıyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+            
+            const form = document.getElementById('registerForm');
             HTMLFormElement.prototype.submit.call(form);
         }
     </script>
