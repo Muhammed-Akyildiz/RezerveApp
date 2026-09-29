@@ -235,6 +235,9 @@
         }
     </script>
     <script src="~/js/validation.js" asp-append-version="true"></script>
+    
+    @Html.Partial("_BusinessOwnerOtpModal")
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

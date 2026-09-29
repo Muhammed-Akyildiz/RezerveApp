@@ -19,6 +19,7 @@ namespace RezerveApp.Controllers
         private readonly IConfiguration _configuration;
         private readonly RezerveApp.Services.IImageService _imageService;
         private readonly RezerveApp.Services.Sms.ISmsProvider _smsProvider;
+        private readonly IOtpService _otpService;
 
         public BusinessController(
             ApplicationDbContext context,
@@ -28,7 +29,8 @@ namespace RezerveApp.Controllers
             NotificationService notificationService,
             IConfiguration configuration,
             RezerveApp.Services.IImageService imageService,
-            RezerveApp.Services.Sms.ISmsProvider smsProvider)
+            RezerveApp.Services.Sms.ISmsProvider smsProvider,
+            IOtpService otpService)
         {
             _context = context;
             _userManager = userManager;
@@ -38,6 +40,7 @@ namespace RezerveApp.Controllers
             _configuration = configuration;
             _imageService = imageService;
             _smsProvider = smsProvider;
+            _otpService = otpService;
         }
 
         // Yardımcı: geçerli kullanıcının işletme id'sini döndürür, yoksa null.
@@ -635,6 +638,13 @@ namespace RezerveApp.Controllers
             string? normalizedPhone = null;
             if (!string.IsNullOrWhiteSpace(phone))
             {
+                if (TempData["OwnerOtpVerified"] as string != "true")
+                {
+                    TempData["Error"] = "Çalışana giriş izni vermek (şifre oluşturmak) için kendi telefonunuzu (SMS) doğrulamanız gereklidir.";
+                    return RedirectToAction(nameof(Employees));
+                }
+                TempData.Remove("OwnerOtpVerified");
+
                 normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
                 if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
                 {
@@ -771,6 +781,13 @@ namespace RezerveApp.Controllers
             
             if (!string.IsNullOrWhiteSpace(phone))
             {
+                if (TempData["OwnerOtpVerified"] as string != "true")
+                {
+                    TempData["Error"] = "Çalışana giriş izni vermek veya numarasını değiştirmek için telefonunuzu (SMS) doğrulamanız gereklidir.";
+                    return RedirectToAction(nameof(Employees));
+                }
+                TempData.Remove("OwnerOtpVerified");
+
                 var normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
                 if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
                 {
@@ -860,6 +877,13 @@ namespace RezerveApp.Controllers
                 TempData["Error"] = "Şifre en az 6 karakter olmalıdır.";
                 return RedirectToAction("Employees");
             }
+
+            if (TempData["OwnerOtpVerified"] as string != "true")
+            {
+                TempData["Error"] = "Çalışanın şifresini sıfırlamak için telefonunuzu (SMS) doğrulamanız gereklidir.";
+                return RedirectToAction("Employees");
+            }
+            TempData.Remove("OwnerOtpVerified");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
@@ -2406,6 +2430,39 @@ namespace RezerveApp.Controllers
                 System.IO.File.WriteAllText("chart_err.txt", ex.ToString());
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        // =====================================================================
+        // BUSINESS OWNER OTP (SECURITY)
+        // =====================================================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendOwnerOtp()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null || string.IsNullOrWhiteSpace(user.PhoneNumber)) return Json(new { success = false, message = "Sistemde kayıtlı telefon numaranız bulunamadı." });
+            
+            var success = await _otpService.GenerateAndSendOtpAsync(user.PhoneNumber, "BusinessOwnerAction");
+            if (success) 
+            {
+                var maskedPhone = "******" + (user.PhoneNumber.Length >= 4 ? user.PhoneNumber.Substring(user.PhoneNumber.Length - 4) : user.PhoneNumber);
+                return Json(new { success = true, phone = maskedPhone }); 
+            }
+            return Json(new { success = false, message = "SMS gönderilemedi. Lütfen daha sonra tekrar deneyin." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> VerifyOwnerOtp(string code)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Json(new { success = false });
+
+            var isOtpValid = await _otpService.VerifyOtpAsync(user.PhoneNumber, code, "BusinessOwnerAction");
+            if (!isOtpValid) return Json(new { success = false, message = "Geçersiz veya süresi dolmuş kod." });
+
+            TempData["OwnerOtpVerified"] = "true";
+            return Json(new { success = true });
         }
     }
 }

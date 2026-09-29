@@ -1,0 +1,88 @@
+<!-- Business Owner OTP Modal Partial -->
+<div id="ownerOtpModal" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center;">
+    <div class="modal-content" style="position:relative; background:#fff; padding:30px; border-radius:12px; max-width:400px; width:90%; text-align:center;">
+        <button type="button" onclick="cancelOwnerOtp()" style="position:absolute; top:15px; right:15px; background:none; border:none; cursor:pointer; color:#999; padding:5px;">
+            <i data-lucide="x"></i>
+        </button>
+        <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Güvenlik Doğrulaması</h3>
+        <p style="margin-bottom:20px; color:#666; font-size:14px;">Bu işlem yetki gerektiriyor. Lütfen <strong id="ownerOtpPhoneDisplay"></strong> numaralı telefonunuza gönderilen doğrulama kodunu girin.</p>
+        <input type="text" id="ownerOtpInput" class="form-input" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:bold; margin-bottom:20px;" maxlength="6" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+        <button type="button" class="btn btn-gold" style="width:100%; justify-content:center;" onclick="verifyOwnerOtpCode()">Doğrula ve İşleme Devam Et</button>
+    </div>
+</div>
+
+<script>
+    let pendingOtpCallback = null;
+
+    async function requireBusinessOwnerOtp(callback) {
+        if (typeof Swal === 'undefined') {
+            alert("Sistem hatası: SweetAlert yüklü değil.");
+            return;
+        }
+
+        Swal.fire({ title: 'Güvenlik kodu gönderiliyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+        try {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const response = await fetch('/Business/SendOwnerOtp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `__RequestVerificationToken=${encodeURIComponent(token || '')}`
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                Swal.close();
+                document.getElementById('ownerOtpPhoneDisplay').innerText = data.phone;
+                document.getElementById('ownerOtpInput').value = '';
+                document.getElementById('ownerOtpModal').style.display = 'flex';
+                pendingOtpCallback = callback;
+                if(typeof lucide !== 'undefined') lucide.createIcons();
+            } else {
+                Swal.fire('Hata', data.message || 'Kod gönderilemedi.', 'error');
+            }
+        } catch (err) {
+            Swal.fire('Hata', 'Sunucu ile bağlantı kurulamadı.', 'error');
+        }
+    }
+
+    function cancelOwnerOtp() {
+        document.getElementById('ownerOtpModal').style.display = 'none';
+        pendingOtpCallback = null;
+    }
+
+    async function verifyOwnerOtpCode() {
+        const code = document.getElementById('ownerOtpInput').value;
+        if (code.length !== 6) {
+            Swal.fire('Hata', 'Lütfen 6 haneli kodu tam girin.', 'error');
+            return;
+        }
+
+        Swal.fire({ title: 'Doğrulanıyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+
+        try {
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+            const response = await fetch('/Business/VerifyOwnerOtp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `code=${encodeURIComponent(code)}&__RequestVerificationToken=${encodeURIComponent(token || '')}`
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                Swal.close();
+                document.getElementById('ownerOtpModal').style.display = 'none';
+                
+                // Execute the pending action
+                if (pendingOtpCallback) {
+                    pendingOtpCallback();
+                    pendingOtpCallback = null;
+                }
+            } else {
+                Swal.fire('Hata', data.message || 'Kod hatalı.', 'error');
+            }
+        } catch (err) {
+            Swal.fire('Hata', 'Sunucu ile bağlantı kurulamadı.', 'error');
+        }
+    }
+</script>

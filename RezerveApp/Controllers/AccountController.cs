@@ -347,6 +347,21 @@ namespace RezerveApp.Controllers
             ViewBag.Email = email;
             ViewBag.Phone = phone;
 
+            bool isSuperAdmin = await _userManager.IsInRoleAsync(user, "SuperAdmin");
+            bool needsOtp = false;
+            if (phone != user.PhoneNumber) needsOtp = true;
+            if (!string.IsNullOrWhiteSpace(newPassword)) needsOtp = true;
+
+            if (needsOtp && !isSuperAdmin)
+            {
+                if (TempData["OwnerOtpVerified"] as string != "true")
+                {
+                    ModelState.AddModelError("", "Güvenlik gereği, telefon numarası veya şifre değiştirmek için telefonunuzu (SMS) doğrulamanız gereklidir.");
+                    return View();
+                }
+                TempData.Remove("OwnerOtpVerified");
+            }
+
             bool hasChanges = false;
 
             // E-posta güncelleme

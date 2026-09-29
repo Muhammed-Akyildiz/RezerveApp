@@ -88,9 +88,11 @@ else
     </h3>
 
 
-    <form asp-controller="Business"
+    <form id="createEmployeeForm"
+          asp-controller="Business"
           asp-action="CreateEmployee"
-          method="post">
+          method="post"
+          onsubmit="return handleCreateEmployee(event, this);">
 
         @Html.AntiForgeryToken()
 
@@ -317,6 +319,7 @@ else
                       asp-action="DeleteEmployee"
                       asp-route-id="@e.Id"
                       method="post"
+                      onsubmit="return handleDeleteEmployee(event, this, @e.Id)"
                       data-confirm="Bu kaydı <b>kalıcı olarak</b> silmek istediğinize emin misiniz?<br><br><span style='font-size:12px; color:#888;'>Bu işlem geri alınamaz ve ilişkili diğer veriler etkilenebilir.</span>"
                       data-confirm-title="Çalışanı Sil">
 
@@ -485,4 +488,70 @@ else
         }
 
     </style>
+    
+    <script>
+        function handleCreateEmployee(e, form) {
+            const phoneInput = form.querySelector('input[name="phone"]');
+            if (phoneInput && phoneInput.value.trim().length > 0) {
+                e.preventDefault(); // Stop native submission
+                requireBusinessOwnerOtp(function() {
+                    HTMLFormElement.prototype.submit.call(form);
+                });
+                return false;
+            }
+            return true;
+        }
+
+        async function resetPassword(employeeId) {
+            const { value: newPassword } = await Swal.fire({
+                title: 'Şifre Sıfırla',
+                input: 'password',
+                inputLabel: 'Çalışan için yeni şifre belirleyin',
+                inputPlaceholder: 'En az 6 karakter',
+                showCancelButton: true,
+                confirmButtonText: 'Sıfırla',
+                cancelButtonText: 'İptal',
+                inputValidator: (value) => {
+                    if (!value || value.length < 6) {
+                        return 'Şifre en az 6 karakter olmalıdır!'
+                    }
+                }
+            });
+
+            if (newPassword) {
+                requireBusinessOwnerOtp(function() {
+                    // Create dynamic form and submit
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/Business/ResetEmployeePassword';
+                    
+                    const idInput = document.createElement('input');
+                    idInput.type = 'hidden';
+                    idInput.name = 'employeeId';
+                    idInput.value = employeeId;
+                    
+                    const pwInput = document.createElement('input');
+                    pwInput.type = 'hidden';
+                    pwInput.name = 'newPassword';
+                    pwInput.value = newPassword;
+                    
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]').cloneNode();
+                    
+                    form.appendChild(idInput);
+                    form.appendChild(pwInput);
+                    form.appendChild(token);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+        }
+
+        function handleDeleteEmployee(e, form, id) {
+            // Already handled by business.js data-confirm? 
+            // The data-confirm logic in business.js might preventDefault itself.
+            // But let's leave it to business.js to handle the confirm dialog. 
+            // If they click yes, business.js submits it natively.
+            return true;
+        }
+    </script>
 }

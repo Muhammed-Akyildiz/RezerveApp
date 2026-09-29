@@ -23,7 +23,7 @@
             </div>
         }
 
-        <form asp-controller="Account" asp-action="Settings" method="post">
+        <form id="settingsForm" asp-controller="Account" asp-action="Settings" method="post" onsubmit="return handleSettingsOtp(event, this);">
             @Html.AntiForgeryToken()
             
             <h4 style="margin-top: 20px; margin-bottom: 10px; color: #fff;">İletişim Bilgileri</h4>
@@ -63,4 +63,32 @@
             </div>
         </form>
     </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        function handleSettingsOtp(e, form) {
+            const originalPhone = '@ViewBag.Phone';
+            const phoneInput = document.getElementById('phone');
+            const newPasswordInput = document.getElementById('newPassword');
+            
+            let needsOtp = false;
+            if (phoneInput && phoneInput.value !== originalPhone) {
+                needsOtp = true;
+            }
+            if (newPasswordInput && newPasswordInput.value.length > 0) {
+                needsOtp = true;
+            }
+
+            if (needsOtp) {
+                e.preventDefault();
+                requireBusinessOwnerOtp(function() {
+                    HTMLFormElement.prototype.submit.call(form);
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+}

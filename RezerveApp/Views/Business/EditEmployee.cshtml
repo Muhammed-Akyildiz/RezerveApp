@@ -8,7 +8,7 @@
     ViewBag.ActiveNav = "Employees";
 }
 
-<form asp-controller="Business" asp-action="EditEmployee" asp-route-id="@Model.Id" method="post">
+<form asp-controller="Business" asp-action="EditEmployee" asp-route-id="@Model.Id" method="post" onsubmit="return handleEditEmployee(event, this);">
     @Html.AntiForgeryToken()
 
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -39,3 +39,19 @@
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        function handleEditEmployee(e, form) {
+            const phoneInput = form.querySelector('input[name="phone"]');
+            if (phoneInput && phoneInput.value.trim().length > 0) {
+                e.preventDefault(); // Stop native submission
+                requireBusinessOwnerOtp(function() {
+                    HTMLFormElement.prototype.submit.call(form);
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
