@@ -1,10 +1,11 @@
-﻿namespace RezerveApp.Models
+namespace RezerveApp.Models
 {
     // SuperAdmin > İşletme Detay sayfasını beslemek için kullanılan
     // salt-okunur görüntüleme modeli.
     public class BusinessDetailsViewModel
     {
         public Business Business { get; set; } = null!;
+        public ApplicationUser? BusinessAdminUser { get; set; }
 
         public List<Employee> Employees { get; set; } = new();
 

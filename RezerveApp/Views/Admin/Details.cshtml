@@ -1,4 +1,4 @@
-﻿@model RezerveApp.Models.BusinessDetailsViewModel
+@model RezerveApp.Models.BusinessDetailsViewModel
 
 @{
     Layout = "_AdminLayout";
@@ -273,6 +273,31 @@
                 <p class="cell-muted" style="max-width:400px; margin:0 auto;">Bu işletmeye henüz bir abonelik paketi atanmadı. Aşağıdaki formdan bir paket seçerek işletmeyi aktifleştirebilirsiniz.</p>
             </div>
         }
+
+        <hr style="border:0; border-top:1px solid var(--color-dark-border); margin:32px 0;" />
+
+        <!-- İŞLETME SAHİBİ GÜVENLİK AYARLARI -->
+        <h4 style="margin-bottom:16px; font-size:16px;">İşletme Sahibi Güvenlik Ayarları (Süper Admin)</h4>
+        
+        <form asp-controller="Admin" asp-action="UpdateBusinessOwnerCredentials" method="post" style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end; margin-bottom: 24px;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="businessId" value="@Model.Business.Id" />
+
+            <div class="form-group" style="margin:0; flex:1; min-width:200px;">
+                <label for="newPhone" class="form-label">Yeni Telefon Numarası (İsteğe Bağlı)</label>
+                <input type="text" id="newPhone" name="newPhone" class="input" placeholder="@(Model.BusinessAdminUser?.PhoneNumber ?? "Telefon numarası yok")" />
+            </div>
+
+            <div class="form-group" style="margin:0; flex:1; min-width:200px;">
+                <label for="newPassword" class="form-label">Yeni Şifre (İsteğe Bağlı)</label>
+                <input type="password" id="newPassword" name="newPassword" class="input" placeholder="Şifreyi sıfırlamak için yazın" />
+            </div>
+
+            <button type="button" class="btn btn-outline" style="border-color:var(--color-danger); color:var(--color-danger);" onclick="event.preventDefault(); Swal.fire({ title: 'Emin misiniz?', text: 'İşletme sahibinin şifresini veya telefonunu değiştiriyorsunuz.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Evet, Değiştir!', cancelButtonText: 'İptal' }).then((result) => { if (result.isConfirmed) { this.form.submit(); } }); return false;">
+                <i data-lucide="shield-alert" class="icon-sm"></i>
+                Güncelle
+            </button>
+        </form>
 
         <hr style="border:0; border-top:1px solid var(--color-dark-border); margin:32px 0;" />
 

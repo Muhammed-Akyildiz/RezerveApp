@@ -1,4 +1,4 @@
-﻿using RezerveApp.Data;
+using RezerveApp.Data;
 using RezerveApp.Models;
 using RezerveApp.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -223,10 +223,14 @@ namespace RezerveApp.Controllers
                     .OrderBy(p => p.Type)
                     .ToListAsync();
 
+            var businessAdminUsers = await _userManager.Users.Where(u => u.BusinessId == id && u.EmployeeId == null).ToListAsync();
+            var businessAdmin = businessAdminUsers.FirstOrDefault(u => _userManager.IsInRoleAsync(u, "BusinessAdmin").Result);
+
             var vm =
                 new BusinessDetailsViewModel
                 {
                     Business = business,
+                    BusinessAdminUser = businessAdmin,
                     Employees = employees,
                     Services = services,
                     Appointments = appointments,
@@ -236,6 +240,66 @@ namespace RezerveApp.Controllers
                 };
 
             return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateBusinessOwnerCredentials(int businessId, string newPhone, string newPassword)
+        {
+            var businessAdminUsers = await _userManager.Users.Where(u => u.BusinessId == businessId && u.EmployeeId == null).ToListAsync();
+            var businessAdmin = businessAdminUsers.FirstOrDefault(u => _userManager.IsInRoleAsync(u, "BusinessAdmin").Result);
+
+            if (businessAdmin == null)
+            {
+                TempData["Error"] = "Bu işletmeye ait yönetici hesabı bulunamadı.";
+                return RedirectToAction(nameof(Details), new { id = businessId });
+            }
+
+            bool hasChanges = false;
+            
+            if (!string.IsNullOrWhiteSpace(newPhone) && newPhone != businessAdmin.PhoneNumber)
+            {
+                var normalizedPhone = new string(newPhone.Where(char.IsDigit).ToArray());
+                if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                    normalizedPhone = "0" + normalizedPhone.Substring(2);
+                else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                    normalizedPhone = "0" + normalizedPhone;
+
+                var existingPhone = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone && u.Id != businessAdmin.Id);
+                if (existingPhone != null)
+                {
+                    TempData["Error"] = "Bu telefon numarası başka bir kullanıcı tarafından kullanılıyor.";
+                    return RedirectToAction(nameof(Details), new { id = businessId });
+                }
+
+                businessAdmin.PhoneNumber = normalizedPhone;
+                var updateResult = await _userManager.UpdateAsync(businessAdmin);
+                if (!updateResult.Succeeded)
+                {
+                    TempData["Error"] = string.Join(", ", updateResult.Errors.Select(e => e.Description));
+                    return RedirectToAction(nameof(Details), new { id = businessId });
+                }
+                hasChanges = true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(newPassword))
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(businessAdmin);
+                var resetResult = await _userManager.ResetPasswordAsync(businessAdmin, token, newPassword);
+                if (!resetResult.Succeeded)
+                {
+                    TempData["Error"] = string.Join(", ", resetResult.Errors.Select(e => e.Description));
+                    return RedirectToAction(nameof(Details), new { id = businessId });
+                }
+                hasChanges = true;
+            }
+
+            if (hasChanges)
+                TempData["Success"] = "İşletme sahibi bilgileri başarıyla güncellendi.";
+            else
+                TempData["Error"] = "Değişiklik yapılmadı.";
+
+            return RedirectToAction(nameof(Details), new { id = businessId });
         }
 
         // =========================================================
