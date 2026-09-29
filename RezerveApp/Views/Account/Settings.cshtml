@@ -78,7 +78,7 @@
                 needsOtp = true;
             }
             if (newPasswordInput && newPasswordInput.value.length > 0) {
-                const passwordRegex = /^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*.,?_~\\-+=]).{6,}$/;
+                const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@@#$%^&*.,?_~\-+=]).{6,}$/;
                 if (!passwordRegex.test(newPasswordInput.value)) {
                     e.preventDefault();
                     Swal.fire('Geçersiz Şifre', 'Şifreniz en az 6 karakter uzunluğunda olmalı, en az 1 büyük harf, 1 rakam ve 1 özel karakter içermelidir.', 'error');
