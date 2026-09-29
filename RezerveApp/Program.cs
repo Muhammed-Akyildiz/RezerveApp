@@ -87,6 +87,10 @@ using (var scope = app.Services.CreateScope())
 
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var dbContext = services.GetRequiredService<ApplicationDbContext>();
+
+    // Apply any pending migrations automatically
+    await dbContext.Database.MigrateAsync();
 
     // ------------------------------
     // Rolleri oluştur
