@@ -1,21 +1,33 @@
-import urllib.request
+import requests
 import json
-import urllib.error
 
-data = json.dumps({
-    'username': '908502411603',
-    'password': 'APJ!463fny',
-    'source_addr': 'Muhammed Akyıldız',
-    'messages': [{'msg': 'test', 'dest': '905320000000'}]
-}).encode('utf-8')
+url = "https://sms.verimor.com.tr/v2/send.json"
+username = "908502411603"
+password = "SHM?584jdd"
 
-req = urllib.request.Request('https://sms.verimor.com.tr/v2/send.json', data=data, headers={'Content-Type': 'application/json'})
+headers_to_test = [
+    "Muhammed Akyıldız",
+    "REZERVEAPP",
+    "908502411603",
+    "08502411603",
+    "8502411603"
+]
 
-try:
-    response = urllib.request.urlopen(req)
-    print("Success:", response.read().decode('utf-8'))
-except urllib.error.HTTPError as e:
-    print("Error Code:", e.code)
-    print("Error Body:", e.read().decode('utf-8'))
-except Exception as e:
-    print("Exception:", str(e))
+for sender in headers_to_test:
+    payload = {
+        "username": username,
+        "password": password,
+        "source_addr": sender,
+        "messages": [
+            {
+                "msg": "Test message",
+                "dest": "905369917452"
+            }
+        ]
+    }
+    
+    response = requests.post(url, json=payload)
+    print(f"Testing SenderId: {sender}")
+    print(f"Status: {response.status_code}")
+    print(f"Response: {response.text}")
+    print("-" * 30)

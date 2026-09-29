@@ -46,7 +46,7 @@ builder.Services
     {
         options.Password.RequireDigit = true;
         options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireNonAlphanumeric = true;
         options.Password.RequireUppercase = true;
         options.Password.RequireLowercase = false;
     })
