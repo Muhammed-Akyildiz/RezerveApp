@@ -755,12 +755,27 @@
 
 @media (max-width: 1024px) {
     .pricing__grid {
-        grid-template-columns: 1fr;
-        max-width: 420px;
-        margin: 0 auto;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: var(--space-lg);
+        padding-bottom: var(--space-lg);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+    }
+
+    .pricing__grid::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+    }
+
+    .pricing-card {
+        flex: 0 0 85%;
+        max-width: 350px;
+        scroll-snap-align: center;
     }
 }
-
 
 /* === CTA === */
 .cta-section {
