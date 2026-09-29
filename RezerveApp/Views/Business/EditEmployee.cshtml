@@ -1,4 +1,4 @@
-﻿@model RezerveApp.Models.Employee
+@model RezerveApp.Models.Employee
 
 @{
     Layout = "_BusinessLayout";
@@ -18,6 +18,11 @@
             <div class="field">
                 <label for="name">Ad Soyad</label>
                 <input class="input" type="text" id="name" name="name" value="@Model.Name" required />
+            </div>
+            <div class="field">
+                <label for="phone">Telefon Numarası (Giriş için)</label>
+                <input class="input" type="tel" id="phone" name="phone" value="@ViewBag.EmployeePhone" placeholder="05XXXXXXXXX" maxlength="11" />
+                <small style="color:var(--text-muted); font-size:12px;">Çalışan şifresi almak için boş bırakmayın.</small>
             </div>
             <div class="field">
                 <label for="isActive">Durum</label>

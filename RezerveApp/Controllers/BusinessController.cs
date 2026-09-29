@@ -126,9 +126,9 @@ namespace RezerveApp.Controllers
             string? logoUrl = null;
             if (logo != null && logo.Length > 0)
             {
-                if (logo.Length > 5 * 1024 * 1024)
+                if (logo.Length > 10 * 1024 * 1024)
                 {
-                    ModelState.AddModelError("logo", "Logo dosyası 5MB'dan küçük olmalıdır.");
+                    ModelState.AddModelError("logo", "Logo dosyası 10MB'dan küçük olmalıdır.");
                     return View();
                 }
 
@@ -166,11 +166,8 @@ namespace RezerveApp.Controllers
   <rect width=""200"" height=""200"" fill=""{color}"" rx=""16""/>
   <text x=""100"" y=""130"" font-family=""Arial,sans-serif"" font-size=""80"" font-weight=""bold"" fill=""white"" text-anchor=""middle"">{initials}</text>
 </svg>";
-                var svgFileName = Guid.NewGuid().ToString() + ".svg";
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                Directory.CreateDirectory(uploadDir);
-                await System.IO.File.WriteAllTextAsync(Path.Combine(uploadDir, svgFileName), svgContent);
-                logoUrl = "/uploads/" + svgFileName;
+                var base64Svg = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(svgContent));
+                logoUrl = "data:image/svg+xml;base64," + base64Svg;
             }
 
             var business = new Business
@@ -632,6 +629,34 @@ namespace RezerveApp.Controllers
                 return RedirectToAction(nameof(Employees));
             }
 
+            string? normalizedPhone = null;
+            if (!string.IsNullOrWhiteSpace(phone))
+            {
+                normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
+                if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                {
+                    normalizedPhone = "0" + normalizedPhone.Substring(2);
+                }
+                else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                {
+                    normalizedPhone = "0" + normalizedPhone;
+                }
+
+                if (normalizedPhone.Length != 11)
+                {
+                    TempData["Error"] = "Geçersiz telefon numarası. Çalışan oluşturulamadı.";
+                    return RedirectToAction(nameof(Employees));
+                }
+                
+                // Telefon daha önce kullanılmış mı?
+                var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+                if (phoneUser != null)
+                {
+                    TempData["Error"] = "Bu telefon numarası zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
+                    return RedirectToAction(nameof(Employees));
+                }
+            }
+
             var employee = new Employee
             {
                 Name = name.Trim(),
@@ -643,16 +668,8 @@ namespace RezerveApp.Controllers
             await _context.SaveChangesAsync();
 
             // Eğer telefon verildiyse, ApplicationUser oluştur.
-            if (!string.IsNullOrWhiteSpace(phone))
+            if (!string.IsNullOrEmpty(normalizedPhone))
             {
-                var normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
-
-                if (normalizedPhone.Length != 11)
-                {
-                    TempData["Error"] = "Çalışan oluşturuldu ancak telefon numarası 11 haneli olmadığı için giriş hesabı açılamadı.";
-                    return RedirectToAction(nameof(Employees));
-                }
-
                 // Rasgele 6 haneli şifre üret
                 var random = new Random();
                 var generatedPassword = random.Next(100000, 999999).ToString();
@@ -701,13 +718,16 @@ namespace RezerveApp.Controllers
 
             if (employee == null)
                 return NotFound();
+                
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.EmployeeId == id);
+            ViewBag.EmployeePhone = user?.PhoneNumber ?? "";
 
             return View(employee);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditEmployee(int id, string name, bool isActive)
+        public async Task<IActionResult> EditEmployee(int id, string name, bool isActive, string? phone)
         {
             var businessId = await GetCurrentBusinessIdAsync();
 
@@ -742,6 +762,74 @@ namespace RezerveApp.Controllers
             employee.IsActive = isActive;
 
             await _context.SaveChangesAsync();
+
+            // Telefon numarası düzenleme/ekleme
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.EmployeeId == id);
+            
+            if (!string.IsNullOrWhiteSpace(phone))
+            {
+                var normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
+                if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                {
+                    normalizedPhone = "0" + normalizedPhone.Substring(2);
+                }
+                else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                {
+                    normalizedPhone = "0" + normalizedPhone;
+                }
+
+                if (normalizedPhone.Length == 11)
+                {
+                    var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone && u.EmployeeId != id);
+                    if (phoneUser == null)
+                    {
+                        if (user == null)
+                        {
+                            // Yeni kullanıcı oluştur
+                            var random = new Random();
+                            var generatedPassword = random.Next(100000, 999999).ToString();
+                            user = new ApplicationUser
+                            {
+                                UserName = normalizedPhone,
+                                PhoneNumber = normalizedPhone,
+                                EmailConfirmed = true,
+                                BusinessId = businessId.Value,
+                                EmployeeId = employee.Id
+                            };
+                            var createResult = await _userManager.CreateAsync(user, generatedPassword);
+                            if (createResult.Succeeded)
+                            {
+                                await _userManager.AddToRoleAsync(user, "Employee");
+                                TempData["Success"] = $"Çalışan güncellendi ve giriş hesabı açıldı. Şifre: {generatedPassword}";
+                            }
+                        }
+                        else if (user.PhoneNumber != normalizedPhone)
+                        {
+                            // Mevcut kullanıcının telefonunu güncelle
+                            user.PhoneNumber = normalizedPhone;
+                            user.UserName = normalizedPhone;
+                            await _userManager.UpdateAsync(user);
+                            TempData["Success"] = "Çalışan bilgileri ve telefon numarası güncellendi.";
+                        }
+                        else 
+                        {
+                            TempData["Success"] = "Çalışan bilgileri güncellendi.";
+                        }
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Girdiğiniz telefon numarası başka birine ait. Diğer bilgiler güncellendi.";
+                    }
+                }
+                else 
+                {
+                    TempData["Error"] = "Geçersiz telefon numarası. Diğer bilgiler güncellendi.";
+                }
+            }
+            else
+            {
+                TempData["Success"] = "Çalışan bilgileri güncellendi.";
+            }
 
             return RedirectToAction(nameof(Employees));
         }

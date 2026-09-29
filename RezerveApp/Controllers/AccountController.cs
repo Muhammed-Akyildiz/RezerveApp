@@ -1,4 +1,4 @@
-﻿using RezerveApp.Models;
+using RezerveApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -181,9 +181,19 @@ namespace RezerveApp.Controllers
             }
 
             var normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
+            
+            if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+            {
+                normalizedPhone = "0" + normalizedPhone.Substring(2);
+            }
+            else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+            {
+                normalizedPhone = "0" + normalizedPhone;
+            }
+
             if (normalizedPhone.Length != 11)
             {
-                ModelState.AddModelError("phone", "Telefon numarası 11 haneli olmalıdır.");
+                ModelState.AddModelError("phone", "Telefon numarası geçersiz (başında 0 ile 11 hane olmalıdır).");
                 return View();
             }
 

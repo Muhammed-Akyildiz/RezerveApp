@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
     // ==========================================
     // İL / İLÇE
@@ -33,10 +33,10 @@
 
             if (!file) return;
 
-            // 5 MB kontrolü
-            if (file.size > 5 * 1024 * 1024) {
+            // 10 MB kontrolü
+            if (file.size > 10 * 1024 * 1024) {
 
-                alert("Logo dosyası 5 MB'dan büyük olamaz.");
+                alert("Logo dosyası 10 MB'dan büyük olamaz.");
 
                 logoInput.value = "";
 
@@ -47,12 +47,14 @@
             const allowedTypes = [
                 "image/png",
                 "image/jpeg",
-                "image/webp"
+                "image/webp",
+                "image/heic",
+                "image/heif"
             ];
 
-            if (!allowedTypes.includes(file.type)) {
+            if (!allowedTypes.includes(file.type) && !file.name.toLowerCase().endsWith(".heic") && !file.name.toLowerCase().endsWith(".heif")) {
 
-                alert("Sadece PNG, JPG veya WEBP dosyaları yükleyebilirsiniz.");
+                alert("Sadece PNG, JPG, WEBP veya HEIC dosyaları yükleyebilirsiniz.");
 
                 logoInput.value = "";
 
