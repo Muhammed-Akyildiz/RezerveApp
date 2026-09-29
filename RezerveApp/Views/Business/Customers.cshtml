@@ -37,10 +37,10 @@
                 @foreach (var c in Model)
                 {
                     <tr>
-                        <td class="cell-primary">@c.Name</td>
-                        <td class="cell-muted">@c.Phone</td>
-                        <td class="cell-muted">@c.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
-                        <td class="cell-muted" style="text-align: center;">
+                        <td class="cell-primary" data-label="Ad">@c.Name</td>
+                        <td class="cell-muted" data-label="Telefon">@c.Phone</td>
+                        <td class="cell-muted" data-label="Kayıt Tarihi">@c.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td class="cell-muted" style="text-align: center;" data-label="Devamsızlık (No-Show)">
                             @if(c.NoShowCount > 0)
                             {
                                 <span style="color:var(--danger); font-weight:bold;">@c.NoShowCount</span>
@@ -50,7 +50,7 @@
                                 <span>0</span>
                             }
                         </td>
-                        <td>
+                        <td data-label="Durum">
                             @if(c.IsBlacklisted)
                             {
                                 <span class="badge badge-danger">Kara Liste</span>
@@ -60,7 +60,7 @@
                                 <span class="badge badge-success">Aktif</span>
                             }
                         </td>
-                        <td>
+                        <td data-label="İşlem">
                             <div style="display:flex; gap:8px;">
                                 <a asp-controller="Business" asp-action="CustomerDetails" asp-route-id="@c.Id" class="btn btn-outline btn-sm">Detay</a>
                                 <form asp-controller="Business" asp-action="ToggleBlacklist" asp-route-id="@c.Id" method="post">

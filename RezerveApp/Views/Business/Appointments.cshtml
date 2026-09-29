@@ -67,17 +67,17 @@
                 @foreach (var a in Model)
                 {
                     <tr>
-                        <td class="cell-primary">
+                        <td class="cell-primary" data-label="Tarih / Saat">
                             @a.AppointmentDate.ToString("dd.MM.yyyy")<br />
                             <span class="cell-muted" style="font-size:12px;">@a.StartTime.ToString("hh\\:mm")</span>
                         </td>
-                        <td>
+                        <td data-label="Müşteri">
                             <div class="cell-primary">@a.CustomerName</div>
                             <div class="cell-muted" style="font-size:12px;">@a.CustomerPhone</div>
                         </td>
-                        <td class="cell-muted">@a.Service?.Name</td>
-                        <td class="cell-muted">@a.Employee?.Name</td>
-                        <td>
+                        <td class="cell-muted" data-label="Hizmet">@a.Service?.Name</td>
+                        <td class="cell-muted" data-label="Berber">@a.Employee?.Name</td>
+                        <td data-label="Durum">
                             @switch (a.Status)
                             {
                                 case "Approved":
@@ -97,7 +97,7 @@
                                     break;
                             }
                         </td>
-                        <td style="text-align:right;">
+                        <td style="text-align:right;" data-label="İşlem">
                             @{
                                 var digits = new string((a.CustomerPhone ?? "").Where(char.IsDigit).ToArray());
                                 var waPhone = digits.Length == 11 && digits.StartsWith("0") ? "90" + digits.Substring(1) : (digits.StartsWith("90") ? digits : "90" + digits);
