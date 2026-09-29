@@ -78,6 +78,12 @@
                 needsOtp = true;
             }
             if (newPasswordInput && newPasswordInput.value.length > 0) {
+                const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+                if (!passwordRegex.test(newPasswordInput.value)) {
+                    e.preventDefault();
+                    Swal.fire('Geçersiz Şifre', 'Şifreniz en az 6 karakter uzunluğunda olmalı, en az 1 büyük harf ve 1 rakam içermelidir.', 'error');
+                    return false;
+                }
                 needsOtp = true;
             }
 

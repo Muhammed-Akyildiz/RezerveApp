@@ -683,9 +683,9 @@ namespace RezerveApp.Controllers
             // Eğer telefon verildiyse, ApplicationUser oluştur.
             if (!string.IsNullOrEmpty(normalizedPhone))
             {
-                // Rasgele 6 haneli şifre üret
+                // 6 haneli, 1 büyük harf ve rakam içeren şifre üret (Örn: R12345)
                 var random = new Random();
-                var generatedPassword = random.Next(100000, 999999).ToString();
+                var generatedPassword = "R" + random.Next(10000, 99999).ToString();
 
                 var user = new ApplicationUser
                 {

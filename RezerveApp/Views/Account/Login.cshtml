@@ -285,8 +285,9 @@
 
         async function setNewPassword() {
             const newPassword = document.getElementById('newPasswordInput').value;
-            if (newPassword.length < 6) {
-                Swal.fire('Hata', 'Şifre en az 6 karakter olmalıdır.', 'error');
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+            if (!passwordRegex.test(newPassword)) {
+                Swal.fire('Geçersiz Şifre', 'Şifreniz en az 6 karakter uzunluğunda olmalı, en az 1 büyük harf ve 1 rakam içermelidir.', 'error');
                 return;
             }
 
