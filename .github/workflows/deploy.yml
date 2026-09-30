@@ -13,6 +13,30 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Debug SSH Key Secret Format Safely
+      run: |
+        KEY_LENGTH=${#VPS_SSH_KEY}
+        echo "The SSH key secret has a length of $KEY_LENGTH characters."
+        if [ "$KEY_LENGTH" -gt 0 ]; then
+          echo "Secret is present."
+          if echo "$VPS_SSH_KEY" | grep -q "BEGIN OPENSSH PRIVATE KEY"; then
+            echo "Header found."
+          else
+            echo "Header missing."
+          fi
+          if echo "$VPS_SSH_KEY" | grep -q "END OPENSSH PRIVATE KEY"; then
+            echo "Footer found."
+          else
+            echo "Footer missing."
+          fi
+          LINE_COUNT=$(echo "$VPS_SSH_KEY" | wc -l)
+          echo "Key has $LINE_COUNT lines."
+        else
+          echo "Secret is EMPTY."
+        fi
+      env:
+        VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+
     - name: Execute deployment commands via SSH
       uses: appleboy/ssh-action@master
       with:
