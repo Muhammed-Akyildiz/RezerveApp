@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "f1aF39bYUWw=",
+  "dgSpecHash": "33YZLtD9F1o=",
   "success": true,
-  "projectFilePath": "c:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj",
+  "projectFilePath": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Asus\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Asus\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

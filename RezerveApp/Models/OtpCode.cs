@@ -9,7 +9,7 @@ namespace RezerveApp.Models
         public int Id { get; set; }
         
         [Required]
-        [MaxLength(20)]
+        [MaxLength(255)]
         public string PhoneNumber { get; set; }
         
         [Required]
