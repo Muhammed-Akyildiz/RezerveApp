@@ -826,6 +826,7 @@ namespace RezerveApp.Controllers
                 TempData.Remove("OwnerOtpVerified");
 
                 bool isValidFormat = false;
+                string normalizedPhone = string.Empty;
                 
                 if (phone.Contains("@"))
                 {
