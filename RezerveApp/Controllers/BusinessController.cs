@@ -74,7 +74,7 @@ namespace RezerveApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "BusinessAdmin")]
-        public async Task<IActionResult> Create(string name, string phone, string email, string city, string district, string address, string neighborhood, IFormFile? logo, string? latitude, string? longitude)
+        public async Task<IActionResult> Create(string name, string phone, string email, string city, string district, string address, string? neighborhood, IFormFile? logo, string? latitude, string? longitude)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -156,11 +156,11 @@ namespace RezerveApp.Controllers
                 }
                 catch
                 {
-                    ModelState.AddModelError("logo", "Fotoğraf yüklenirken bir sorun oluştu.");
-                    return View();
+                    // Cloudinary ayarlanmamışsa hata verme, aşağıda avatar oluştursun
                 }
             }
-            else
+            
+            if (string.IsNullOrEmpty(logoUrl))
             {
                 // Logo yüklenmemişse işletme adından baş harf avatarı oluştur
                 var words = name.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
