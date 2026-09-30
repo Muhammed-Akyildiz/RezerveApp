@@ -62,7 +62,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<AvailabilityService>();
-builder.Services.AddTransient<IEmailSender, DummyEmailSender>();
+builder.Services.AddTransient<IEmailSender, BrevoEmailSender>();
 builder.Services.AddHttpClient<IWhatsAppService, WhatsAppBusinessCloudService>();
 builder.Services.AddHttpClient<ISmsProvider, VerimorSmsProvider>();
 builder.Services.AddScoped<NotificationService>();

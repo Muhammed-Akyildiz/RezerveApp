@@ -129,6 +129,9 @@ namespace RezerveApp.Controllers
             if (date.Date < DateTime.Today)
                 return BadRequest("Geçmiş bir tarih seçilemez.");
 
+            if (date.Date > DateTime.Today.AddMonths(2))
+                return BadRequest("En fazla 2 ay sonrasına randevu alabilirsiniz.");
+
             // İşletme o gün tatil mi? (resmi tatil / özel kapalı gün)
             var isHoliday = await _context.BusinessHolidays
                 .AsNoTracking()
@@ -235,8 +238,31 @@ namespace RezerveApp.Controllers
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.EmployeeId == employee.Id && x.DayOfWeek == date.DayOfWeek);
 
-            if (workingHour == null || !workingHour.IsWorking)
-                return result;
+            TimeSpan dayStart;
+            TimeSpan dayEnd;
+
+            if (workingHour != null)
+            {
+                if (!workingHour.IsWorking)
+                    return result;
+                
+                dayStart = workingHour.StartTime;
+                dayEnd = workingHour.EndTime;
+            }
+            else if (businessHour != null)
+            {
+                if (!businessHour.IsOpen)
+                    return result;
+
+                dayStart = businessHour.OpenTime;
+                dayEnd = businessHour.CloseTime;
+            }
+            else
+            {
+                // Varsayılan çalışma saatleri 09:00 - 19:00
+                dayStart = new TimeSpan(9, 0, 0);
+                dayEnd = new TimeSpan(19, 0, 0);
+            }
 
             // Çalışanın izinli olduğu bir güne denk geliyor mu?
             var onLeave = await _context.EmployeeTimeOffs
@@ -247,11 +273,8 @@ namespace RezerveApp.Controllers
             if (onLeave)
                 return result;
 
-            var dayStart = workingHour.StartTime;
-            var dayEnd = workingHour.EndTime;
-
             // İşletme geneli saatleri tanımlıysa, çalışanın saatleriyle kesiştir.
-            if (businessHour != null && businessHour.IsOpen)
+            if (businessHour != null && businessHour.IsOpen && workingHour != null)
             {
                 if (businessHour.OpenTime > dayStart) dayStart = businessHour.OpenTime;
                 if (businessHour.CloseTime < dayEnd) dayEnd = businessHour.CloseTime;
@@ -363,6 +386,9 @@ namespace RezerveApp.Controllers
 
             if (date.Date < DateTime.Today)
                 return BadRequest("Geçmiş bir tarihe randevu alınamaz.");
+
+            if (date.Date > DateTime.Today.AddMonths(2))
+                return BadRequest("En fazla 2 ay sonrasına randevu alabilirsiniz.");
 
             var business = await _context.Businesses
                 .FirstOrDefaultAsync(x => x.Slug == slug);

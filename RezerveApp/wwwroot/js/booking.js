@@ -469,6 +469,13 @@
                 const disabled =
                     isPast || isClosed;
 
+                const maxDate = new Date();
+                maxDate.setHours(0,0,0,0);
+                maxDate.setMonth(maxDate.getMonth() + 2);
+                
+                const isTooFar = cellDate > maxDate;
+
+                const finalDisabled = disabled || isTooFar;
 
                 const isToday =
                     cellDate.getTime() ===
@@ -484,13 +491,13 @@
                 html += `
                     <div
                         class="cal-day
-                        ${disabled ? 'disabled' : ''}
+                        ${finalDisabled ? 'disabled' : ''}
                         ${isToday ? 'today' : ''}
                         ${isSelected ? 'selected' : ''}"
 
                         data-date="${cellDateKey}"
 
-                        ${disabled
+                        ${finalDisabled
                         ? ''
                         : 'onclick="selectDate(this)"'}>
 

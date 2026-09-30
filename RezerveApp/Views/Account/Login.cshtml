@@ -319,8 +319,8 @@
                 &times;
             </button>
             <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Şifremi Unuttum</h3>
-            <p style="margin-bottom:20px; color:#666; font-size:14px;">Kayıtlı telefon numaranızı girin. Size bir doğrulama kodu göndereceğiz.</p>
-            <input type="tel" id="resetPhoneInput" class="form-input" style="text-align:center; font-size:18px; margin-bottom:20px;" placeholder="05XX XXX XX XX" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+            <p style="margin-bottom:20px; color:#666; font-size:14px;">Kayıtlı telefon numaranızı veya e-posta adresinizi girin. Size bir doğrulama kodu göndereceğiz.</p>
+            <input type="text" id="resetPhoneInput" class="form-input" style="text-align:center; font-size:18px; margin-bottom:20px;" placeholder="05XX XXX XX XX veya ornek@email.com" />
             <button type="button" class="btn btn--primary btn--full" onclick="sendResetOtp()">Kodu Gönder</button>
             <button type="button" class="btn btn--secondary btn--full" style="margin-top:10px;" onclick="closeModals()">İptal</button>
         </div>
@@ -332,7 +332,7 @@
                 &times;
             </button>
             <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Doğrulama Kodu</h3>
-            <p style="margin-bottom:20px; color:#666; font-size:14px;">Telefonunuza gönderilen 6 haneli doğrulama kodunu giriniz.</p>
+            <p style="margin-bottom:20px; color:#666; font-size:14px;">E-posta veya telefonunuza gönderilen 6 haneli doğrulama kodunu giriniz.</p>
             <input type="text" id="resetOtpInput" class="form-input" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:bold; margin-bottom:20px;" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
             <button type="button" class="btn btn--primary btn--full" onclick="verifyResetOtp()">Doğrula</button>
             <button type="button" class="btn btn--secondary btn--full" style="margin-top:10px;" onclick="closeModals()">İptal</button>

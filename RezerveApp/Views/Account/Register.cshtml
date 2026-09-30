@@ -197,7 +197,7 @@
                 const response = await fetch('/Account/SendRegistrationOtp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `phone=${encodeURIComponent(phone)}&__RequestVerificationToken=${encodeURIComponent(token)}`
+                    body: `phone=${encodeURIComponent(email)}&__RequestVerificationToken=${encodeURIComponent(token)}`
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -237,7 +237,7 @@
                 &times;
             </button>
             <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Doğrulama Kodu</h3>
-            <p style="margin-bottom:20px; color:#666; font-family:'Inter', sans-serif; font-size:14px;">Telefonunuza gönderilen 6 haneli doğrulama kodunu giriniz.</p>
+            <p style="margin-bottom:20px; color:#666; font-family:'Inter', sans-serif; font-size:14px;">E-posta adresinize gönderilen 6 haneli doğrulama kodunu giriniz.</p>
             <input type="text" id="otpInputModal" class="form-input" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:bold; margin-bottom:20px;" maxlength="6" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
             <button type="button" class="btn btn--primary btn--full" onclick="verifyOtpAndSubmit()">Doğrula ve Kayıt Ol</button>
             <button type="button" class="btn btn--secondary btn--full" style="margin-top:10px;" onclick="closeOtpModal()">İptal</button>

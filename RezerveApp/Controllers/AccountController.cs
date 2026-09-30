@@ -155,7 +155,7 @@ namespace RezerveApp.Controllers
                 return View();
             }
 
-            var isOtpValid = await _otpService.VerifyOtpAsync(phone, otpCode, "Register");
+            var isOtpValid = await _otpService.VerifyOtpAsync(email, otpCode, "Register");
             if (!isOtpValid)
             {
                 ModelState.AddModelError("", "Doğrulama kodu hatalı veya süresi dolmuş.");
@@ -567,14 +567,22 @@ namespace RezerveApp.Controllers
         public async Task<IActionResult> SendPasswordResetOtp(string phone)
         {
             if (string.IsNullOrWhiteSpace(phone))
-                return Json(new { success = false, message = "Telefon numarası gereklidir." });
+                return Json(new { success = false, message = "Telefon numarası veya e-posta gereklidir." });
 
-            var normalizedPhone = phone.Replace(" ", "");
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            ApplicationUser user = null;
+            if (phone.Contains("@"))
+            {
+                user = await _userManager.FindByEmailAsync(phone.Trim());
+            }
+            else
+            {
+                var normalizedPhone = phone.Replace(" ", "");
+                user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            }
+
             if (user == null)
             {
-                // Güvenlik için kullanıcı yoksa da "gönderildi" diyebiliriz veya hata dönebiliriz.
-                return Json(new { success = false, message = "Bu telefon numarasıyla kayıtlı bir hesap bulunamadı." });
+                return Json(new { success = false, message = "Kayıtlı bir hesap bulunamadı." });
             }
 
             var success = await _otpService.GenerateAndSendOtpAsync(phone, "PasswordReset");
@@ -598,8 +606,17 @@ namespace RezerveApp.Controllers
                 return Json(new { success = false, message = "Doğrulama kodu hatalı veya süresi dolmuş." });
             }
 
-            var normalizedPhone = phone.Replace(" ", "");
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            ApplicationUser user = null;
+            if (phone.Contains("@"))
+            {
+                user = await _userManager.FindByEmailAsync(phone.Trim());
+            }
+            else
+            {
+                var normalizedPhone = phone.Replace(" ", "");
+                user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            }
+            
             if (user == null) return Json(new { success = false, message = "Kullanıcı bulunamadı." });
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -614,8 +631,17 @@ namespace RezerveApp.Controllers
             if (string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(token) || string.IsNullOrWhiteSpace(newPassword))
                 return Json(new { success = false, message = "Eksik bilgi." });
 
-            var normalizedPhone = phone.Replace(" ", "");
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            ApplicationUser user = null;
+            if (phone.Contains("@"))
+            {
+                user = await _userManager.FindByEmailAsync(phone.Trim());
+            }
+            else
+            {
+                var normalizedPhone = phone.Replace(" ", "");
+                user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+            }
+            
             if (user == null) return Json(new { success = false, message = "Kullanıcı bulunamadı." });
 
             var result = await _userManager.ResetPasswordAsync(user, token, newPassword);

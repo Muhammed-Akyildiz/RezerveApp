@@ -20,6 +20,7 @@ namespace RezerveApp.Controllers
         private readonly RezerveApp.Services.IImageService _imageService;
         private readonly RezerveApp.Services.Sms.ISmsProvider _smsProvider;
         private readonly IOtpService _otpService;
+        private readonly IEmailSender _emailSender;
 
         public BusinessController(
             ApplicationDbContext context,
@@ -30,7 +31,8 @@ namespace RezerveApp.Controllers
             IConfiguration configuration,
             RezerveApp.Services.IImageService imageService,
             RezerveApp.Services.Sms.ISmsProvider smsProvider,
-            IOtpService otpService)
+            IOtpService otpService,
+            IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
@@ -41,6 +43,7 @@ namespace RezerveApp.Controllers
             _imageService = imageService;
             _smsProvider = smsProvider;
             _otpService = otpService;
+            _emailSender = emailSender;
         }
 
         // Yardımcı: geçerli kullanıcının işletme id'sini döndürür, yoksa null.
@@ -645,28 +648,42 @@ namespace RezerveApp.Controllers
                 }
                 TempData.Remove("OwnerOtpVerified");
 
-                normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
-                if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                if (phone.Contains("@"))
                 {
-                    normalizedPhone = "0" + normalizedPhone.Substring(2);
+                    normalizedPhone = phone.Trim().ToLowerInvariant();
+                    
+                    var emailUser = await _userManager.FindByEmailAsync(normalizedPhone);
+                    if (emailUser != null)
+                    {
+                        TempData["Error"] = "Bu e-posta adresi zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
+                        return RedirectToAction(nameof(Employees));
+                    }
                 }
-                else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                else
                 {
-                    normalizedPhone = "0" + normalizedPhone;
-                }
+                    normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
+                    if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                    {
+                        normalizedPhone = "0" + normalizedPhone.Substring(2);
+                    }
+                    else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                    {
+                        normalizedPhone = "0" + normalizedPhone;
+                    }
 
-                if (normalizedPhone.Length != 11)
-                {
-                    TempData["Error"] = "Geçersiz telefon numarası. Çalışan oluşturulamadı.";
-                    return RedirectToAction(nameof(Employees));
-                }
-                
-                // Telefon daha önce kullanılmış mı?
-                var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
-                if (phoneUser != null)
-                {
-                    TempData["Error"] = "Bu telefon numarası zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
-                    return RedirectToAction(nameof(Employees));
+                    if (normalizedPhone.Length != 11)
+                    {
+                        TempData["Error"] = "Geçersiz telefon numarası. Çalışan oluşturulamadı.";
+                        return RedirectToAction(nameof(Employees));
+                    }
+                    
+                    // Telefon daha önce kullanılmış mı?
+                    var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
+                    if (phoneUser != null)
+                    {
+                        TempData["Error"] = "Bu telefon numarası zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
+                        return RedirectToAction(nameof(Employees));
+                    }
                 }
             }
 
@@ -690,7 +707,8 @@ namespace RezerveApp.Controllers
                 var user = new ApplicationUser
                 {
                     UserName = normalizedPhone,
-                    PhoneNumber = normalizedPhone,
+                    PhoneNumber = phone.Contains("@") ? null : normalizedPhone,
+                    Email = phone.Contains("@") ? normalizedPhone : null,
                     EmailConfirmed = true, // Not using email, but setting true just in case
                     BusinessId = businessId.Value,
                     EmployeeId = employee.Id
@@ -700,10 +718,29 @@ namespace RezerveApp.Controllers
                 if (createResult.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "Employee");
-                    TempData["Success"] = $"Çalışan eklendi. Test Giriş Şifresi: {generatedPassword}";
-                    
-                    // Dummy log SMS (Gerçek NetGSM burada tetiklenebilir)
-                    Console.WriteLine($"[SMS GÖNDERİLDİ] Tel: {normalizedPhone}, Mesaj: RezerveApp giriş şifreniz: {generatedPassword}");
+                    if (phone.Contains("@"))
+                    {
+                        var htmlMessage = $@"
+                            <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+                                <h2 style='color: #1a1a1a; text-align: center;'>RezerveApp Hesabınız Açıldı</h2>
+                                <p style='color: #666; font-size: 16px;'>Merhaba,</p>
+                                <p style='color: #666; font-size: 16px;'>İşletmeniz tarafından sizin adınıza RezerveApp sistemi üzerinde bir çalışan hesabı oluşturulmuştur. Sisteme girmek için kullanacağınız giriş bilgileriniz:</p>
+                                <div style='text-align: center; margin: 30px 0;'>
+                                    <p style='color: #333; font-size: 16px;'><strong>E-posta / Kullanıcı Adı:</strong> {normalizedPhone}</p>
+                                    <p style='color: #333; font-size: 16px;'><strong>Şifre:</strong></p>
+                                    <span style='font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #b78a28; padding: 10px 20px; background: #f9f9f9; border-radius: 8px;'>{generatedPassword}</span>
+                                </div>
+                                <p style='color: #999; font-size: 12px; text-align: center;'>Şifrenizi dilediğiniz zaman profilinizden değiştirebilirsiniz.</p>
+                            </div>";
+                        await _emailSender.SendEmailAsync(normalizedPhone, "RezerveApp Hesap Bilgileriniz", htmlMessage);
+                        TempData["Success"] = $"Çalışan eklendi ve hesap bilgileri e-posta adresine gönderildi.";
+                    }
+                    else
+                    {
+                        // Dummy log SMS (Gerçek NetGSM burada tetiklenebilir)
+                        Console.WriteLine($"[SMS GÖNDERİLDİ] Tel: {normalizedPhone}, Mesaj: RezerveApp giriş şifreniz: {generatedPassword}");
+                        await _smsProvider.SendSmsAsync(normalizedPhone, $"RezerveApp giriş şifreniz: {generatedPassword}");
+                    }
                 }
                 else
                 {
@@ -733,7 +770,7 @@ namespace RezerveApp.Controllers
                 return NotFound();
                 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.EmployeeId == id);
-            ViewBag.EmployeePhone = user?.PhoneNumber ?? "";
+            ViewBag.EmployeePhone = user?.UserName ?? "";
 
             return View(employee);
         }
@@ -788,63 +825,111 @@ namespace RezerveApp.Controllers
                 }
                 TempData.Remove("OwnerOtpVerified");
 
-                var normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
-                if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                bool isValidFormat = false;
+                
+                if (phone.Contains("@"))
                 {
-                    normalizedPhone = "0" + normalizedPhone.Substring(2);
+                    normalizedPhone = phone.Trim().ToLowerInvariant();
+                    isValidFormat = true;
+                    
+                    var emailUser = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == normalizedPhone && u.EmployeeId != id);
+                    if (emailUser != null)
+                    {
+                        TempData["Error"] = "Girdiğiniz e-posta adresi başka birine ait. Diğer bilgiler güncellendi.";
+                        isValidFormat = false; // Block further execution
+                    }
                 }
-                else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                else
                 {
-                    normalizedPhone = "0" + normalizedPhone;
+                    normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
+                    if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
+                    {
+                        normalizedPhone = "0" + normalizedPhone.Substring(2);
+                    }
+                    else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
+                    {
+                        normalizedPhone = "0" + normalizedPhone;
+                    }
+
+                    if (normalizedPhone.Length == 11)
+                    {
+                        var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone && u.EmployeeId != id);
+                        if (phoneUser != null)
+                        {
+                            TempData["Error"] = "Girdiğiniz telefon numarası başka birine ait. Diğer bilgiler güncellendi.";
+                        }
+                        else 
+                        {
+                            isValidFormat = true;
+                        }
+                    }
+                    else 
+                    {
+                        TempData["Error"] = "Geçersiz telefon numarası. Diğer bilgiler güncellendi.";
+                    }
                 }
 
-                if (normalizedPhone.Length == 11)
+                if (isValidFormat)
                 {
-                    var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone && u.EmployeeId != id);
-                    if (phoneUser == null)
+                    if (user == null)
                     {
-                        if (user == null)
+                        // Yeni kullanıcı oluştur
+                        var random = new Random();
+                        var generatedPassword = random.Next(100000, 999999).ToString();
+                        user = new ApplicationUser
                         {
-                            // Yeni kullanıcı oluştur
-                            var random = new Random();
-                            var generatedPassword = random.Next(100000, 999999).ToString();
-                            user = new ApplicationUser
+                            UserName = normalizedPhone,
+                            PhoneNumber = phone.Contains("@") ? null : normalizedPhone,
+                            Email = phone.Contains("@") ? normalizedPhone : null,
+                            EmailConfirmed = true,
+                            BusinessId = businessId.Value,
+                            EmployeeId = employee.Id
+                        };
+                        var createResult = await _userManager.CreateAsync(user, generatedPassword);
+                        if (createResult.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(user, "Employee");
+                            
+                            if (phone.Contains("@"))
                             {
-                                UserName = normalizedPhone,
-                                PhoneNumber = normalizedPhone,
-                                EmailConfirmed = true,
-                                BusinessId = businessId.Value,
-                                EmployeeId = employee.Id
-                            };
-                            var createResult = await _userManager.CreateAsync(user, generatedPassword);
-                            if (createResult.Succeeded)
+                                var htmlMessage = $@"
+                                    <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+                                        <h2 style='color: #1a1a1a; text-align: center;'>RezerveApp Hesabınız Açıldı</h2>
+                                        <p style='color: #666; font-size: 16px;'>Merhaba,</p>
+                                        <p style='color: #333; font-size: 16px;'><strong>Şifre:</strong> {generatedPassword}</p>
+                                    </div>";
+                                await _emailSender.SendEmailAsync(normalizedPhone, "RezerveApp Hesap Bilgileriniz", htmlMessage);
+                                TempData["Success"] = $"Çalışan güncellendi ve şifresi E-posta olarak gönderildi.";
+                            }
+                            else
                             {
-                                await _userManager.AddToRoleAsync(user, "Employee");
                                 await _smsProvider.SendSmsAsync(normalizedPhone, $"RezerveApp giriş hesabınız açıldı. Şifreniz: {generatedPassword}");
                                 TempData["Success"] = $"Çalışan güncellendi ve şifresi SMS olarak gönderildi.";
                             }
                         }
-                        else if (user.PhoneNumber != normalizedPhone)
-                        {
-                            // Mevcut kullanıcının telefonunu güncelle
-                            user.PhoneNumber = normalizedPhone;
-                            user.UserName = normalizedPhone;
-                            await _userManager.UpdateAsync(user);
-                            TempData["Success"] = "Çalışan bilgileri ve telefon numarası güncellendi.";
-                        }
-                        else 
-                        {
-                            TempData["Success"] = "Çalışan bilgileri güncellendi.";
-                        }
                     }
-                    else
+                    else if (user.UserName != normalizedPhone)
                     {
-                        TempData["Error"] = "Girdiğiniz telefon numarası başka birine ait. Diğer bilgiler güncellendi.";
+                        // Mevcut kullanıcının giriş bilgisini güncelle
+                        if (phone.Contains("@")) 
+                        {
+                            user.Email = normalizedPhone;
+                            user.PhoneNumber = null;
+                        }
+                        else
+                        {
+                            user.PhoneNumber = normalizedPhone;
+                            user.Email = null;
+                        }
+                        
+                        user.UserName = normalizedPhone;
+                        await _userManager.UpdateAsync(user);
+                        TempData["Success"] = "Çalışan bilgileri ve giriş adresi güncellendi.";
                     }
-                }
-                else 
-                {
-                    TempData["Error"] = "Geçersiz telefon numarası. Diğer bilgiler güncellendi.";
+                    else 
+                    {
+                        TempData["Success"] = "Çalışan bilgileri güncellendi.";
+                    }
                 }
             }
             else
