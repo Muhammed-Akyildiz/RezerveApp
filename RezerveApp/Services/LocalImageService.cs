@@ -15,12 +15,12 @@ namespace RezerveApp.Services
             _env = env;
         }
 
-        public async Task<string> UploadImageAsync(IFormFile file)
+        public async Task<string> UploadImageAsync(IFormFile file, string folder = "rezerveapp")
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException("Dosya boş olamaz.");
 
-            var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "images");
+            var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", folder);
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
@@ -34,13 +34,12 @@ namespace RezerveApp.Services
                 await file.CopyToAsync(fileStream);
             }
 
-            return $"/uploads/images/{uniqueFileName}";
+            return $"/uploads/{folder}/{uniqueFileName}";
         }
 
-        public Task DeleteImageAsync(string publicId)
+        public Task<bool> DeleteImageAsync(string publicId)
         {
-            // Simple local delete if needed
-            if (string.IsNullOrEmpty(publicId)) return Task.CompletedTask;
+            if (string.IsNullOrEmpty(publicId)) return Task.FromResult(false);
 
             try
             {
@@ -48,11 +47,12 @@ namespace RezerveApp.Services
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
+                    return Task.FromResult(true);
                 }
             }
             catch { }
             
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
     }
 }
