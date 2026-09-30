@@ -25,7 +25,11 @@ namespace RezerveApp.Services
                 var smtpServer = _configuration["Email:SmtpServer"];
                 var port = int.Parse(_configuration["Email:Port"] ?? "587");
                 var username = _configuration["Email:Username"];
-                var password = _configuration["Email:Password"];
+                var password = _configuration["Email:BrevoKey1"] + _configuration["Email:BrevoKey2"];
+                if (string.IsNullOrEmpty(password) || password.Length < 10) 
+                {
+                    password = _configuration["Email:Password"]; // Fallback
+                }
                 var senderEmail = _configuration["Email:SenderEmail"] ?? "info@rezerveapp.com.tr";
                 var senderName = _configuration["Email:SenderName"] ?? "RezerveApp";
 
