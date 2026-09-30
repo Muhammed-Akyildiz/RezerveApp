@@ -70,7 +70,7 @@ builder.Services.AddHostedService<AppointmentReminderHostedService>();
 
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
-builder.Services.AddScoped<IImageService, CloudinaryImageService>();
+builder.Services.AddScoped<IImageService, LocalImageService>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 
 
