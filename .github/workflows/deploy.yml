@@ -22,11 +22,13 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22
+          script_stop: true
           script: |
             cd /var/www/rezerveapp
             git stash
             git pull origin main
             cd RezerveApp
+            dotnet build -c Release
             dotnet publish -c Release -o /var/www/rezerveapp/publish
             chown -R www-data:www-data /var/www/rezerveapp/publish
             systemctl restart rezerveapp.service
