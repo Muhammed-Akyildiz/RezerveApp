@@ -8,47 +8,32 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Debug SSH Key Secret Format Safely
-      run: |
-        KEY_LENGTH=${#VPS_SSH_KEY}
-        echo "The SSH key secret has a length of $KEY_LENGTH characters."
-        if [ "$KEY_LENGTH" -gt 0 ]; then
-          echo "Secret is present."
-          if echo "$VPS_SSH_KEY" | grep -q "BEGIN OPENSSH PRIVATE KEY"; then
-            echo "Header found."
-          else
-            echo "Header missing."
-          fi
-          if echo "$VPS_SSH_KEY" | grep -q "END OPENSSH PRIVATE KEY"; then
-            echo "Footer found."
-          else
-            echo "Footer missing."
-          fi
-          LINE_COUNT=$(echo "$VPS_SSH_KEY" | wc -l)
-          echo "Key has $LINE_COUNT lines."
-        else
-          echo "Secret is EMPTY."
-        fi
-      env:
-        VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      - name: Debug SSH Key
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          printf '%s\n' "$VPS_SSH_KEY" > /tmp/test_key
+          echo "Key length: ${#VPS_SSH_KEY}"
+          echo "Testing private key format..."
+          ssh-keygen -lf /tmp/test_key
 
-    - name: Execute deployment commands via SSH
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VPS_IP }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        port: 22
-        script: |
-          cd /var/www/rezerveapp
-          git stash
-          git pull origin main
-          cd RezerveApp
-          dotnet publish -c Release -o /var/www/rezerveapp/publish
-          chown -R www-data:www-data /var/www/rezerveapp/publish
-          systemctl restart rezerveapp.service
+      - name: Execute deployment commands via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: 22
+          script: |
+            cd /var/www/rezerveapp
+            git stash
+            git pull origin main
+            cd RezerveApp
+            dotnet publish -c Release -o /var/www/rezerveapp/publish
+            chown -R www-data:www-data /var/www/rezerveapp/publish
+            systemctl restart rezerveapp.service
