@@ -58,7 +58,7 @@ builder.Services
 // MVC
 // ======================================================
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<AvailabilityService>();
