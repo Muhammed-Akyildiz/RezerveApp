@@ -873,9 +873,7 @@
         const originalText = btn.innerHTML;
         btn.innerHTML = 'Aranıyor... <span style="display:inline-block; animation: spin 1s linear infinite;">⏳</span>';
         
-        let currentCheckDate = new Date();
         let foundDateStr = null;
-        let daysChecked = 0;
         
         const pathParts = window.location.pathname.split('/').filter(Boolean);
         const bookingIndex = pathParts.findIndex(x => x.toLowerCase() === 'booking');
@@ -884,28 +882,32 @@
             slug = pathParts[bookingIndex + 1];
         }
 
-        while(!foundDateStr && daysChecked < 30) {
-            let dateStr = formatLocalDateKey(currentCheckDate);
+        // 14 günü paralel sorgula
+        const fetchPromises = [];
+        for (let i = 0; i < 14; i++) {
+            let checkDate = new Date();
+            checkDate.setDate(checkDate.getDate() + i);
+            let dateStr = formatLocalDateKey(checkDate);
             const url = `/Booking/${encodeURIComponent(slug)}/Availability?serviceIds=${encodeURIComponent(state.serviceId)}&employeeId=${encodeURIComponent(state.employeeFlexible ? 0 : (state.employeeId || 0))}&date=${encodeURIComponent(dateStr)}`;
             
-            try {
-               const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-               if (res.ok) {
-                   const html = await res.text();
-                   // Müsait slot var mı kontrol et (slot-pill var ve hepsi disabled değilse)
-                   if (html.includes('slot-pill') && !html.includes('Kapalı') && !html.includes('Tatil')) {
-                       // Sadece .disabled olmayan slot-pill var mı diye basit bir regex kontrolü
-                       // Daha güvenlisi "is-available" gibi bir data attribute kullanmak ama basitçe:
-                       if (html.split('slot-pill').length > html.split('disabled').length) {
-                           foundDateStr = dateStr;
-                           break;
-                       }
-                   }
-               }
-            } catch(e) {}
-            
-            currentCheckDate.setDate(currentCheckDate.getDate() + 1);
-            daysChecked++;
+            fetchPromises.push(
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(r => r.ok ? r.text() : '')
+                    .then(html => ({ dateStr, html }))
+                    .catch(() => ({ dateStr, html: '' }))
+            );
+        }
+
+        const results = await Promise.all(fetchPromises);
+
+        for (const res of results) {
+            const html = res.html;
+            if (html.includes('slot-pill') && !html.includes('Kapalı') && !html.includes('hizmet vermiyor') && !html.includes('izinli')) {
+                if (html.split('slot-pill').length > html.split('disabled').length) {
+                    foundDateStr = res.dateStr;
+                    break;
+                }
+            }
         }
         
         btn.innerHTML = originalText;
@@ -933,7 +935,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Uyarı',
-                text: 'Önümüzdeki 30 gün içinde uygun boş saat bulunamadı.',
+                text: 'Önümüzdeki 14 gün içinde uygun boş saat bulunamadı.',
                 confirmButtonColor: '#d4af37',
                 confirmButtonText: 'Tamam',
                 background: '#1a1a24',

@@ -173,6 +173,35 @@ namespace RezerveApp.Controllers
                 if (employee == null)
                     return NotFound();
 
+                var explicitWorkingHour = await _context.WorkingHours
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.EmployeeId == employee.Id && x.DayOfWeek == date.DayOfWeek);
+
+                if (explicitWorkingHour != null && !explicitWorkingHour.IsWorking)
+                {
+                    ViewBag.Business = business;
+                    ViewBag.Services = services;
+                    ViewBag.Date = date;
+                    ViewBag.AvailableSlots = new List<BookingSlot>();
+                    ViewBag.ClosedMessage = "Seçilen çalışan bugün hizmet vermiyor.";
+                    return View();
+                }
+
+                var onLeave = await _context.EmployeeTimeOffs
+                    .AsNoTracking()
+                    .AnyAsync(t => t.EmployeeId == employee.Id &&
+                                   date.Date >= t.StartDate.Date && date.Date <= t.EndDate.Date);
+
+                if (onLeave)
+                {
+                    ViewBag.Business = business;
+                    ViewBag.Services = services;
+                    ViewBag.Date = date;
+                    ViewBag.AvailableSlots = new List<BookingSlot>();
+                    ViewBag.ClosedMessage = "Seçilen çalışan bu tarihte izinli.";
+                    return View();
+                }
+
                 employees = new List<Employee> { employee };
             }
             else
