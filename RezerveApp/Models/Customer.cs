@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace RezerveApp.Models
 {
@@ -17,6 +17,8 @@ namespace RezerveApp.Models
         [Required]
         [StringLength(11, MinimumLength = 11)]
         public string Phone { get; set; } = string.Empty;
+
+        public string? Email { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

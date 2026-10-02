@@ -5,7 +5,7 @@
             <i data-lucide="x"></i>
         </button>
         <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Güvenlik Doğrulaması</h3>
-        <p style="margin-bottom:20px; color:#666; font-size:14px;">Bu işlem yetki gerektiriyor. Lütfen <strong id="ownerOtpPhoneDisplay"></strong> numaralı telefonunuza gönderilen doğrulama kodunu girin.</p>
+        <p style="margin-bottom:20px; color:#666; font-size:14px;">Bu işlem yetki gerektiriyor. Lütfen <strong id="ownerOtpPhoneDisplay"></strong> adresine gönderilen doğrulama kodunu girin.</p>
         <input type="text" id="ownerOtpInput" class="form-input" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:bold; margin-bottom:20px;" maxlength="6" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
         <button type="button" class="btn btn-gold" style="width:100%; justify-content:center;" onclick="verifyOwnerOtpCode()">Doğrula ve İşleme Devam Et</button>
     </div>

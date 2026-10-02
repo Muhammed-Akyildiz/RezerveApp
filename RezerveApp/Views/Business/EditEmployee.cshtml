@@ -20,8 +20,8 @@
                 <input class="input" type="text" id="name" name="name" value="@Model.Name" required />
             </div>
             <div class="field">
-                <label for="phone">Giriş E-Postası veya Telefonu</label>
-                <input class="input" type="text" id="phone" name="phone" value="@ViewBag.EmployeePhone" placeholder="05XXXXXXXXX veya mail@ornek.com" />
+                <label for="email">Giriş E-Postası</label>
+                <input class="input" type="email" id="email" name="email" value="@ViewBag.EmployeeEmail" placeholder="mail@ornek.com" />
                 <small style="color:var(--text-muted); font-size:12px;">Çalışan şifresi almak için boş bırakmayın.</small>
             </div>
             <div class="field">
@@ -43,7 +43,7 @@
 @section Scripts {
     <script>
         function handleEditEmployee(e, form) {
-            const phoneInput = form.querySelector('input[name="phone"]');
+            const phoneInput = form.querySelector('input[name="email"]');
             if (phoneInput && phoneInput.value.trim().length > 0) {
                 e.preventDefault(); // Stop native submission
                 requireBusinessOwnerOtp(function() {

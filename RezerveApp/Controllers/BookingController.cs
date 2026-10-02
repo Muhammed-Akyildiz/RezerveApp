@@ -384,15 +384,36 @@ namespace RezerveApp.Controllers
         }
 
         // =========================================================
+        // RANDEVU ONAY KODU GÖNDER
+        // /Booking/{slug}/SendCustomerOtp
+        // =========================================================
+        [HttpPost("Booking/{slug}/SendCustomerOtp")]
+        public async Task<IActionResult> SendCustomerOtp(string slug, [FromServices] IOtpService otpService, [FromForm] string customerEmail)
+        {
+            if (string.IsNullOrWhiteSpace(customerEmail))
+                return BadRequest(new { success = false, message = "E-posta adresi gereklidir." });
+
+            var success = await otpService.GenerateAndSendOtpAsync(customerEmail, "BookingConfirmation");
+
+            if (success)
+                return Ok(new { success = true });
+
+            return BadRequest(new { success = false, message = "Kod gönderilemedi. Lütfen tekrar deneyin." });
+        }
+
+        // =========================================================
         // RANDEVU OLUŞTUR
         // /Booking/{slug}/Create
         // =========================================================
         [HttpPost("Booking/{slug}/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
+            [FromServices] IOtpService otpService,
             string slug,
             string customerName,
             string customerPhone,
+            string customerEmail,
+            string otpCode,
             int employeeId,
             string serviceIds,
             DateTime date,
@@ -406,6 +427,22 @@ namespace RezerveApp.Controllers
 
             if (string.IsNullOrWhiteSpace(customerPhone))
                 return BadRequest("Telefon zorunludur.");
+                
+            if (string.IsNullOrWhiteSpace(customerEmail))
+                return BadRequest("E-posta zorunludur.");
+
+            if (string.IsNullOrWhiteSpace(otpCode))
+            {
+                TempData["ErrorMessage"] = "Randevuyu onaylamak için doğrulama kodu gereklidir.";
+                return RedirectToAction("Index", new { slug = slug });
+            }
+
+            var isValidOtp = await otpService.VerifyOtpAsync(customerEmail, otpCode, "BookingConfirmation");
+            if (!isValidOtp)
+            {
+                TempData["ErrorMessage"] = "Geçersiz veya süresi dolmuş doğrulama kodu.";
+                return RedirectToAction("Index", new { slug = slug });
+            }
 
             customerName = customerName.Trim();
             customerPhone = new string(customerPhone.Where(char.IsDigit).ToArray());
@@ -560,11 +597,21 @@ namespace RezerveApp.Controllers
                     {
                         BusinessId = business.Id,
                         Name = customerName,
-                        Phone = customerPhone
+                        Phone = customerPhone,
+                        Email = customerEmail
                     };
 
                     _context.Customers.Add(customer);
                     await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    // Eğer email eksikse veya değiştiyse güncelle (tercihe bağlı)
+                    if (string.IsNullOrWhiteSpace(customer.Email) || customer.Email != customerEmail)
+                    {
+                        customer.Email = customerEmail;
+                        await _context.SaveChangesAsync();
+                    }
                 }
 
                 var currentSlotTime = time;
@@ -575,6 +622,7 @@ namespace RezerveApp.Controllers
                     {
                         CustomerName = customerName,
                         CustomerPhone = customerPhone,
+                        CustomerEmail = customerEmail,
                         CustomerId = customer.Id,
                         BusinessId = business.Id,
                         EmployeeId = employee.Id,

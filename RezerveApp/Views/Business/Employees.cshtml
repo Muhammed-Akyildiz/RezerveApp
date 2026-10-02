@@ -133,10 +133,10 @@ else
 
         <h4 style="margin-top:20px; margin-bottom:12px; font-size:14px; color:var(--text-muted);">Çalışan Giriş Bilgileri (İsteğe Bağlı)</h4>
         <div class="form-grid" style="grid-template-columns:1fr;">
-            <!-- TELEFON / EMAIL -->
+            <!-- E-POSTA -->
             <div class="field">
-                <label for="empPhone">Giriş E-Postası veya Telefonu (Şifre gönderilecektir)</label>
-                <input class="input" type="text" id="empPhone" name="phone" placeholder="Örn. 05xxxxxxxxx veya mail@ornek.com" />
+                <label for="empEmail">Giriş E-Postası (Şifre gönderilecektir)</label>
+                <input class="input" type="email" id="empEmail" name="email" placeholder="Örn. mail@ornek.com" />
             </div>
         </div>
 
@@ -491,8 +491,8 @@ else
     
     <script>
         function handleCreateEmployee(e, form) {
-            const phoneInput = form.querySelector('input[name="phone"]');
-            if (phoneInput && phoneInput.value.trim().length > 0) {
+            const emailInput = form.querySelector('input[name="email"]');
+            if (emailInput && emailInput.value.trim().length > 0) {
                 e.preventDefault(); // Stop native submission
                 requireBusinessOwnerOtp(function() {
                     HTMLFormElement.prototype.submit.call(form);

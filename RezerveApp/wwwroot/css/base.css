@@ -1,4 +1,4 @@
-﻿/* ============================================
+/* ============================================
    RezerveApp — Base Styles
    Reset, typography, utilities
    ============================================ */
@@ -61,6 +61,13 @@ input, select, textarea {
     outline: none;
     background: none;
     color: inherit;
+}
+
+/* Make date and time picker icons visible in dark mode */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
 }
 
 /* --- Typography --- */

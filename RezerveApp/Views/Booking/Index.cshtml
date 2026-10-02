@@ -368,7 +368,8 @@
                   asp-controller="Booking"
                   asp-action="Create"
                   asp-route-slug="@biz.Slug"
-                  method="post">
+                  method="post"
+                  onsubmit="return handleBookingSubmit(event)">
 
                 @Html.AntiForgeryToken()
 
@@ -385,6 +386,7 @@
                 <input type="hidden" name="EmployeeId" id="EmployeeId" />
                 <input type="hidden" name="Date" id="Date" required />
                 <input type="hidden" name="Time" id="Time" required />
+                <input type="hidden" name="otpCode" id="otpCode" />
 
 
                 <!-- =================================================
@@ -679,6 +681,19 @@
                                        required
                                        oninput="updateSummary()" />
 
+                            </div>
+
+                            <div class="field">
+                                <label for="CustomerEmail">E-posta</label>
+                                <input class="input"
+                                       type="email"
+                                       id="CustomerEmail"
+                                       name="CustomerEmail"
+                                       placeholder="mail@ornek.com"
+                                       autocomplete="email"
+                                       required
+                                       oninput="updateSummary()" />
+                                <small style="color:var(--text-muted); font-size:12px;">Randevu onay kodu bu adrese gönderilecektir.</small>
                             </div>
 
 
@@ -1054,6 +1069,87 @@
             }, 300);
 
         });
+
+        async function handleBookingSubmit(e) {
+            const form = e.target;
+            const otpCodeInput = document.getElementById("otpCode");
+            
+            if (otpCodeInput.value) {
+                // Already have OTP, let the form submit natively
+                return true;
+            }
+
+            e.preventDefault(); // Stop native submit to request OTP
+
+            const email = document.getElementById("CustomerEmail").value;
+            const slug = '@biz.Slug';
+
+            if (!email) {
+                Swal.fire('Hata', 'Lütfen e-posta adresinizi girin.', 'error');
+                return false;
+            }
+
+            // Show loading
+            Swal.fire({
+                title: 'Onay Kodu Gönderiliyor...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const formData = new FormData();
+                formData.append('customerEmail', email);
+
+                const response = await fetch(`/Booking/${slug}/SendCustomerOtp`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'E-postanızı Kontrol Edin',
+                        html: 'Lütfen <b>' + email + '</b> adresine gönderilen 6 haneli onay kodunu giriniz:',
+                        input: 'text',
+                        inputAttributes: {
+                            autocapitalize: 'off',
+                            autocorrect: 'off',
+                            maxlength: 6
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Onayla ve Randevuyu Tamamla',
+                        cancelButtonText: 'Vazgeç',
+                        confirmButtonColor: '#c9a24d',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (code) => {
+                            if (!code || code.trim().length !== 6) {
+                                Swal.showValidationMessage('Lütfen 6 haneli kodu giriniz.');
+                                return false;
+                            }
+                            return code.trim();
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            otpCodeInput.value = result.value;
+                            form.submit(); // Submit the form with OTP
+                        }
+                    });
+                } else {
+                    Swal.fire('Hata', data.message || 'Kod gönderilemedi.', 'error');
+                }
+            } catch (error) {
+                Swal.fire('Hata', 'Bir sorun oluştu.', 'error');
+            }
+
+            return false;
+        }
 
     </script>
 }

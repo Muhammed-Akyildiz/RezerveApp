@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace RezerveApp.Models
 {
@@ -11,6 +11,8 @@ namespace RezerveApp.Models
 
         [Required]
         public string CustomerPhone { get; set; } = string.Empty;
+
+        public string? CustomerEmail { get; set; }
 
         // Faz 6 (müşteri yönetimi) ile ilişkilendirilir; eski kayıtlarla
         // geriye dönük uyum için nullable bırakıldı.
