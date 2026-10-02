@@ -49,6 +49,7 @@ html, body {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    color-scheme: dark;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -1086,6 +1087,6 @@ input[type=""datetime-local""] {
 input[type=""date""]::-webkit-calendar-picker-indicator,
 input[type=""time""]::-webkit-calendar-picker-indicator,
 input[type=""datetime-local""]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+    
     cursor: pointer;
 }
