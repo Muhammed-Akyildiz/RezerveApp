@@ -2277,6 +2277,20 @@ namespace RezerveApp.Controllers
                         TempData["ErrorMessage"] = "Yeni şifreler eşleşmiyor.";
                         return RedirectToAction(nameof(Profile));
                     }
+                    
+                    var emailOtpCode = Request.Form["emailOtpCode"].ToString();
+                    if (string.IsNullOrEmpty(emailOtpCode))
+                    {
+                        TempData["ErrorMessage"] = "Lütfen e-postanıza gönderilen doğrulama kodunu girin.";
+                        return RedirectToAction(nameof(Profile));
+                    }
+                    var isValidOtp = await _otpService.VerifyOtpAsync(user.Email, emailOtpCode, "PasswordChangeEmail");
+                    if (!isValidOtp)
+                    {
+                        TempData["ErrorMessage"] = "Geçersiz veya süresi dolmuş doğrulama kodu.";
+                        return RedirectToAction(nameof(Profile));
+                    }
+
                     var changeResult = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
                     if (!changeResult.Succeeded)
                     {

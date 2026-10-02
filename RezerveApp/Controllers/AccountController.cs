@@ -420,6 +420,20 @@ namespace RezerveApp.Controllers
                     return View();
                 }
 
+                var emailOtpCode = Request.Form["emailOtpCode"].ToString();
+                if (string.IsNullOrEmpty(emailOtpCode))
+                {
+                    ModelState.AddModelError("", "Lütfen e-postanıza gönderilen doğrulama kodunu girin.");
+                    return View();
+                }
+
+                var isValidOtp = await _otpService.VerifyOtpAsync(user.Email, emailOtpCode, "PasswordChangeEmail");
+                if (!isValidOtp)
+                {
+                    ModelState.AddModelError("", "Geçersiz veya süresi dolmuş doğrulama kodu.");
+                    return View();
+                }
+
                 var passwordResult = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
                 if (!passwordResult.Succeeded)
                 {
@@ -651,6 +665,26 @@ namespace RezerveApp.Controllers
             }
 
             return Json(new { success = false, message = "Şifre sıfırlanamadı: " + string.Join(", ", result.Errors.Select(e => e.Description)) });
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendPasswordResetOtpToEmail()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null || string.IsNullOrEmpty(user.Email))
+            {
+                return Json(new { success = false, message = "Kullanıcı veya e-posta adresi bulunamadı." });
+            }
+
+            var success = await _otpService.GenerateAndSendOtpAsync(user.Email, "PasswordChangeEmail");
+            if (success)
+            {
+                return Json(new { success = true, message = "Doğrulama kodu e-posta adresinize gönderildi." });
+            }
+
+            return Json(new { success = false, message = "Kod gönderilirken bir hata oluştu." });
         }
     }
 }

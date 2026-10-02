@@ -92,6 +92,7 @@
       asp-action="SaveProfile"
       method="post"
       enctype="multipart/form-data"
+      id="profileForm"
       class="profile-form">
 
     @Html.AntiForgeryToken()
@@ -259,9 +260,10 @@
                 </div>
                 <div class="profile-field">
                     <label>Yeni Şifre (Tekrar)</label>
-                    <input type="password" name="confirmNewPassword" placeholder="Yeni şifreyi doğrulayın" class="profile-input" />
+                    <input type="password" name="confirmNewPassword" id="confirmNewPassword" placeholder="Yeni şifreyi doğrulayın" class="profile-input" />
                 </div>
             </div>
+            <input type="hidden" name="emailOtpCode" id="emailOtpCode" />
         </div>
     </div>
 
@@ -396,6 +398,97 @@
             setTimeout(function () {
                 map.invalidateSize();
             }, 200);
+
+            // --- OTP MANTIĞI ---
+            const profileForm = document.getElementById("profileForm");
+            if (profileForm) {
+                profileForm.addEventListener("submit", function(e) {
+                    const newPassword = document.querySelector('input[name="newPassword"]').value;
+                    const confirmNewPassword = document.getElementById("confirmNewPassword").value;
+                    
+                    if (newPassword && newPassword.trim() !== "") {
+                        if (newPassword !== confirmNewPassword) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'Yeni şifreler eşleşmiyor!'
+                            });
+                            e.preventDefault();
+                            return;
+                        }
+                        
+                        const otpCodeField = document.getElementById("emailOtpCode");
+                        if (!otpCodeField.value) {
+                            e.preventDefault();
+                            
+                            Swal.fire({
+                                title: 'Şifrenizi değiştirmek üzeresiniz',
+                                text: 'Doğrulama kodu göndermek için lütfen bekleyin...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+
+                            const formData = new FormData();
+                            // Include CSRF token
+                            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                            formData.append("__RequestVerificationToken", token);
+
+                            fetch('/Account/SendPasswordResetOtpToEmail', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        title: 'Doğrulama Kodu Gönderildi',
+                                        text: 'Lütfen e-posta adresinize gönderilen 6 haneli kodu giriniz.',
+                                        input: 'text',
+                                        inputAttributes: {
+                                            maxlength: 6,
+                                            autocapitalize: 'off',
+                                            autocorrect: 'off'
+                                        },
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Doğrula ve Kaydet',
+                                        cancelButtonText: 'İptal',
+                                        showLoaderOnConfirm: true,
+                                        preConfirm: (code) => {
+                                            if (!code || code.length < 6) {
+                                                Swal.showValidationMessage('Lütfen geçerli bir kod giriniz');
+                                                return false;
+                                            }
+                                            return code;
+                                        },
+                                        allowOutsideClick: () => !Swal.isLoading()
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            otpCodeField.value = result.value;
+                                            profileForm.submit();
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Hata',
+                                        text: data.message || 'Kod gönderilemedi.'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata',
+                                    text: 'Bir bağlantı hatası oluştu.'
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+
         });
     </script>
 }

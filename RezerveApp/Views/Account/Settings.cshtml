@@ -25,6 +25,7 @@
 
         <form id="settingsForm" asp-controller="Account" asp-action="Settings" method="post" onsubmit="return handleSettingsOtp(event, this);">
             @Html.AntiForgeryToken()
+            <input type="hidden" name="emailOtpCode" id="emailOtpCode" />
             
             <h4 style="margin-top: 20px; margin-bottom: 10px; color: #fff;">İletişim Bilgileri</h4>
             
@@ -72,28 +73,80 @@
             const originalPhone = '@ViewBag.Phone';
             const phoneInput = document.getElementById('phone');
             const newPasswordInput = document.getElementById('newPassword');
+            const currentPasswordInput = document.getElementById('currentPassword');
             
-            let needsOtp = false;
+            let needsPhoneOtp = false;
+            let needsEmailOtp = false;
+
             if (phoneInput && phoneInput.value !== originalPhone) {
-                needsOtp = true;
+                needsPhoneOtp = true;
             }
             if (newPasswordInput && newPasswordInput.value.length > 0) {
-                const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@@#$%^&*.,?_~\-+=]).{6,}$/;
-                if (!passwordRegex.test(newPasswordInput.value)) {
-                    e.preventDefault();
-                    Swal.fire('Geçersiz Şifre', 'Şifreniz en az 6 karakter uzunluğunda olmalı, en az 1 büyük harf, 1 rakam ve 1 özel karakter içermelidir.', 'error');
-                    return false;
-                }
-                needsOtp = true;
+                needsEmailOtp = true;
             }
 
-            if (needsOtp) {
+            if (needsEmailOtp) {
+                e.preventDefault();
+                const otpCodeField = document.getElementById("emailOtpCode");
+                if (!otpCodeField.value) {
+                    Swal.fire({
+                        title: 'Şifrenizi değiştirmek üzeresiniz',
+                        text: 'Doğrulama kodu göndermek için lütfen bekleyin...',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+
+                    const formData = new FormData();
+                    formData.append("__RequestVerificationToken", document.querySelector('input[name="__RequestVerificationToken"]').value);
+
+                    fetch('/Account/SendPasswordResetOtpToEmail', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: 'Doğrulama Kodu Gönderildi',
+                                text: 'Lütfen e-posta adresinize gönderilen 6 haneli kodu giriniz.',
+                                input: 'text',
+                                inputAttributes: { maxlength: 6 },
+                                showCancelButton: true,
+                                confirmButtonText: 'Doğrula ve Kaydet',
+                                cancelButtonText: 'İptal',
+                                preConfirm: (code) => {
+                                    if (!code || code.length < 6) {
+                                        Swal.showValidationMessage('Lütfen geçerli bir kod giriniz');
+                                        return false;
+                                    }
+                                    return code;
+                                }
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    otpCodeField.value = result.value;
+                                    if (needsPhoneOtp) {
+                                        requireBusinessOwnerOtp(function() {
+                                            HTMLFormElement.prototype.submit.call(form);
+                                        });
+                                    } else {
+                                        HTMLFormElement.prototype.submit.call(form);
+                                    }
+                                }
+                            });
+                        } else {
+                            Swal.fire('Hata', data.message || 'Kod gönderilemedi.', 'error');
+                        }
+                    }).catch(() => Swal.fire('Hata', 'Bir bağlantı hatası oluştu.', 'error'));
+                }
+                return false;
+            } else if (needsPhoneOtp) {
                 e.preventDefault();
                 requireBusinessOwnerOtp(function() {
                     HTMLFormElement.prototype.submit.call(form);
                 });
                 return false;
             }
+            
             return true;
         }
     </script>
