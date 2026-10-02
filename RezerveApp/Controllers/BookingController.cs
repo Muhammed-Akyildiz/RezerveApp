@@ -382,13 +382,22 @@ namespace RezerveApp.Controllers
             customerPhone = new string(customerPhone.Where(char.IsDigit).ToArray());
 
             if (customerPhone.Length != 11)
-                return BadRequest("Telefon numarası 11 haneli olmalıdır.");
+            {
+                TempData["ErrorMessage"] = "Telefon numarası 11 haneli olmalıdır.";
+                return RedirectToAction("Index", new { slug = slug });
+            }
 
             if (date.Date < DateTime.Today)
-                return BadRequest("Geçmiş bir tarihe randevu alınamaz.");
+            {
+                TempData["ErrorMessage"] = "Geçmiş bir tarihe randevu alınamaz.";
+                return RedirectToAction("Index", new { slug = slug });
+            }
 
             if (date.Date > DateTime.Today.AddMonths(2))
-                return BadRequest("En fazla 2 ay sonrasına randevu alabilirsiniz.");
+            {
+                TempData["ErrorMessage"] = "En fazla 2 ay sonrasına randevu alabilirsiniz.";
+                return RedirectToAction("Index", new { slug = slug });
+            }
 
             var business = await _context.Businesses
                 .FirstOrDefaultAsync(x => x.Slug == slug);
@@ -459,14 +468,20 @@ namespace RezerveApp.Controllers
                     {
                         var capable = await GetCapableEmployeeIdsAsync(new List<int> { employee.Id }, s.Id);
                         if (!capable.Contains(employee.Id))
-                            return BadRequest($"Seçilen berber {s.Name} hizmetini vermiyor.");
+                        {
+                            TempData["ErrorMessage"] = $"Seçilen berber {s.Name} hizmetini vermiyor.";
+                            return RedirectToAction("Index", new { slug = slug });
+                        }
                     }
 
                     // Toplam süre kadar müsaitliği validate et
                     var dummyService = new Service { DurationMinutes = services.Sum(s => s.DurationMinutes) };
                     var validation = await ValidateSlotAsync(employee, dummyService, date, time, businessHour);
                     if (validation != null)
-                        return BadRequest(validation);
+                    {
+                        TempData["ErrorMessage"] = validation;
+                        return RedirectToAction("Index", new { slug = slug });
+                    }
                 }
                 else
                 {
@@ -494,7 +509,10 @@ namespace RezerveApp.Controllers
                     }
 
                     if (employee == null)
-                        return BadRequest("Seçtiğiniz saat artık uygun değil. Lütfen başka bir saat seçin.");
+                    {
+                        TempData["ErrorMessage"] = "Seçtiğiniz saat artık uygun değil. Lütfen başka bir saat seçin.";
+                        return RedirectToAction("Index", new { slug = slug });
+                    }
                 }
 
                 // Müşteriyi telefon numarasıyla eşleştir / yoksa oluştur
@@ -599,15 +617,34 @@ namespace RezerveApp.Controllers
             var workingHour = await _context.WorkingHours
                 .FirstOrDefaultAsync(x => x.EmployeeId == employee.Id && x.DayOfWeek == date.DayOfWeek);
 
-            if (workingHour == null || !workingHour.IsWorking)
-                return "Seçilen berber bu gün çalışmıyor.";
+            TimeSpan dayStart;
+            TimeSpan dayEnd;
+
+            if (workingHour != null)
+            {
+                if (!workingHour.IsWorking)
+                    return "Seçilen berber bu gün çalışmıyor.";
+                
+                dayStart = workingHour.StartTime;
+                dayEnd = workingHour.EndTime;
+            }
+            else if (businessHour != null)
+            {
+                if (!businessHour.IsOpen)
+                    return "İşletme bu gün kapalı.";
+
+                dayStart = businessHour.OpenTime;
+                dayEnd = businessHour.CloseTime;
+            }
+            else
+            {
+                dayStart = new TimeSpan(9, 0, 0);
+                dayEnd = new TimeSpan(19, 0, 0);
+            }
 
             var endTime = time.Add(TimeSpan.FromMinutes(service.DurationMinutes));
 
-            var dayStart = workingHour.StartTime;
-            var dayEnd = workingHour.EndTime;
-
-            if (businessHour != null && businessHour.IsOpen)
+            if (businessHour != null && businessHour.IsOpen && workingHour != null)
             {
                 if (businessHour.OpenTime > dayStart) dayStart = businessHour.OpenTime;
                 if (businessHour.CloseTime < dayEnd) dayEnd = businessHour.CloseTime;
