@@ -64,18 +64,27 @@
                 {
                     <tr><td colspan="6" class="cell-muted">Kriterlere uyan randevu bulunamadı.</td></tr>
                 }
-                @foreach (var a in Model)
+                
+                @{
+                    // Geriye dönük uyumluluk için, GroupId'si olmayanları kendi Id'si ile grupluyoruz
+                    var groupedAppointments = Model.GroupBy(a => string.IsNullOrEmpty(a.GroupId) ? a.Id.ToString() : a.GroupId);
+                }
+
+                @foreach (var group in groupedAppointments)
                 {
+                    var a = group.OrderBy(x => x.StartTime).First();
+                    var allServices = string.Join(" + ", group.OrderBy(x => x.StartTime).Select(x => x.Service?.Name));
+                    var totalDuration = group.Sum(x => x.Service?.DurationMinutes ?? 0);
+                    
                     <tr>
                         <td class="cell-primary" data-label="Tarih / Saat">
-                            @a.AppointmentDate.ToString("dd.MM.yyyy")<br />
-                            <span class="cell-muted" style="font-size:12px;">@a.StartTime.ToString("hh\\:mm")</span>
+                            @a.AppointmentDate.ToString("dd.MM.yyyy") <span class="cell-muted" style="font-size:12px; margin-left:4px;">@a.StartTime.ToString("hh\\:mm")</span>
                         </td>
                         <td data-label="Müşteri">
-                            <div class="cell-primary">@a.CustomerName</div>
-                            <div class="cell-muted" style="font-size:12px;">@a.CustomerPhone</div>
+                            <span class="cell-primary">@a.CustomerName</span>
+                            <span class="cell-muted" style="font-size:12px; margin-left:4px;">(@a.CustomerPhone)</span>
                         </td>
-                        <td class="cell-muted" data-label="Hizmet">@a.Service?.Name</td>
+                        <td class="cell-muted" data-label="Hizmet">@allServices</td>
                         <td class="cell-muted" data-label="Berber">@a.Employee?.Name</td>
                         <td data-label="Durum">
                             @switch (a.Status)

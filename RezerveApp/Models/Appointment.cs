@@ -43,5 +43,8 @@ namespace RezerveApp.Models
         // aynı anda onaylamasını (double-booking) engellemek için.
         [Timestamp]
         public byte[]? RowVersion { get; set; }
+
+        // Aynı anda alınan çoklu hizmetleri tek ekranda gruplamak için
+        public string? GroupId { get; set; }
     }
 }

@@ -316,9 +316,11 @@
                     var upcoming =
                     (ViewBag.UpcomingAppointments as List<RezerveApp.Models.Appointment>)
                     ?? new List<RezerveApp.Models.Appointment>();
+                    
+                    var groupedUpcoming = upcoming.GroupBy(a => string.IsNullOrEmpty(a.GroupId) ? a.Id.ToString() : a.GroupId);
                 }
 
-                @if (!upcoming.Any())
+                @if (!groupedUpcoming.Any())
                 {
                     <tr>
                         <td colspan="5" class="cell-muted">
@@ -327,8 +329,11 @@
                     </tr>
                 }
 
-                @foreach (var a in upcoming)
+                @foreach (var group in groupedUpcoming)
                 {
+                    var a = group.OrderBy(x => x.StartTime).First();
+                    var allServices = string.Join(" + ", group.OrderBy(x => x.StartTime).Select(x => x.Service?.Name));
+
                     <tr>
                         <td class="cell-primary">
                             @a.AppointmentDate.ToString("dd.MM.yyyy")
@@ -341,7 +346,7 @@
                         <td>@a.CustomerName</td>
 
                         <td class="cell-muted">
-                            @a.Service?.Name
+                            @allServices
                         </td>
 
                         <td class="cell-muted">

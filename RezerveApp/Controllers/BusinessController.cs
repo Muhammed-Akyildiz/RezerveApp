@@ -1521,34 +1521,51 @@ namespace RezerveApp.Controllers
             if (status != "Approved" && status != "Rejected" && status != "Cancelled" && status != "Completed" && status != "NoShow")
                 return BadRequest();
 
-            // Eğer durumu NoShow (Gelmedi) yapılıyorsa ve önceki durum NoShow değilse müşteri ceza puanını artır
-            if (status == "NoShow" && appointment.Status != "NoShow")
+            // Aynı gruba (GroupId) sahip tüm randevuları bul (tekli hizmetse sadece kendisi)
+            var groupAppointments = new List<Appointment> { appointment };
+            if (!string.IsNullOrEmpty(appointment.GroupId))
             {
-                var customer = await _context.Customers.FindAsync(appointment.CustomerId);
-                if (customer != null)
+                var relatedQuery = _context.Appointments.Where(x => x.GroupId == appointment.GroupId && x.BusinessId == businessId);
+                if (User.IsInRole("Employee") && !User.IsInRole("BusinessAdmin"))
                 {
-                    customer.NoShowCount++;
-                    if (customer.NoShowCount >= 2)
-                    {
-                        customer.IsBlacklisted = true;
-                    }
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user?.EmployeeId != null)
+                        relatedQuery = relatedQuery.Where(x => x.EmployeeId == user.EmployeeId);
                 }
-            }
-            // Yanlışlıkla NoShow yapılıp geri alındıysa ceza puanını düşür
-            else if (appointment.Status == "NoShow" && status != "NoShow")
-            {
-                var customer = await _context.Customers.FindAsync(appointment.CustomerId);
-                if (customer != null && customer.NoShowCount > 0)
-                {
-                    customer.NoShowCount--;
-                    if (customer.NoShowCount < 2)
-                    {
-                        customer.IsBlacklisted = false;
-                    }
-                }
+                groupAppointments = await relatedQuery.ToListAsync();
             }
 
-            appointment.Status = status;
+            foreach(var app in groupAppointments)
+            {
+                // Eğer durumu NoShow (Gelmedi) yapılıyorsa ve önceki durum NoShow değilse müşteri ceza puanını artır
+                // Ceza puanı sadece grup başına 1 kez artsın diye küçük bir kontrol (ancak her app'te artarsa müşteri çok ceza alır, 
+                // bu yüzden ilk appointment için ceza verip diğerlerini es geçmek daha mantıklı, ama id'si ilk olana bakalım)
+                if (app.Id == groupAppointments.First().Id) 
+                {
+                    if (status == "NoShow" && app.Status != "NoShow")
+                    {
+                        var customer = await _context.Customers.FindAsync(app.CustomerId);
+                        if (customer != null)
+                        {
+                            customer.NoShowCount++;
+                            if (customer.NoShowCount >= 2)
+                                customer.IsBlacklisted = true;
+                        }
+                    }
+                    else if (app.Status == "NoShow" && status != "NoShow")
+                    {
+                        var customer = await _context.Customers.FindAsync(app.CustomerId);
+                        if (customer != null && customer.NoShowCount > 0)
+                        {
+                            customer.NoShowCount--;
+                            if (customer.NoShowCount < 2)
+                                customer.IsBlacklisted = false;
+                        }
+                    }
+                }
+
+                app.Status = status;
+            }
 
             try
             {
@@ -1585,8 +1602,22 @@ namespace RezerveApp.Controllers
             if (appointment == null)
                 return NotFound();
 
-            // Kalıcı silme işlemi (hatalı/test kayıtlarını temizlemek için)
-            _context.Appointments.Remove(appointment);
+            // Aynı gruba (GroupId) sahip tüm randevuları bul (tekli hizmetse sadece kendisi)
+            var groupAppointments = new List<Appointment> { appointment };
+            if (!string.IsNullOrEmpty(appointment.GroupId))
+            {
+                var relatedQuery = _context.Appointments.Where(x => x.GroupId == appointment.GroupId && x.BusinessId == businessId);
+                if (User.IsInRole("Employee") && !User.IsInRole("BusinessAdmin"))
+                {
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user?.EmployeeId != null)
+                        relatedQuery = relatedQuery.Where(x => x.EmployeeId == user.EmployeeId);
+                }
+                groupAppointments = await relatedQuery.ToListAsync();
+            }
+
+            // Kalıcı silme işlemi
+            _context.Appointments.RemoveRange(groupAppointments);
             await _context.SaveChangesAsync();
 
             TempData["Success"] = "Randevu kalıcı olarak silindi.";

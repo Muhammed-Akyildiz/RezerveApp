@@ -615,6 +615,7 @@ namespace RezerveApp.Controllers
                 }
 
                 var currentSlotTime = time;
+                var groupId = Guid.NewGuid().ToString();
                 Appointment? firstApp = null;
                 foreach(var s in services)
                 {
@@ -624,6 +625,7 @@ namespace RezerveApp.Controllers
                         CustomerPhone = customerPhone,
                         CustomerEmail = customerEmail,
                         CustomerId = customer.Id,
+                        GroupId = groupId,
                         BusinessId = business.Id,
                         EmployeeId = employee.Id,
                         ServiceId = s.Id,
