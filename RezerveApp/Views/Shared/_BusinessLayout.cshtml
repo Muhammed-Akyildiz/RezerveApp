@@ -41,8 +41,11 @@
     <link rel="stylesheet" href="~/css/shared.css?v=@DateTime.Now.Ticks" />
     <link rel="stylesheet" href="~/css/business.css?v=@DateTime.Now.Ticks" />
     <style>
-        .btn-secondary { background: #2A2E39 !important; color: #fff !important; border: 1px solid #3E4352 !important; }
-        .btn-secondary:hover { background: #353947 !important; border-color: #4C5263 !important; }
+        .btn-secondary { background: rgba(255,255,255,0.05) !important; color: #E5E5E5 !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1) !important; border-color: rgba(255,255,255,0.15) !important; }
+        .input { color-scheme: dark; } /* Fix for native date/time icons on dark background */
+        input[type="time"]::-webkit-calendar-picker-indicator,
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.8); cursor: pointer; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Styles", required: false)
