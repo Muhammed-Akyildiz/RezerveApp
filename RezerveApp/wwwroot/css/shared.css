@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    RezerveApp â€” Shared design tokens & base components
    Used by admin.css, business.css and booking.css.
    Load order: shared.css -> (admin|business|booking).css
@@ -410,6 +410,18 @@ button {
     .btn-gold:hover {
         background: var(--gold-hover);
         transform: translateY(-1px);
+    }
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: var(--text);
     }
 
 .btn-outline {

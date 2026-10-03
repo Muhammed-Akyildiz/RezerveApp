@@ -41,8 +41,8 @@
                 <option value="NoShow" selected="@(ViewBag.StatusFilter == "NoShow")">Gelmedi</option>
             </select>
             <input type="date" class="input" style="width:auto;" name="date" value="@(ViewBag.DateFilter != null ? ((DateTime)ViewBag.DateFilter).ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) : DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture))" onchange="this.form.submit()" />
-            <button type="submit" class="btn btn-outline btn-sm">Filtrele</button>
-            <a asp-controller="Business" asp-action="Appointments" class="btn btn-ghost btn-sm">Temizle</a>
+            <button type="submit" class="btn btn-secondary btn-sm">Filtrele</button>
+            <a asp-controller="Business" asp-action="Appointments" class="btn btn-secondary btn-sm">Temizle</a>
             <div class="toolbar-spacer"></div>
         </form>
     </div>
