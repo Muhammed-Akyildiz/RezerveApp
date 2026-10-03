@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -25,8 +26,9 @@ jobs:
           script_stop: true
           script: |
             cd /var/www/rezerveapp
-            git stash
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
             cd RezerveApp
             dotnet build -c Release
             dotnet publish -c Release -o /var/www/rezerveapp/publish
