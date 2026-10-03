@@ -1,4 +1,4 @@
-﻿@model List<RezerveApp.Models.Appointment>
+@model List<RezerveApp.Models.Appointment>
 
 @{
     Layout = "_BusinessLayout";
@@ -106,7 +106,7 @@
             <tbody>
                 @if (!Model.Any())
                 {
-                    <tr><td colspan="5" class="cell-muted">Randevu bulunmuyor.</td></tr>
+                    <tr><td colspan="5" class="cell-muted" style="text-align: center !important; justify-content: center !important; padding: 32px 14px !important;">Randevu bulunmuyor.</td></tr>
                 }
                 @foreach (var a in Model)
                 {

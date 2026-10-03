@@ -1,4 +1,4 @@
-﻿@model List<RezerveApp.Models.BusinessHoliday>
+@model List<RezerveApp.Models.BusinessHoliday>
 
 @{
     Layout = "_BusinessLayout";
@@ -34,7 +34,7 @@
             <tbody>
                 @if (!Model.Any())
                 {
-                    <tr><td colspan="3" class="cell-muted">Henüz tatil günü tanımlanmadı.</td></tr>
+                    <tr><td colspan="3" class="cell-muted" style="text-align: center !important; justify-content: center !important; padding: 32px 14px !important;">Henüz tatil günü tanımlanmadı.</td></tr>
                 }
                 @foreach (var h in Model)
                 {
