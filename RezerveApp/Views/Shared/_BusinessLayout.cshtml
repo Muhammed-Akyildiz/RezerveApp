@@ -43,9 +43,9 @@
     <style>
         .btn-secondary { background: rgba(255,255,255,0.05) !important; color: #E5E5E5 !important; border: 1px solid rgba(255,255,255,0.1) !important; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1) !important; border-color: rgba(255,255,255,0.15) !important; }
-        .input { color-scheme: dark; } /* Fix for native date/time icons on dark background */
+        .input, input[type="time"], input[type="date"] { color-scheme: dark; } /* Fix for native date/time icons on dark background */
         input[type="time"]::-webkit-calendar-picker-indicator,
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(100%); opacity: 1; cursor: pointer; transform: scale(1.2); }
+        input[type="date"]::-webkit-calendar-picker-indicator { opacity: 1; cursor: pointer; transform: scale(1.2); }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Styles", required: false)

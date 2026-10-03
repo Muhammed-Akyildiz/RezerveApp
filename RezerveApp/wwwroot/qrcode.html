@@ -77,10 +77,29 @@
         .btn-secondary:hover {
             background-color: #d4d4d4;
         }
-        @@media print {
-            body { background: white; }
-            .container { box-shadow: none; padding: 0; }
-            .btn-group { display: none; }
+        @media print {
+            body { 
+                background: white; 
+                align-items: flex-start;
+                justify-content: center;
+                padding-top: 50px;
+            }
+            .container { 
+                box-shadow: none; 
+                padding: 0; 
+            }
+            .btn-group, h1, p { 
+                display: none; 
+            }
+            #qrcode {
+                margin: 0 auto;
+            }
+            #qrcode img {
+                border: none;
+                box-shadow: none;
+                width: 500px;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
