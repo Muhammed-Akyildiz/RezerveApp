@@ -14,7 +14,7 @@
         @Html.AntiForgeryToken()
         <div class="field" style="margin-bottom:0;">
             <label>Tarih</label>
-            <input class="input" type="date" name="date" required />
+            <input class="input" type="date" name="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
         </div>
         <div class="field" style="margin-bottom:0;">
             <label>Sebep (opsiyonel)</label>

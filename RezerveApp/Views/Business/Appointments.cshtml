@@ -40,7 +40,7 @@
                 <option value="Rejected" selected="@(ViewBag.StatusFilter == "Rejected")">Reddedildi</option>
                 <option value="NoShow" selected="@(ViewBag.StatusFilter == "NoShow")">Gelmedi</option>
             </select>
-            <input type="date" class="input" style="width:auto;" name="date" value="@(ViewBag.DateFilter != null ? ((DateTime)ViewBag.DateFilter).ToString("yyyy-MM-dd") : "")" onchange="this.form.submit()" />
+            <input type="date" class="input" style="width:auto;" name="date" value="@(ViewBag.DateFilter != null ? ((DateTime)ViewBag.DateFilter).ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))" onchange="this.form.submit()" />
             <button type="submit" class="btn btn-outline btn-sm">Filtrele</button>
             <a asp-controller="Business" asp-action="Appointments" class="btn btn-ghost btn-sm">Temizle</a>
             <div class="toolbar-spacer"></div>
