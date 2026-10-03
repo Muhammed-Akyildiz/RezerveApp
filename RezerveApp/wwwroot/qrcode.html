@@ -78,21 +78,30 @@
             background-color: #d4d4d4;
         }
         @media print {
+            @page { margin: 0; }
             body { 
                 background: white; 
-                align-items: flex-start;
+                display: flex;
+                align-items: center;
                 justify-content: center;
-                padding-top: 50px;
+                height: 100vh;
+                margin: 0;
             }
             .container { 
                 box-shadow: none; 
                 padding: 0; 
+                width: 100%;
+                display: flex;
+                justify-content: center;
             }
             .btn-group, h1, p { 
-                display: none; 
+                display: none !important; 
             }
             #qrcode {
-                margin: 0 auto;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
             #qrcode img {
                 border: none;
