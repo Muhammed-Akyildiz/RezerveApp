@@ -32,7 +32,7 @@
                     </div>
                     <div style="background-color: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
                         <div style="font-size: 12px; color: var(--text-faint);">Fiyatlandırma Döngüsü</div>
-                        <div style="font-size: 16px; font-weight: 500; margin-top: 4px;">@activeSub.BillingPeriod.ToString()</div>
+                        <div style="font-size: 16px; font-weight: 500; margin-top: 4px;">@(activeSub.BillingPeriod.ToString() == "Monthly" ? "Aylık" : (activeSub.BillingPeriod.ToString() == "Yearly" ? "Yıllık" : activeSub.BillingPeriod.ToString()))</div>
                     </div>
                     @if (activeSub.EndDate.HasValue)
                     {

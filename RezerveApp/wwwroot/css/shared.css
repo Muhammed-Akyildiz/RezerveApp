@@ -303,20 +303,21 @@ button {
     gap: 11px;
     padding: 10px 12px;
     border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    color: #ff6b6b; /* Reddish color for logout */
+    background: rgba(255, 107, 107, 0.05);
     font-size: 13.5px;
-    font-weight: 500;
+    font-weight: 600;
     
-    border: none;
+    border: 1px solid rgba(255, 107, 107, 0.1);
     width: 100%;
     cursor: pointer;
     text-align: left;
-    transition: background .15s var(--ease), color .15s var(--ease);
+    transition: background .15s ease, color .15s ease;
 }
 
     .logout-link:hover {
-        background: var(--danger-soft);
-        color: #FCA5A5;
+        background: rgba(255, 107, 107, 0.15);
+        color: #ff8787;
     }
 
 /* ==========================================================================
@@ -446,13 +447,14 @@ button {
     }
 
 .btn-danger-outline {
-    
-    border-color: var(--danger);
-    color: #FCA5A5;
+    background: transparent !important;
+    border: 1px solid rgba(229, 57, 53, 0.6) !important;
+    color: #E53935 !important;
 }
 
     .btn-danger-outline:hover {
-        background: var(--danger-soft);
+        background: rgba(229, 57, 53, 0.1) !important;
+        border-color: #E53935 !important;
     }
 
 .btn-sm {
