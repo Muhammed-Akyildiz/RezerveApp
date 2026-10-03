@@ -135,8 +135,8 @@ else
         <div class="form-grid" style="grid-template-columns:1fr;">
             <!-- E-POSTA -->
             <div class="field">
-                <label for="empEmail">Giriş E-Postası (Şifre gönderilecektir)</label>
-                <input class="input" type="email" id="empEmail" name="email" placeholder="Örn. mail@ornek.com" />
+                <label for="empEmail">Giriş E-Postası (Şifre gönderilecektir) <span style="color:var(--danger)">*</span></label>
+                <input class="input" type="email" id="empEmail" name="email" placeholder="Örn. mail@ornek.com" required />
             </div>
         </div>
 
@@ -491,14 +491,6 @@ else
     
     <script>
         function handleCreateEmployee(e, form) {
-            const emailInput = form.querySelector('input[name="email"]');
-            if (emailInput && emailInput.value.trim().length > 0) {
-                e.preventDefault(); // Stop native submission
-                requireBusinessOwnerOtp(function() {
-                    HTMLFormElement.prototype.submit.call(form);
-                });
-                return false;
-            }
             return true;
         }
 

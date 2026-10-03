@@ -1,5 +1,5 @@
-/* ==========================================================================
-   RezerveApp — Business Admin overrides
+﻿/* ==========================================================================
+   RezerveApp â€” Business Admin overrides
    Loaded after shared.css
    ========================================================================== */
 
@@ -501,7 +501,7 @@
         color: var(--text-muted);
     }
     
-    .data-table td[data-label="İşlem"],
+    .data-table td[data-label="Ä°ÅŸlem"],
     .data-table td:empty {
         flex-direction: column;
         align-items: flex-start;
@@ -509,12 +509,12 @@
         padding-left: 0 !important;
     }
     
-    .data-table td[data-label="İşlem"]::before,
+    .data-table td[data-label="Ä°ÅŸlem"]::before,
     .data-table td:empty::before {
         display: none;
     }
     
-    .data-table td[data-label="İşlem"] .btn,
+    .data-table td[data-label="Ä°ÅŸlem"] .btn,
     .data-table td:last-child form,
     .data-table td:last-child .btn {
         width: 100%;
@@ -523,3 +523,6 @@
         justify-content: center;
     }
 }
+
+
+@media (max-width: 768px) { .data-table td[colspan] { text-align: center !important; justify-content: center !important; padding: 20px 10px !important; color: var(--text-muted); display: flex; align-items: center; } }

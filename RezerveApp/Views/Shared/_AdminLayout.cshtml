@@ -137,7 +137,7 @@
 
                 <a class="nav-link @(ViewBag.ActiveNav == "SupportTickets" ? "active" : "")"
                    asp-controller="Admin"
-                   asp-action="SupportTickets">
+                   asp-action="SupportTickets" style="position: relative;">
                     <svg class="icon"
                          viewBox="0 0 24 24"
                          fill="none"
@@ -145,6 +145,17 @@
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
                     Destek Talepleri
+                    
+                    @inject RezerveApp.Data.ApplicationDbContext DbContext
+                    @{
+                        var unreadTickets = DbContext.NotificationLogs.Count(n => n.RecipientPhone == "SUPPORT");
+                    }
+                    @if(unreadTickets > 0)
+                    {
+                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: var(--danger); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;">
+                            @unreadTickets
+                        </span>
+                    }
                 </a>
 
                 <!-- FATURA VE ABONELİKLER -->

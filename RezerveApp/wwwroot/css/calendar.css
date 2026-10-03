@@ -1,4 +1,4 @@
-.cal-toolbar {
+ï»¿.cal-toolbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -77,7 +77,7 @@
 /* -------------------- DAY VIEW -------------------- */
 .cal-day-grid {
     display: grid;
-    min-width: 640px;
+    min-width: 100%;
 }
 
 .cal-day-header {
@@ -165,8 +165,8 @@
 /* -------------------- WEEK VIEW -------------------- */
 .cal-week-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(140px, 1fr));
-    min-width: 900px;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    min-width: 100%;
 }
 
 .cal-week-day {
@@ -219,7 +219,7 @@
 .cal-month-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    min-width: 800px;
+    min-width: 100%;
 }
 
 .cal-month-weekday {
@@ -287,7 +287,7 @@
 }
 
 /* =========================================================
-   GEÇMÝÞ RANDEVULAR
+   GEÃ‡MÄ°Åž RANDEVULAR
    ========================================================= */
 
 .cal-event.is-past,
@@ -304,7 +304,7 @@
     }
 
 
-/* ÝPTAL EDÝLEN RANDEVULAR */
+/* Ä°PTAL EDÄ°LEN RANDEVULAR */
 
 .cal-event.is-cancelled,
 .cal-week-chip.is-cancelled,
@@ -315,7 +315,7 @@
 }
 
 
-/* TAMAMLANMIÞ RANDEVULAR */
+/* TAMAMLANMIÅž RANDEVULAR */
 
 .cal-event.is-completed,
 .cal-week-chip.is-completed,
@@ -324,7 +324,7 @@
 }
 
 
-/* BUGÜNKÜ RANDEVULAR */
+/* BUGÃœNKÃœ RANDEVULAR */
 
 .cal-event.is-today,
 .cal-week-chip.is-today,

@@ -1,5 +1,5 @@
-/* ==========================================================================
-   RezerveApp — Shared design tokens & base components
+﻿/* ==========================================================================
+   RezerveApp â€” Shared design tokens & base components
    Used by admin.css, business.css and booking.css.
    Load order: shared.css -> (admin|business|booking).css
    ========================================================================== */
@@ -90,7 +90,7 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    
 }
 
 ::-webkit-scrollbar-thumb {
@@ -306,7 +306,7 @@ button {
     color: var(--text-muted);
     font-size: 13.5px;
     font-weight: 500;
-    background: transparent;
+    
     border: none;
     width: 100%;
     cursor: pointer;
@@ -413,10 +413,10 @@ button {
     }
 
 .btn-outline {
-    background: transparent;
+    
     border-color: var(--border);
     color: var(--text);
-}
+ background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.15); }
 
     .btn-outline:hover {
         border-color: var(--text-faint);
@@ -424,9 +424,9 @@ button {
     }
 
 .btn-ghost {
-    background: transparent;
+    
     color: var(--text-muted);
-}
+ background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.05); }
 
     .btn-ghost:hover {
         color: var(--text);
@@ -434,7 +434,7 @@ button {
     }
 
 .btn-danger-outline {
-    background: transparent;
+    
     border-color: var(--danger);
     color: #FCA5A5;
 }
@@ -778,7 +778,7 @@ table.data-table {
     flex-wrap: wrap;
 }
 
-    .toolbar .input-with-icon {
+    .toolbar .input, .toolbar .select { background: rgba(255,255,255,0.06); border-color: var(--border-light); } .toolbar .input:focus, .toolbar .select:focus { background: rgba(255,255,255,0.1); border-color: var(--gold); } .toolbar .input-with-icon {
         min-width: 260px;
         flex: 1;
         max-width: 360px;
@@ -850,7 +850,7 @@ table.data-table {
     color: var(--text-muted);
     font-size: 12.5px;
     font-weight: 600;
-    background: transparent;
+    
     cursor: pointer;
 }
 
@@ -1004,7 +1004,7 @@ table.data-table {
         align-items: stretch;
     }
 
-        .toolbar .input-with-icon {
+        .toolbar .input, .toolbar .select { background: rgba(255,255,255,0.06); border-color: var(--border-light); } .toolbar .input:focus, .toolbar .select:focus { background: rgba(255,255,255,0.1); border-color: var(--gold); } .toolbar .input-with-icon {
             max-width: none;
         }
 }
@@ -1090,3 +1090,8 @@ input[type=""datetime-local""]::-webkit-calendar-picker-indicator {
     
     cursor: pointer;
 }
+
+
+
+input[type="date"], input[type="time"] { color: var(--text) !important; font-family: inherit; } input[type="date"]::-webkit-calendar-picker-indicator, input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.7; cursor: pointer; } input[type="date"]:empty::before { content: attr(placeholder); color: var(--text-faint); margin-right: 0.5em; } input[type="date"]:focus::before, input[type="date"]:valid::before { display: none; }
+

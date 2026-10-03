@@ -115,7 +115,10 @@
                         <i data-lucide="settings" style="width:20px; height:20px; margin-right:12px;"></i>
                         Ayarlar
                     </a>
-
+                    <a class="nav-link @(ViewBag.ActiveNav == "Subscription" ? "active" : "")" asp-controller="Business" asp-action="Subscription" style="margin-bottom:6px;">
+                        <i data-lucide="package" style="width:20px; height:20px; margin-right:12px;"></i>
+                        Abonelik
+                    </a>
                 }
                 
                 <div class="sidebar-user" style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">

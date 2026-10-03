@@ -1,0 +1,70 @@
+@model RezerveApp.Models.Business
+
+@{
+    Layout = "_BusinessLayout";
+    var activeSub = Model.Subscriptions.FirstOrDefault(s => s.IsActive);
+}
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3>Kullandığınız Paket</h3>
+            <div class="card-header-sub">Mevcut abonelik paketinizi ve detaylarını buradan inceleyebilirsiniz.</div>
+        </div>
+    </div>
+    
+    <div style="padding: 24px;">
+        @if (activeSub != null && activeSub.SubscriptionPlan != null)
+        {
+            <div style="background-color: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 24px; font-weight: 600; color: var(--gold);">@activeSub.SubscriptionPlan.Name</div>
+                    <div style="background-color: rgba(221, 168, 83, 0.1); color: var(--gold); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                        Aktif Paket
+                    </div>
+                </div>
+                
+                <p style="color: var(--text-muted); margin: 0; font-size: 14px;">@activeSub.SubscriptionPlan.Description</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
+                    <div style="background-color: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: var(--text-faint);">Başlangıç Tarihi</div>
+                        <div style="font-size: 16px; font-weight: 500; margin-top: 4px;">@activeSub.StartDate.ToString("dd.MM.yyyy")</div>
+                    </div>
+                    <div style="background-color: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                        <div style="font-size: 12px; color: var(--text-faint);">Fiyatlandırma Döngüsü</div>
+                        <div style="font-size: 16px; font-weight: 500; margin-top: 4px;">@activeSub.BillingPeriod.ToString()</div>
+                    </div>
+                    @if (activeSub.EndDate.HasValue)
+                    {
+                        <div style="background-color: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
+                            <div style="font-size: 12px; color: var(--text-faint);">Bitiş Tarihi</div>
+                            <div style="font-size: 16px; font-weight: 500; margin-top: 4px;">@activeSub.EndDate.Value.ToString("dd.MM.yyyy")</div>
+                        </div>
+                    }
+                </div>
+                
+                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-color);">
+                    <h4 style="margin-bottom: 12px; font-size: 16px;">Paket Özellikleri</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                        <li style="display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="check-circle" style="width:16px; height:16px; color:var(--success);"></i>
+                            <span>Çalışan Limiti: @(activeSub.SubscriptionPlan.MaxEmployees == null ? "Sınırsız" : activeSub.SubscriptionPlan.MaxEmployees.ToString())</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="check-circle" style="width:16px; height:16px; color:var(--success);"></i>
+                            <span>Şube Limiti: @(activeSub.SubscriptionPlan.MaxBranches == null ? "Sınırsız" : activeSub.SubscriptionPlan.MaxBranches.ToString())</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="text-align: center; padding: 40px 20px;">
+                <i data-lucide="package-x" style="width:48px; height:48px; color:var(--text-faint); margin-bottom:16px;"></i>
+                <p style="color:var(--text-muted);">Şu anda işletmenize tanımlanmış aktif bir paket bulunmamaktadır.<br/>Lütfen sistem yöneticisi ile iletişime geçin.</p>
+            </div>
+        }
+    </div>
+</div>

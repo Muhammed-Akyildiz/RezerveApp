@@ -321,6 +321,8 @@ namespace RezerveApp.Controllers
                 .OrderBy(x => x.StartTime)
                 .Select(x => new
                 {
+                    Id = x.Id,
+                    GroupId = x.GroupId,
                     StartTime = x.StartTime,
                     CustomerName = x.CustomerName,
                     ServiceName = x.Service!.Name,
@@ -330,15 +332,16 @@ namespace RezerveApp.Controllers
                 .ToListAsync();
 
             var todaysList = todaysRaw
-                .Select(x => new
+                .GroupBy(x => string.IsNullOrEmpty(x.GroupId) ? x.Id.ToString() : x.GroupId)
+                .Select(g => new
                 {
-                    Time = x.StartTime.ToString(@"hh\:mm"),
-                    CustomerName = x.CustomerName,
-                    ServiceName = x.ServiceName,
-                    EmployeeName = x.EmployeeName,
-                    Status = x.Status == "Approved"
+                    Time = g.First().StartTime.ToString(@"hh\:mm"),
+                    CustomerName = g.First().CustomerName,
+                    ServiceName = string.Join(" + ", g.Select(x => x.ServiceName)),
+                    EmployeeName = g.First().EmployeeName,
+                    Status = g.First().Status == "Approved"
                         ? "confirmed"
-                        : x.Status == "Pending"
+                        : g.First().Status == "Pending"
                             ? "pending"
                             : "cancelled"
                 })
@@ -446,6 +449,17 @@ namespace RezerveApp.Controllers
             };
             _context.NotificationLogs.Add(notification);
             await _context.SaveChangesAsync();
+
+            // E-posta gönderimi (Süper Admin e-postasına)
+            var adminEmail = _configuration["SupportEmail"] ?? "destek@rezerveapp.com.tr";
+            var emailSubject = $"Yeni Destek Talebi: {business?.Name} - {subject}";
+            var emailBody = $@"
+                <h3>Yeni Destek Talebi</h3>
+                <p><strong>İşletme:</strong> {business?.Name}</p>
+                <p><strong>Konu:</strong> {subject}</p>
+                <p><strong>Mesaj:</strong><br/>{message.Replace("\n", "<br/>")}</p>
+            ";
+            await _emailSender.SendEmailAsync(adminEmail, emailSubject, emailBody);
 
             TempData["SuccessMessage"] = "Destek talebiniz alındı. En kısa sürede size dönüş yapılacaktır.";
             ViewBag.BusinessName = business?.Name;
@@ -645,17 +659,13 @@ namespace RezerveApp.Controllers
                 return RedirectToAction(nameof(Employees));
             }
 
-            string? normalizedEmail = null;
-            if (!string.IsNullOrWhiteSpace(email))
+            if (string.IsNullOrWhiteSpace(email))
             {
-                if (TempData["OwnerOtpVerified"] as string != "true")
-                {
-                    TempData["Error"] = "Çalışana giriş izni vermek (şifre oluşturmak) için doğrulama gereklidir.";
-                    return RedirectToAction(nameof(Employees));
-                }
-                TempData.Remove("OwnerOtpVerified");
+                TempData["Error"] = "Çalışan e-posta adresi zorunludur.";
+                return RedirectToAction(nameof(Employees));
+            }
 
-                normalizedEmail = email.Trim().ToLowerInvariant();
+            string? normalizedEmail = email.Trim().ToLowerInvariant();
                 
                 var emailUser = await _userManager.FindByEmailAsync(normalizedEmail);
                 if (emailUser != null)
@@ -714,11 +724,7 @@ namespace RezerveApp.Controllers
                     TempData["Error"] = "Çalışan oluşturuldu ancak kullanıcı hesabı oluşturulamadı: " + string.Join(", ", createResult.Errors.Select(e => e.Description));
                 }
             }
-            else
 
-            {
-                TempData["Success"] = "Çalışan başarıyla oluşturuldu.";
-            }
 
             return RedirectToAction(nameof(Employees));
         }
@@ -2327,6 +2333,29 @@ namespace RezerveApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "BusinessAdmin")]
+        public async Task<IActionResult> Subscription()
+        {
+            var businessId = await GetCurrentBusinessIdAsync();
+            if (businessId == null)
+                return Unauthorized();
+
+            var business = await _context.Businesses
+                .Include(b => b.Subscriptions)
+                    .ThenInclude(s => s.SubscriptionPlan)
+                .FirstOrDefaultAsync(b => b.Id == businessId.Value);
+
+            if (business == null)
+                return NotFound();
+
+            ViewBag.BusinessName = business.Name;
+            ViewBag.PageTitle = "Abonelik ve Paketim";
+            ViewBag.ActiveNav = "Subscription";
+
+            return View(business);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CustomerDetails(int id)
         {
             var businessId = await GetCurrentBusinessIdAsync();
@@ -2355,7 +2384,7 @@ namespace RezerveApp.Controllers
                 .ToList();
 
             var favoriteService = appointments
-                .Where(a => a.Status != "Cancelled" && a.Status != "Rejected")
+                .Where(a => a.Status != "Cancelled" && a.Status != "Rejected" && a.Service != null)
                 .GroupBy(a => a.Service!.Name)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
@@ -2363,13 +2392,13 @@ namespace RezerveApp.Controllers
 
             // Aldığı hizmetler: benzersiz hizmet adı + kaç kez alındığı
             var receivedServices = appointments
-                .Where(a => a.Status != "Cancelled" && a.Status != "Rejected")
+                .Where(a => a.Status != "Cancelled" && a.Status != "Rejected" && a.Service != null)
                 .GroupBy(a => a.Service!.Name)
                 .Select(g => new { ServiceName = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
                 .ToList();
 
-            var totalSpent = completedOrApproved.Sum(a => a.Service!.Price);
+            var totalSpent = completedOrApproved.Where(a => a.Service != null).Sum(a => a.Service!.Price);
 
             ViewBag.Customer = customer;
             ViewBag.TotalAppointments = totalCount;

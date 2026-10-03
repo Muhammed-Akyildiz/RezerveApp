@@ -147,6 +147,28 @@ namespace RezerveApp.Controllers
                 return View();
             }
 
+            // DEBUG IF NEEDED
+            if (Request.Query.ContainsKey("debug"))
+            {
+                var debugInfo = new List<string>();
+                var bHour = await _context.BusinessWorkingHours.FirstOrDefaultAsync(x => x.BusinessId == business.Id && x.DayOfWeek == date.DayOfWeek);
+                var employeesDebug = await _context.Employees.Where(x => x.BusinessId == business.Id && x.IsActive).ToListAsync();
+                foreach(var emp in employeesDebug)
+                {
+                    var empSlots = await ComputeEmployeeSlotsAsync(emp, services.Sum(s => s.DurationMinutes), date, bHour, business.SlotInterval > 0 ? business.SlotInterval : 30);
+                    debugInfo.Add($"EMP {emp.Name}:");
+                    foreach(var s in empSlots) {
+                        debugInfo.Add($"  {s.Time} - Available: {s.IsAvailable}");
+                    }
+                    var apps = await _context.Appointments.Where(x => x.EmployeeId == emp.Id && x.AppointmentDate.Date == date.Date).ToListAsync();
+                    debugInfo.Add($"  APPS:");
+                    foreach(var a in apps) {
+                        debugInfo.Add($"    {a.StartTime} to {a.EndTime} ({a.Status})");
+                    }
+                }
+                return Ok(debugInfo);
+            }
+
             // İşletmenin o gün için tanımlı genel çalışma saati var mı?
             var businessHour = await _context.BusinessWorkingHours
                 .AsNoTracking()

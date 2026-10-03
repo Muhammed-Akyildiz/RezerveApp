@@ -9,265 +9,269 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = RezerveApp
 build_property.RootNamespace = RezerveApp
-build_property.ProjectDir = C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\
+build_property.ProjectDir = c:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = true
-build_property.MSBuildProjectDirectory = C:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp
+build_property.MSBuildProjectDirectory = c:\Users\Asus\OneDrive\Desktop\RezerveApp\RezerveApp
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Error.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Index.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Privacy.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Shared/_ValidationScriptsPartial.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/_ViewImports.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/_ViewStart.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/ForgotPassword.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/ForgotPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/Login.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/Register.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/ResetPassword.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/ResetPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/Settings.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/Settings.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxTZXR0aW5ncy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/VerifyPhone.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Account/VerifyPhone.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxWZXJpZnlQaG9uZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Billing.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Billing.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQmlsbGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Create.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Details.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Edit.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Index.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/PlanForm.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/PlanForm.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGxhbkZvcm0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Plans.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Plans.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUGxhbnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Settings.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Settings.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2V0dGluZ3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/SubscriptionPlans.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/SubscriptionPlans.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3Vic2NyaXB0aW9uUGxhbnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/SupportTickets.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/SupportTickets.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU3VwcG9ydFRpY2tldHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Templates.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Templates.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVGVtcGxhdGVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Users.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Admin/Users.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Availability.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Availability.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xBdmFpbGFiaWxpdHkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Cancel.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Cancel.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xDYW5jZWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Index.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Success.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Booking/Success.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va2luZ1xTdWNjZXNzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Appointments.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Appointments.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcQXBwb2ludG1lbnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Calendar.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Calendar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcQ2FsZW5kYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Create.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/CreateAppointment.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/CreateAppointment.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcQ3JlYXRlQXBwb2ludG1lbnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/CustomerDetails.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/CustomerDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcQ3VzdG9tZXJEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Customers.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Customers.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcQ3VzdG9tZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EditEmployee.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EditEmployee.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcRWRpdEVtcGxveWVlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EditService.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EditService.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcRWRpdFNlcnZpY2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Employees.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Employees.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcRW1wbG95ZWVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EmployeeServices.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EmployeeServices.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcRW1wbG95ZWVTZXJ2aWNlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EmployeeWorkingHours.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/EmployeeWorkingHours.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcRW1wbG95ZWVXb3JraW5nSG91cnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Holidays.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Holidays.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcSG9saWRheXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Index.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Notifications.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Notifications.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcTm90aWZpY2F0aW9ucy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Pending.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Pending.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcUGVuZGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Profile.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcUHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Services.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Services.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcU2VydmljZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Support.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Subscription.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcU3Vic2NyaXB0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/Support.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcU3VwcG9ydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/WorkingHours.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Business/WorkingHours.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQnVzaW5lc3NcV29ya2luZ0hvdXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Index.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Maintenance.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Maintenance.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNYWludGVuYW5jZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Privacy.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Terms.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Home/Terms.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUZXJtcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Review/Leave.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Review/Leave.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3XExlYXZlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Review/Success.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Review/Success.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmV2aWV3XFN1Y2Nlc3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/Error.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_AdminLayout.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_AdminLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_BookingLayout.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_BookingLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Cb29raW5nTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_BusinessLayout.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_BusinessLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CdXNpbmVzc0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_BusinessOwnerOtpModal.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_BusinessOwnerOtpModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CdXNpbmVzc093bmVyT3RwTW9kYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_ValidationScriptsPartial.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/_ViewImports.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/_ViewStart.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Shared/_Layout.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Pages/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-z8oeo13vvi
 
-[C:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_Layout.cshtml]
+[c:/Users/Asus/OneDrive/Desktop/RezerveApp/RezerveApp/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-6momq2r0yu

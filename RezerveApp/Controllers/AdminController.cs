@@ -16,6 +16,7 @@ namespace RezerveApp.Controllers
         private readonly SubscriptionService _subscriptionService;
         private readonly IWebHostEnvironment _env;
         private readonly ISettingsService _settingsService;
+        private readonly RezerveApp.Services.IEmailSender _emailSender;
 
         private static readonly string[] AllowedLogoContentTypes =
         {
@@ -39,13 +40,15 @@ namespace RezerveApp.Controllers
             UserManager<ApplicationUser> userManager,
             SubscriptionService subscriptionService,
             IWebHostEnvironment env,
-            ISettingsService settingsService)
+            ISettingsService settingsService,
+            RezerveApp.Services.IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
             _subscriptionService = subscriptionService;
             _env = env;
             _settingsService = settingsService;
+            _emailSender = emailSender;
         }
 
         // =========================================================
@@ -744,6 +747,14 @@ namespace RezerveApp.Controllers
                     subscriptionPlanId,
                     billingPeriod);
 
+            if (!string.IsNullOrEmpty(business.Email))
+            {
+                var subject = "RezerveApp - Abonelik Paketiniz Güncellendi";
+                var message = $"Merhaba {business.Name},<br/><br/>Abonelik paketiniz <strong>{plan.Name}</strong> olarak güncellenmiştir. Yönetim panelinizdeki Abonelik sekmesinden detayları görüntüleyebilirsiniz.";
+                await _emailSender.SendEmailAsync(business.Email, subject, message);
+            }
+
+            TempData["Success"] = "Paket başarıyla atandı ve işletmeye e-posta bildirimi gönderildi.";
             return RedirectToAction(
                 nameof(Details),
                 new { id = businessId });

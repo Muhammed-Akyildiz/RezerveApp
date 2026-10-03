@@ -81,8 +81,8 @@
                             @a.AppointmentDate.ToString("dd.MM.yyyy") <span class="cell-muted" style="font-size:12px; margin-left:4px;">@a.StartTime.ToString("hh\\:mm")</span>
                         </td>
                         <td data-label="Müşteri">
-                            <span class="cell-primary">@a.CustomerName</span>
-                            <span class="cell-muted" style="font-size:12px; margin-left:4px;">(@a.CustomerPhone)</span>
+                            <span class="cell-primary" style="display:block; font-weight:600;">@a.CustomerName</span>
+                            <span class="cell-muted" style="font-size:13px;">@a.CustomerPhone</span>
                         </td>
                         <td class="cell-muted" data-label="Hizmet">@allServices</td>
                         <td class="cell-muted" data-label="Berber">@a.Employee?.Name</td>
@@ -137,7 +137,7 @@
                             {
                                 <form asp-controller="Business" asp-action="ConfirmAppointment" asp-route-id="@a.Id" method="post" style="display:inline;">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-ghost btn-sm">
+                                    <button type="submit" class="btn btn-sm" style="background-color: var(--success); color: white; border: none; font-weight: bold;">
                                         <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12" /></svg>
                                         Onayla
                                     </button>
