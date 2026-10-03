@@ -14,7 +14,7 @@
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="card card-pad">
-        <div class="form-grid" style="grid-template-columns: 2fr 1fr;">
+        <div class="form-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-bottom: 24px;">
             <div class="field">
                 <label for="name">Ad Soyad</label>
                 <input class="input" type="text" id="name" name="name" value="@Model.Name" required />
