@@ -44,8 +44,20 @@
         .btn-secondary { background: rgba(255,255,255,0.05) !important; color: #E5E5E5 !important; border: 1px solid rgba(255,255,255,0.1) !important; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1) !important; border-color: rgba(255,255,255,0.15) !important; }
         .input { color-scheme: dark; } /* Fix for native date/time icons on dark background */
-        input[type="time"]::-webkit-calendar-picker-indicator,
-        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1) brightness(100) !important; opacity: 1 !important; cursor: pointer; transform: scale(1.2); }
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            background-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23ffffff%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M11.99%202C6.47%202%202%206.48%202%2012s4.47%2010%209.99%2010C17.52%2022%2022%2017.52%2022%2012S17.52%202%2011.99%202zM12%2020c-4.42%200-8-3.58-8-8s3.58-8%208-8%208%203.58%208%208-3.58%208-8%208zm.5-13H11v6l5.25%203.15.75-1.23-4.5-2.67z%22%2F%3E%3C%2Fsvg%3E") !important;
+            filter: none !important;
+            opacity: 1 !important;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23ffffff%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M19%203h-1V1h-2v2H8V1H6v2H5c-1.11%200-1.99.9-1.99%202L3%2019c0%201.1.89%202%202%202h14c1.1%200%202-.9%202-2V5c0-1.1-.9-2-2-2zm0%2016H5V8h14v11z%22%2F%3E%3C%2Fsvg%3E") !important;
+            filter: none !important;
+            opacity: 1 !important;
+            cursor: pointer;
+            transform: scale(1.2);
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Styles", required: false)
