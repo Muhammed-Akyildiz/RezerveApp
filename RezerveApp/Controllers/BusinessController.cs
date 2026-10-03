@@ -673,7 +673,6 @@ namespace RezerveApp.Controllers
                     TempData["Error"] = "Bu e-posta adresi zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
                     return RedirectToAction(nameof(Employees));
                 }
-            }
 
             var employee = new Employee
             {

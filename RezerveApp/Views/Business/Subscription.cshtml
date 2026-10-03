@@ -24,8 +24,7 @@
                     </div>
                 </div>
                 
-                <p style="color: var(--text-muted); margin: 0; font-size: 14px;">@activeSub.SubscriptionPlan.Description</p>
-                
+
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px;">
                     <div style="background-color: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px;">
                         <div style="font-size: 12px; color: var(--text-faint);">Başlangıç Tarihi</div>
@@ -51,10 +50,7 @@
                             <i data-lucide="check-circle" style="width:16px; height:16px; color:var(--success);"></i>
                             <span>Çalışan Limiti: @(activeSub.SubscriptionPlan.MaxEmployees == null ? "Sınırsız" : activeSub.SubscriptionPlan.MaxEmployees.ToString())</span>
                         </li>
-                        <li style="display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="check-circle" style="width:16px; height:16px; color:var(--success);"></i>
-                            <span>Şube Limiti: @(activeSub.SubscriptionPlan.MaxBranches == null ? "Sınırsız" : activeSub.SubscriptionPlan.MaxBranches.ToString())</span>
-                        </li>
+
                     </ul>
                 </div>
             </div>
