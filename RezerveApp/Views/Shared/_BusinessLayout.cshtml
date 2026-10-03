@@ -40,6 +40,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="~/css/shared.css?v=@DateTime.Now.Ticks" />
     <link rel="stylesheet" href="~/css/business.css?v=@DateTime.Now.Ticks" />
+    <style>
+        .btn-secondary { background: #2A2E39 !important; color: #fff !important; border: 1px solid #3E4352 !important; }
+        .btn-secondary:hover { background: #353947 !important; border-color: #4C5263 !important; }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Styles", required: false)
 </head>
