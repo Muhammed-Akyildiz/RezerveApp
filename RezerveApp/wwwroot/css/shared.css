@@ -747,6 +747,11 @@ table.data-table {
     transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
 }
 
+.select option {
+    background-color: var(--bg-surface);
+    color: var(--text);
+}
+
     .input::placeholder {
         color: var(--text-faint);
     }
