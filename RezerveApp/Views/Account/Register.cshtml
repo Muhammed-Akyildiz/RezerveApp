@@ -62,10 +62,7 @@
                         <input type="tel" id="phone" name="phone" class="form-input" placeholder="05XX XXX XX XX" autocomplete="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="email">E-posta</label>
-                        <input type="email" id="email" name="email" class="form-input" placeholder="ornek@email.com" autocomplete="email" required>
-                    </div>
+
 
                     <div class="form-group">
                         <label class="form-label" for="password">Şifre</label>
@@ -191,15 +188,13 @@
                 return;
             }
             
-            const emailValue = document.getElementById('email').value;
-
             const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
             try {
                 Swal.fire({ title: 'Kod gönderiliyor...', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
                 const response = await fetch('/Account/SendRegistrationOtp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `phone=${encodeURIComponent(emailValue)}&__RequestVerificationToken=${encodeURIComponent(token)}`
+                    body: `phone=${encodeURIComponent(phone)}&__RequestVerificationToken=${encodeURIComponent(token)}`
                 });
                 const data = await response.json();
                 if (data.success) {
@@ -266,7 +261,7 @@
                 &times;
             </button>
             <h3 style="margin-bottom:15px; color:#1a1a1a; font-family:'Inter', sans-serif;">Doğrulama Kodu</h3>
-            <p style="margin-bottom:20px; color:#666; font-family:'Inter', sans-serif; font-size:14px;">E-posta adresinize gönderilen 6 haneli doğrulama kodunu giriniz.</p>
+            <p style="margin-bottom:20px; color:#666; font-family:'Inter', sans-serif; font-size:14px;">Telefonunuza WhatsApp veya SMS üzerinden gönderilen 6 haneli doğrulama kodunu giriniz.</p>
             <input type="text" id="otpInputModal" class="form-input" style="text-align:center; letter-spacing:8px; font-size:24px; font-weight:bold; margin-bottom:15px; background:#f9f9f9; color:#1a1a1a; border:1px solid #ddd;" maxlength="6" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
             
             <div style="margin-bottom:20px;">
