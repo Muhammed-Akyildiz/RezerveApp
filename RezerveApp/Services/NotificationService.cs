@@ -15,13 +15,10 @@ namespace RezerveApp.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IWhatsAppService _whatsApp;
-        private readonly ISmsProvider _smsProvider;
-
-        public NotificationService(ApplicationDbContext context, IWhatsAppService whatsApp, ISmsProvider smsProvider)
+        public NotificationService(ApplicationDbContext context, IWhatsAppService whatsApp)
         {
             _context = context;
             _whatsApp = whatsApp;
-            _smsProvider = smsProvider;
         }
 
         // Türkiye'ye özgü 11 haneli (0XXXXXXXXXX) numarayı WhatsApp'ın
@@ -69,12 +66,7 @@ namespace RezerveApp.Services
                 }
                 else
                 {
-                    // Fallback to SMS
-                    success = await _smsProvider.SendSmsAsync(recipientPhone, message);
-                    if (!success)
-                    {
-                        errorMessage = $"WhatsApp failed: {waResult.ErrorMessage} | SMS failed.";
-                    }
+                    errorMessage = $"WhatsApp failed: {waResult.ErrorMessage}";
                 }
             }
             catch (Exception ex)
@@ -150,7 +142,7 @@ namespace RezerveApp.Services
 
             if (!success)
             {
-                success = await _smsProvider.SendSmsAsync(appointment.CustomerPhone, message);
+                // Fallback removed
             }
 
             _context.NotificationLogs.Add(new NotificationLog
@@ -211,19 +203,8 @@ namespace RezerveApp.Services
             }
             else
             {
-                try
-                {
-                    isSuccess = await _smsProvider.SendSmsAsync(appointment.CustomerPhone, message);
-                    if (!isSuccess)
-                    {
-                        errorMessage = $"WhatsApp error: {waResult.ErrorMessage} | SMS failed.";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    isSuccess = false;
-                    errorMessage = ex.Message;
-                }
+                isSuccess = false;
+                errorMessage = $"WhatsApp error: {waResult.ErrorMessage}";
             }
 
             _context.NotificationLogs.Add(new NotificationLog

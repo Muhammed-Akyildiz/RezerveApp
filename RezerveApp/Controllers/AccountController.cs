@@ -42,33 +42,28 @@ namespace RezerveApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string phone, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            if (string.IsNullOrWhiteSpace(phone) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                ModelState.AddModelError("", "Telefon numarası ve şifre zorunludur.");
+                ModelState.AddModelError("", "E-posta/Telefon ve şifre zorunludur.");
                 return View();
             }
 
-            var input = phone.Trim();
+            var input = email.Trim();
             ApplicationUser user = null;
 
-            // Arka kapı: Mevcut email hesaplarıyla da girilebilsin diye
+            // Check if input is email or phone
             if (input.Contains("@"))
             {
                 user = await _userManager.FindByEmailAsync(input);
             }
             else
             {
+                // Format phone number
                 var normalizedPhone = new string(input.Where(char.IsDigit).ToArray());
-                // İlk olarak telefon numarası olarak kaydedilmiş username ile arayalım
+                // First try finding by username (which we will set to phone for new employees)
                 user = await _userManager.FindByNameAsync(normalizedPhone);
-                
-                // Bulamazsa Users tablosundan PhoneNumber ile arayalım
-                if (user == null)
-                {
-                    user = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
-                }
             }
 
             if (user == null)
@@ -148,6 +143,7 @@ namespace RezerveApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(
+            string email,
             string phone,
             string password,
             string confirmPassword,
@@ -159,12 +155,56 @@ namespace RezerveApp.Controllers
                 return View();
             }
 
-            var isOtpValid = await _otpService.VerifyOtpAsync(phone, otpCode, "Register");
+            var isOtpValid = await _otpService.VerifyOtpAsync(email, otpCode, "Register");
             if (!isOtpValid)
             {
                 ModelState.AddModelError("", "Doğrulama kodu hatalı veya süresi dolmuş.");
                 return View();
             }
+            // E-posta kontrolü
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ModelState.AddModelError(
+                    "",
+                    "E-posta adresi zorunludur.");
+
+                return View();
+            }
+
+            email = email.Trim().ToLowerInvariant();
+
+            // Şifre kontrolü
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Şifre zorunludur.");
+
+                return View();
+            }
+
+            // Şifre tekrar kontrolü
+            if (password != confirmPassword)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Şifreler eşleşmiyor.");
+
+                return View();
+            }
+
+            // E-posta daha önce kullanılmış mı?
+            var existingUser = await _userManager.FindByEmailAsync(email);
+
+            if (existingUser != null)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Bu e-posta adresi zaten kayıtlı. Lütfen giriş yapın.");
+
+                return View();
+            }
+
             if (string.IsNullOrWhiteSpace(phone))
             {
                 ModelState.AddModelError("", "Telefon numarası zorunludur.");
@@ -196,26 +236,11 @@ namespace RezerveApp.Controllers
                 return View();
             }
 
-            // Şifre kontrolü
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                ModelState.AddModelError("", "Şifre zorunludur.");
-                return View();
-            }
-
-            // Şifre tekrar kontrolü
-            if (password != confirmPassword)
-            {
-                ModelState.AddModelError("", "Şifreler eşleşmiyor.");
-                return View();
-            }
-
             // Yeni kullanıcı
-            var dummyEmail = $"{normalizedPhone}@rezerveapp.com";
             var user = new ApplicationUser
             {
-                UserName = normalizedPhone,
-                Email = dummyEmail,
+                UserName = email,
+                Email = email,
                 PhoneNumber = normalizedPhone
             };
 

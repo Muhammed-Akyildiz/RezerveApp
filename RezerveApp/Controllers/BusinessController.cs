@@ -18,7 +18,6 @@ namespace RezerveApp.Controllers
         private readonly NotificationService _notificationService;
         private readonly IConfiguration _configuration;
         private readonly RezerveApp.Services.IImageService _imageService;
-        private readonly RezerveApp.Services.Sms.ISmsProvider _smsProvider;
         private readonly IOtpService _otpService;
         private readonly IEmailSender _emailSender;
 
@@ -30,7 +29,6 @@ namespace RezerveApp.Controllers
             NotificationService notificationService,
             IConfiguration configuration,
             RezerveApp.Services.IImageService imageService,
-            RezerveApp.Services.Sms.ISmsProvider smsProvider,
             IOtpService otpService,
             IEmailSender emailSender)
         {
@@ -41,7 +39,6 @@ namespace RezerveApp.Controllers
             _notificationService = notificationService;
             _configuration = configuration;
             _imageService = imageService;
-            _smsProvider = smsProvider;
             _otpService = otpService;
             _emailSender = emailSender;
         }
@@ -627,12 +624,12 @@ namespace RezerveApp.Controllers
                 .Where(u => u.BusinessId == businessId && u.EmployeeId != null)
                 .ToListAsync();
             
-            var employeePhones = users.ToDictionary(u => u.EmployeeId.Value, u => u.PhoneNumber ?? u.UserName);
+            var employeeEmails = users.ToDictionary(u => u.EmployeeId.Value, u => u.Email);
 
             var (canAdd, maxEmployees, currentCount) = await _subscriptionService.CanAddEmployeeAsync(businessId.Value);
 
             ViewBag.Employees = employees;
-            ViewBag.EmployeePhones = employeePhones;
+            ViewBag.EmployeeEmails = employeeEmails;
             ViewBag.CanAddEmployee = canAdd;
             ViewBag.MaxEmployees = maxEmployees;
             ViewBag.CurrentEmployeeCount = currentCount;
@@ -642,7 +639,7 @@ namespace RezerveApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEmployee([FromServices] RezerveApp.Services.IWhatsAppService whatsApp, [FromServices] RezerveApp.Services.Sms.ISmsProvider smsProvider, string name, bool isActive = true, string? phone = null)
+        public async Task<IActionResult> CreateEmployee(string name, bool isActive = true, string? email = null)
         {
             var businessId = await GetCurrentBusinessIdAsync();
 
@@ -666,34 +663,20 @@ namespace RezerveApp.Controllers
                 return RedirectToAction(nameof(Employees));
             }
 
-            if (string.IsNullOrWhiteSpace(phone))
+            if (string.IsNullOrWhiteSpace(email))
             {
-                TempData["Error"] = "Çalışan telefon numarası zorunludur.";
+                TempData["Error"] = "Çalışan e-posta adresi zorunludur.";
                 return RedirectToAction(nameof(Employees));
             }
 
-            var normalizedPhone = new string(phone.Where(char.IsDigit).ToArray());
-            if (normalizedPhone.StartsWith("90") && normalizedPhone.Length == 12)
-            {
-                normalizedPhone = "0" + normalizedPhone.Substring(2);
-            }
-            else if (!normalizedPhone.StartsWith("0") && normalizedPhone.Length == 10)
-            {
-                normalizedPhone = "0" + normalizedPhone;
-            }
-
-            if (normalizedPhone.Length != 11)
-            {
-                TempData["Error"] = "Geçersiz telefon numarası formatı.";
-                return RedirectToAction(nameof(Employees));
-            }
+            string? normalizedEmail = email.Trim().ToLowerInvariant();
                 
-            var phoneUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == normalizedPhone);
-            if (phoneUser != null)
-            {
-                TempData["Error"] = "Bu telefon numarası zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
-                return RedirectToAction(nameof(Employees));
-            }
+                var emailUser = await _userManager.FindByEmailAsync(normalizedEmail);
+                if (emailUser != null)
+                {
+                    TempData["Error"] = "Bu e-posta adresi zaten sistemde kayıtlı. Çalışan oluşturulamadı.";
+                    return RedirectToAction(nameof(Employees));
+                }
 
             var employee = new Employee
             {
@@ -705,18 +688,16 @@ namespace RezerveApp.Controllers
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            if (!string.IsNullOrEmpty(normalizedPhone))
+            if (!string.IsNullOrEmpty(normalizedEmail))
             {
                 var random = new Random();
                 // Generate a strong password meeting Identity requirements (Rz! + 6 digits)
                 var generatedPassword = "Rz!" + random.Next(100000, 999999).ToString();
-                var dummyEmail = $"{normalizedPhone}@rezerveapp.com";
 
                 var user = new ApplicationUser
                 {
-                    UserName = normalizedPhone,
-                    Email = dummyEmail,
-                    PhoneNumber = normalizedPhone,
+                    UserName = normalizedEmail,
+                    Email = normalizedEmail,
                     EmailConfirmed = true,
                     BusinessId = businessId.Value,
                     EmployeeId = employee.Id
@@ -727,19 +708,20 @@ namespace RezerveApp.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "Employee");
                     
-                    var e164 = "90" + normalizedPhone.Substring(1);
-                    var business = await _context.Businesses.FindAsync(businessId.Value);
-
-                    var waResult = await whatsApp.SendTemplateMessageAsync("+" + e164, "calisan_sifresi", new List<string> { name, business?.Name ?? "RezerveApp", generatedPassword });
-                    
-                    if (!waResult.Success)
-                    {
-                        // Fallback to SMS
-                        var smsMessage = $"Sayın {name}, {business?.Name} hesabınız oluşturuldu. Şifreniz: {generatedPassword}";
-                        await smsProvider.SendSmsAsync(normalizedPhone, smsMessage);
-                    }
-
-                    TempData["Success"] = $"Çalışan eklendi ve şifresi WhatsApp/SMS ile telefonuna gönderildi.";
+                    var htmlMessage = $@"
+                        <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;'>
+                            <h2 style='color: #1a1a1a; text-align: center;'>RezerveApp Hesabınız Açıldı</h2>
+                            <p style='color: #666; font-size: 16px;'>Merhaba,</p>
+                            <p style='color: #666; font-size: 16px;'>İşletmeniz tarafından sizin adınıza RezerveApp sistemi üzerinde bir çalışan hesabı oluşturulmuştur. Sisteme girmek için kullanacağınız giriş bilgileriniz:</p>
+                            <div style='text-align: center; margin: 30px 0;'>
+                                <p style='color: #333; font-size: 16px;'><strong>E-posta / Kullanıcı Adı:</strong> {normalizedEmail}</p>
+                                <p style='color: #333; font-size: 16px;'><strong>Şifre:</strong></p>
+                                <span style='font-size: 24px; font-weight: bold; letter-spacing: 2px; color: #b78a28; padding: 10px 20px; background: #f9f9f9; border-radius: 8px;'>{generatedPassword}</span>
+                            </div>
+                            <p style='color: #999; font-size: 12px; text-align: center;'>Şifrenizi dilediğiniz zaman profilinizden değiştirebilirsiniz.</p>
+                        </div>";
+                    await _emailSender.SendEmailAsync(normalizedEmail, "RezerveApp Hesap Bilgileriniz", htmlMessage);
+                    TempData["Success"] = $"Çalışan eklendi ve hesap bilgileri e-posta adresine gönderildi.";
                 }
                 else
                 {

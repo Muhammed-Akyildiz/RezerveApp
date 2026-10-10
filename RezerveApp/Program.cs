@@ -64,7 +64,7 @@ builder.Services.AddScoped<SubscriptionService>();
 builder.Services.AddScoped<AvailabilityService>();
 builder.Services.AddTransient<IEmailSender, BrevoEmailSender>();
 builder.Services.AddHttpClient<IWhatsAppService, WhatsAppBusinessCloudService>();
-builder.Services.AddHttpClient<ISmsProvider, VerimorSmsProvider>();
+
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddHostedService<AppointmentReminderHostedService>();
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RezerveApp.Data;
 using RezerveApp.Models;
-using RezerveApp.Services.Sms;
+
 using System.Collections.Generic;
 
 namespace RezerveApp.Services
@@ -12,14 +12,12 @@ namespace RezerveApp.Services
     public class OtpService : IOtpService
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISmsProvider _smsProvider;
         private readonly IEmailSender _emailSender;
         private readonly IWhatsAppService _whatsAppService;
 
-        public OtpService(ApplicationDbContext context, ISmsProvider smsProvider, IEmailSender emailSender, IWhatsAppService whatsAppService)
+        public OtpService(ApplicationDbContext context, IEmailSender emailSender, IWhatsAppService whatsAppService)
         {
             _context = context;
-            _smsProvider = smsProvider;
             _emailSender = emailSender;
             _whatsAppService = whatsAppService;
         }
@@ -85,13 +83,7 @@ namespace RezerveApp.Services
                 // WhatsApp template sending
                 var waResult = await _whatsAppService.SendTemplateMessageAsync(e164, "dogrulama_kodu", new List<string> { code });
                 
-                // Fallback to SMS if WhatsApp fails
-                if (!waResult.Success)
-                {
-                    return await _smsProvider.SendSmsAsync(normalizedPhone, message);
-                }
-                
-                return true;
+                return waResult.Success;
             }
         }
 
