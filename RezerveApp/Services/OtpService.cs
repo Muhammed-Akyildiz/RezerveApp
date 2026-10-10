@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RezerveApp.Data;
 using RezerveApp.Models;
 using RezerveApp.Services.Sms;
+using System.Collections.Generic;
 
 namespace RezerveApp.Services
 {
@@ -13,12 +14,14 @@ namespace RezerveApp.Services
         private readonly ApplicationDbContext _context;
         private readonly ISmsProvider _smsProvider;
         private readonly IEmailSender _emailSender;
+        private readonly IWhatsAppService _whatsAppService;
 
-        public OtpService(ApplicationDbContext context, ISmsProvider smsProvider, IEmailSender emailSender)
+        public OtpService(ApplicationDbContext context, ISmsProvider smsProvider, IEmailSender emailSender, IWhatsAppService whatsAppService)
         {
             _context = context;
             _smsProvider = smsProvider;
             _emailSender = emailSender;
+            _whatsAppService = whatsAppService;
         }
 
         public async Task<bool> GenerateAndSendOtpAsync(string phoneNumber, string purpose)
@@ -70,7 +73,25 @@ namespace RezerveApp.Services
             }
             else
             {
-                return await _smsProvider.SendSmsAsync(normalizedPhone, message);
+                // Format phone number to E164 for WhatsApp
+                var e164 = normalizedPhone;
+                if (!e164.StartsWith("+"))
+                {
+                    if (e164.StartsWith("0")) e164 = "+90" + e164.Substring(1);
+                    else if (e164.Length == 10) e164 = "+90" + e164;
+                    else e164 = "+" + e164;
+                }
+
+                // WhatsApp template sending
+                var waResult = await _whatsAppService.SendTemplateMessageAsync(e164, "dogrulama_kodu", new List<string> { code });
+                
+                // Fallback to SMS if WhatsApp fails
+                if (!waResult.Success)
+                {
+                    return await _smsProvider.SendSmsAsync(normalizedPhone, message);
+                }
+                
+                return true;
             }
         }
 

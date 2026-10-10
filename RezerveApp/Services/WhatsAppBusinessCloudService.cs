@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
@@ -114,6 +114,87 @@ namespace RezerveApp.Services
                     Success = false,
                     ErrorMessage = $"WhatsApp API'ye ulaşılamadı: {ex.Message}"
                 };
+            }
+        }
+
+        public async Task<WhatsAppSendResult> SendTemplateMessageAsync(string toPhoneE164, string templateName, List<string> parameters)
+        {
+            var enabled = _configuration.GetValue<bool>("WhatsApp:Enabled");
+            if (!enabled)
+            {
+                return new WhatsAppSendResult { Success = false, ErrorMessage = "WhatsApp kapalı." };
+            }
+
+            var phoneNumberId = _configuration["WhatsApp:PhoneNumberId"];
+            var accessToken = _configuration["WhatsApp:AccessToken"];
+            var apiBaseUrl = _configuration["WhatsApp:ApiBaseUrl"] ?? "https://graph.facebook.com";
+            var apiVersion = _configuration["WhatsApp:ApiVersion"] ?? "v20.0";
+
+            if (string.IsNullOrWhiteSpace(phoneNumberId) || string.IsNullOrWhiteSpace(accessToken))
+            {
+                return new WhatsAppSendResult { Success = false, ErrorMessage = "Kimlik/Token eksik." };
+            }
+
+            var url = $"{apiBaseUrl.TrimEnd('/')}/{apiVersion}/{phoneNumberId}/messages";
+
+            var parameterObjects = parameters.Select(p => new { type = "text", text = p }).ToList();
+
+            object[] components;
+            if (templateName == "dogrulama_kodu" && parameterObjects.Any())
+            {
+                // Kimlik doğrulama şablonu (Kodu kopyala butonu dahil)
+                components = new object[]
+                {
+                    new { type = "body", parameters = parameterObjects },
+                    new { type = "button", sub_type = "url", index = "0", parameters = new[] { new { type = "text", text = parameters.First() } } }
+                };
+            }
+            else if (parameterObjects.Any())
+            {
+                components = new object[] { new { type = "body", parameters = parameterObjects } };
+            }
+            else
+            {
+                components = null;
+            }
+
+            var payload = new
+            {
+                messaging_product = "whatsapp",
+                to = toPhoneE164,
+                type = "template",
+                template = new
+                {
+                    name = templateName,
+                    language = new { code = "tr" },
+                    components = components
+                }
+            };
+
+            var requestJson = JsonSerializer.Serialize(payload, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            try
+            {
+                var response = await _httpClient.SendAsync(request);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return new WhatsAppSendResult { Success = true };
+                }
+
+                return new WhatsAppSendResult { Success = false, ErrorMessage = $"WhatsApp API hatası ({(int)response.StatusCode}): {responseBody}" };
+            }
+            catch (HttpRequestException ex)
+            {
+                return new WhatsAppSendResult { Success = false, ErrorMessage = $"WhatsApp API'ye ulaşılamadı: {ex.Message}" };
             }
         }
     }

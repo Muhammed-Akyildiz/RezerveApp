@@ -1,4 +1,4 @@
-﻿namespace RezerveApp.Services
+namespace RezerveApp.Services
 {
     public class WhatsAppSendResult
     {
@@ -13,5 +13,6 @@
     public interface IWhatsAppService
     {
         Task<WhatsAppSendResult> SendMessageAsync(string toPhoneE164, string message);
+        Task<WhatsAppSendResult> SendTemplateMessageAsync(string toPhoneE164, string templateName, List<string> parameters);
     }
 }
