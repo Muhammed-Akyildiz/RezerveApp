@@ -1,4 +1,4 @@
-﻿using RezerveApp.Data;
+using RezerveApp.Data;
 using RezerveApp.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,15 +53,15 @@ namespace RezerveApp.HostedServices
             var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
 
             var now = DateTime.Now;
-            var tomorrow = now.Date.AddDays(1);
-
-            // Polling aralığı 1 dakika olduğu için tam 24 saat sonrasını hedefler.
-            // Yani randevusuna 23 saat 59 dakika ile 24 saat kalanlar.
-            var windowStart = now.TimeOfDay;
-            var windowEnd = now.AddMinutes(2).TimeOfDay;
+            // Şimdiki zamana 2 saat ekliyoruz.
+            // Yani şu andan tam 2 saat sonra başlayacak randevular.
+            var targetTime = now.AddHours(2);
+            var targetDate = targetTime.Date;
+            var windowStart = targetTime.TimeOfDay;
+            var windowEnd = targetTime.AddMinutes(2).TimeOfDay;
 
             var dueAppointments = await context.Appointments
-                .Where(a => a.AppointmentDate.Date == tomorrow &&
+                .Where(a => a.AppointmentDate.Date == targetDate &&
                             a.Status == "Approved" &&
                             !a.ReminderSent &&
                             a.StartTime >= windowStart &&

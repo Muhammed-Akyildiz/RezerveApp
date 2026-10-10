@@ -54,10 +54,27 @@ namespace RezerveApp.Services
 
             try
             {
-                success = await _smsProvider.SendSmsAsync(recipientPhone, message);
-                if (!success)
+                var e164 = NormalizePhone(recipientPhone);
+                if (!e164.StartsWith("+")) e164 = "+" + e164;
+
+                // Send via WhatsApp
+                // In generic SendAndLogAsync, we only have 'message' string, which means it's not using a template.
+                // We should avoid using this generic method for WhatsApp if it requires templates.
+                // For now, we will fallback to SMS for generic messages or try WhatsApp free text.
+                var waResult = await _whatsApp.SendMessageAsync(e164, message);
+                
+                if (waResult.Success)
                 {
-                    errorMessage = "SMS Provider returned false";
+                    success = true;
+                }
+                else
+                {
+                    // Fallback to SMS
+                    success = await _smsProvider.SendSmsAsync(recipientPhone, message);
+                    if (!success)
+                    {
+                        errorMessage = $"WhatsApp failed: {waResult.ErrorMessage} | SMS failed.";
+                    }
                 }
             }
             catch (Exception ex)
@@ -118,7 +135,35 @@ namespace RezerveApp.Services
                 $"Tarih: {appointment.AppointmentDate:dd.MM.yyyy} {appointment.StartTime:hh\\:mm}\n" +
                 $"Randevunuzu iptal etmeniz gerekirse lütfen işletmeyi arayın.";
 
-            await SendAndLogAsync(NotificationType.AppointmentConfirmationCustomer, business.Id, appointment.Id, appointment.CustomerPhone, message);
+            var e164 = NormalizePhone(appointment.CustomerPhone);
+            if (!e164.StartsWith("+")) e164 = "+" + e164;
+
+            var waResult = await _whatsApp.SendTemplateMessageAsync(e164, "randevu_onay", new List<string> 
+            { 
+                appointment.CustomerName, 
+                appointment.AppointmentDate.ToString("dd.MM.yyyy"), 
+                appointment.StartTime.ToString(@"hh\:mm") 
+            });
+
+            bool success = waResult.Success;
+            string errorMessage = waResult.ErrorMessage;
+
+            if (!success)
+            {
+                success = await _smsProvider.SendSmsAsync(appointment.CustomerPhone, message);
+            }
+
+            _context.NotificationLogs.Add(new NotificationLog
+            {
+                Type = NotificationType.AppointmentConfirmationCustomer,
+                BusinessId = business.Id,
+                AppointmentId = appointment.Id,
+                RecipientPhone = appointment.CustomerPhone,
+                Message = message,
+                IsSuccess = success,
+                ErrorMessage = errorMessage
+            });
+            await _context.SaveChangesAsync();
         }
 
         // Randevudan ~30 dakika önce müşteriye hatırlatma.
@@ -151,18 +196,34 @@ namespace RezerveApp.Services
             bool isSuccess = false;
             string? errorMessage = null;
 
-            try
+            var e164 = NormalizePhone(appointment.CustomerPhone);
+            if (!e164.StartsWith("+")) e164 = "+" + e164;
+
+            var waResult = await _whatsApp.SendTemplateMessageAsync(e164, "randevu_hatirlatma", new List<string> 
+            { 
+                appointment.CustomerName, 
+                appointment.StartTime.ToString(@"hh\:mm") 
+            });
+
+            if (waResult.Success)
             {
-                isSuccess = await _smsProvider.SendSmsAsync(appointment.CustomerPhone, message);
-                if (!isSuccess)
-                {
-                    errorMessage = "SMS sağlayıcı false döndü.";
-                }
+                isSuccess = true;
             }
-            catch (Exception ex)
+            else
             {
-                isSuccess = false;
-                errorMessage = ex.Message;
+                try
+                {
+                    isSuccess = await _smsProvider.SendSmsAsync(appointment.CustomerPhone, message);
+                    if (!isSuccess)
+                    {
+                        errorMessage = $"WhatsApp error: {waResult.ErrorMessage} | SMS failed.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    isSuccess = false;
+                    errorMessage = ex.Message;
+                }
             }
 
             _context.NotificationLogs.Add(new NotificationLog
