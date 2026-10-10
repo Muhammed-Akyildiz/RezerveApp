@@ -623,9 +623,16 @@ namespace RezerveApp.Controllers
                 .OrderBy(x => x.Name)
                 .ToListAsync();
 
+            var users = await _userManager.Users
+                .Where(u => u.BusinessId == businessId && u.EmployeeId != null)
+                .ToListAsync();
+            
+            var employeeEmails = users.ToDictionary(u => u.EmployeeId.Value, u => u.Email);
+
             var (canAdd, maxEmployees, currentCount) = await _subscriptionService.CanAddEmployeeAsync(businessId.Value);
 
             ViewBag.Employees = employees;
+            ViewBag.EmployeeEmails = employeeEmails;
             ViewBag.CanAddEmployee = canAdd;
             ViewBag.MaxEmployees = maxEmployees;
             ViewBag.CurrentEmployeeCount = currentCount;
@@ -687,7 +694,8 @@ namespace RezerveApp.Controllers
             if (!string.IsNullOrEmpty(normalizedEmail))
             {
                 var random = new Random();
-                var generatedPassword = "R" + random.Next(10000, 99999).ToString();
+                // Generate a strong password meeting Identity requirements (Rz! + 6 digits)
+                var generatedPassword = "Rz!" + random.Next(100000, 999999).ToString();
 
                 var user = new ApplicationUser
                 {
@@ -815,7 +823,7 @@ namespace RezerveApp.Controllers
                     {
                         // Yeni kullanıcı oluştur
                         var random = new Random();
-                        var generatedPassword = random.Next(100000, 999999).ToString();
+                        var generatedPassword = "Rz!" + random.Next(100000, 999999).ToString();
                         user = new ApplicationUser
                         {
                             UserName = normalizedEmail,
@@ -837,6 +845,10 @@ namespace RezerveApp.Controllers
                                 </div>";
                             await _emailSender.SendEmailAsync(normalizedEmail, "RezerveApp Hesap Bilgileriniz", htmlMessage);
                             TempData["Success"] = $"Çalışan güncellendi ve şifresi E-posta olarak gönderildi.";
+                        }
+                        else
+                        {
+                            TempData["Error"] = "Kullanıcı hesabı oluşturulamadı: " + string.Join(", ", createResult.Errors.Select(e => e.Description));
                         }
                     }
                     else if (user.UserName != normalizedEmail)

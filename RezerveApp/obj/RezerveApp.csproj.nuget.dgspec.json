@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj": {}
+    "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj": {
+    "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj",
+        "projectUniqueName": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj",
         "projectName": "RezerveApp",
-        "projectPath": "c:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj",
+        "projectPath": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\RezerveApp.csproj",
         "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\obj\\",
+        "outputPath": "C:\\Users\\Asus\\OneDrive\\Desktop\\RezerveApp\\RezerveApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -186,11 +186,13 @@ else
         new { Id = 3, Name = "Deniz Kurt", IsActive = true },
         new { Id = 4, Name = "Serkan Er", IsActive = false }
         };
+        var emails = ViewBag.EmployeeEmails as Dictionary<int, string> ?? new Dictionary<int, string>();
     }
 
 
     @foreach (var e in employees)
     {
+        var empEmail = emails.ContainsKey(e.Id) ? emails[e.Id] : "";
         <div class="employee-card">
 
 
@@ -307,7 +309,7 @@ else
 
 
                 <!-- ŞİFRE SIFIRLA -->
-                <button type="button" class="btn btn-outline btn-sm" onclick="resetPassword(@e.Id)">
+                <button type="button" class="btn btn-outline btn-sm" onclick="resetPassword(@e.Id, '@empEmail')">
                     Şifre Sıfırla
                 </button>
 
@@ -492,19 +494,24 @@ else
             return true;
         }
 
-        async function resetPassword(employeeId) {
+        async function resetPassword(employeeId, empEmail) {
+            const emailHtml = empEmail ? `<p style="font-size:14px; color:var(--text-muted); margin-bottom:10px;">Hesap: <strong>${empEmail}</strong></p>` : `<p style="font-size:14px; color:var(--danger); margin-bottom:10px;">Kullanıcı hesabı yok (Önce E-posta kaydedin)</p>`;
+            
             const { value: newPassword } = await Swal.fire({
                 title: 'Şifre Sıfırla',
+                html: emailHtml + `<p style="font-size:12px; color:var(--text-muted); text-align:left; margin-bottom:15px;">Kurallar:<br/>- En az 6 karakter<br/>- En az 1 büyük harf<br/>- En az 1 rakam<br/>- En az 1 özel karakter (!, *, # vb.)</p>`,
                 input: 'password',
-                inputLabel: 'Çalışan için yeni şifre belirleyin',
-                inputPlaceholder: 'En az 6 karakter',
+                inputLabel: 'Yeni şifre belirleyin',
+                inputPlaceholder: 'Örn: Rz!123456',
                 showCancelButton: true,
                 confirmButtonText: 'Sıfırla',
                 cancelButtonText: 'İptal',
                 inputValidator: (value) => {
-                    if (!value || value.length < 6) {
-                        return 'Şifre en az 6 karakter olmalıdır!'
-                    }
+                    if (!value) return 'Şifre zorunludur!';
+                    if (value.length < 6) return 'Şifre en az 6 karakter olmalıdır!';
+                    if (!/[A-Z]/.test(value)) return 'En az 1 büyük harf içermelidir!';
+                    if (!/[0-9]/.test(value)) return 'En az 1 rakam içermelidir!';
+                    if (!/[^a-zA-Z0-9]/.test(value)) return 'En az 1 özel karakter içermelidir!';
                 }
             });
 
